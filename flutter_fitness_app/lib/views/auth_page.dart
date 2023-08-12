@@ -44,13 +44,11 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _entryField(String title, TextEditingController controller) {
     return TextField(
-      controller: controller,
-      decoration: InputDecoration(labelText: title),
-    );
+        controller: controller, decoration: InputDecoration(labelText: title));
   }
 
   Widget _errorMessage() {
-    return Text(errorMessage == '' ? '' : 'Humm ? $errorMessage');
+    return Text(errorMessage.toString());
   }
 
   Widget _submitButton() {
