@@ -27,9 +27,9 @@ class _SetNamePageState extends State<SetNamePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            title(),
+            title('Choose a name'),
             const SizedBox(
-              height: 40,
+              height: 20,
             ),
             entryField(context, 'Type here', _controller),
             const SizedBox(
@@ -38,7 +38,8 @@ class _SetNamePageState extends State<SetNamePage> {
             submitButton(context, () {
               Provider.of<TrainingRegiment>(context, listen: false)
                   .setName(_controller.text);
-            })
+              Navigator.pushNamed(context, '/set_type');
+            }, 'Next')
           ],
         ),
       ),

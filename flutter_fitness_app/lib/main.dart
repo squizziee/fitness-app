@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
+import 'package:flutter_fitness_app/route_generator.dart';
 import 'package:flutter_fitness_app/views/first_use/set_name.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SetNamePage(),
-      //onGenerateRoute: RouteGenerator.generateRoute,
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
