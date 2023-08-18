@@ -1,0 +1,34 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/services/auth.dart';
+import 'package:flutter_fitness_app/views/authentication/login_page.dart';
+import 'package:flutter_fitness_app/views/authentication/register_page.dart';
+import 'package:flutter_fitness_app/views/first_use/set_name.dart';
+import 'package:flutter_fitness_app/views/authentication/home_page.dart';
+
+class AuthWidgetTree extends StatefulWidget {
+  const AuthWidgetTree({super.key});
+
+  @override
+  State<AuthWidgetTree> createState() => _AuthWidgetTreeState();
+}
+
+class _AuthWidgetTreeState extends State<AuthWidgetTree> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: Auth().authStateChanges,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          return snapshot.data != null
+              ? const HomePage()
+              : const RegisterPage();
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+}

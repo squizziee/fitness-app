@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
+import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/route_generator.dart';
-import 'package:flutter_fitness_app/views/first_use/set_name.dart';
+import 'package:flutter_fitness_app/views/authentication/auth_widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
@@ -9,13 +10,19 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => TrainingRegiment())
+    ChangeNotifierProvider(create: (context) => TrainingRegiment()),
+    ChangeNotifierProvider(create: (context) => AppUser())
   ], child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: const SetNamePage(),
+      home: const AuthWidgetTree(),
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
