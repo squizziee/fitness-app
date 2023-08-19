@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/views/first_use/widgets/entry_field.dart';
-import 'package:flutter_fitness_app/views/first_use/widgets/title.dart';
-import 'package:flutter_fitness_app/views/first_use/widgets/submit_button.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/widgets/entry_field.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/widgets/title.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/widgets/submit_button.dart';
 
 class SetNamePage extends StatefulWidget {
   const SetNamePage({super.key});

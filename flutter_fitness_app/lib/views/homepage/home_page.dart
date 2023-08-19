@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_fitness_app/views/homepage/regiment_tab.dart';
+import 'package:flutter_fitness_app/views/homepage/session_tab.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../services/auth.dart';
 
@@ -13,6 +15,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final User? user = Auth().currentUser;
   int _selectedIndex = 0;
+  List<Widget> tabs = [
+    const RegimentTab(),
+    const SessionTab(),
+    const RegimentTab(),
+    const RegimentTab()
+  ];
 
   Future<void> signOut() async {
     await Auth().signOut();
@@ -26,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     return ElevatedButton(
         onPressed: () async {
           await signOut();
+          // ignore: use_build_context_synchronously
           Navigator.of(context).pushNamed('/login');
         },
         child: const Text('Sign out'));
@@ -41,7 +50,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        selectedFontSize: 12,
+        iconSize: 22,
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -56,17 +68,16 @@ class _HomePageState extends State<HomePage> {
             icon: FaIcon(FontAwesomeIcons.bullseye),
             label: 'Goals',
           ),
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.user),
+            label: 'Profile',
+          ),
         ],
       ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [_userUID(), _signOutButton()],
-        ),
+        child: tabs[_selectedIndex],
       ),
     );
   }

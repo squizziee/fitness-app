@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
-import 'package:flutter_fitness_app/views/authentication/login_page.dart';
 import 'package:flutter_fitness_app/views/authentication/register_page.dart';
-import 'package:flutter_fitness_app/views/first_use/set_name.dart';
-import 'package:flutter_fitness_app/views/authentication/home_page.dart';
+import 'package:flutter_fitness_app/views/homepage/home_page.dart';
 
 class AuthWidgetTree extends StatefulWidget {
   const AuthWidgetTree({super.key});
