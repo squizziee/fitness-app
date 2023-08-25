@@ -1,25 +1,64 @@
-// ignore_for_file: unused_field
+import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:string_validator/string_validator.dart';
 
-import 'package:flutter/material.dart';
-import 'training_types.dart';
-
-class TrainingRegiment extends ChangeNotifier {
-  String? _name;
+class TrainingRegiment {
+  String _id = '';
+  String _name = '';
+  String _notes = '';
   TrainingType? _trainingType;
-  int? _cycleDurationInDays;
+  // ignore: prefer_final_fields
+  List<TrainingSession> _schedule = [];
+  int _cycleDurationInDays = 0;
+
+  void setId(String id) {
+    _id = id;
+  }
+
+  String getId() {
+    return _id;
+  }
 
   void setName(String name) {
+    if (!isAlphanumeric(name)) {
+      throw Exception('Regiment name should only contain letters and numbers');
+    }
     _name = name;
-    notifyListeners();
   }
 
-  void setTrainingType(TrainingType type) {
-    _trainingType = type;
-    notifyListeners();
+  String getName() {
+    return _name;
   }
 
-  void setCycleDurationInDays(int days) {
-    _cycleDurationInDays = days;
-    notifyListeners();
+  void setNotes(String notes) {
+    _notes = notes;
+  }
+
+  String getNotes() {
+    return _notes;
+  }
+
+  void setTrainingType(TrainingType trainingType) {
+    _trainingType = trainingType;
+  }
+
+  TrainingType? getTrainingType() {
+    return _trainingType;
+  }
+
+  void addToSchedule(TrainingSession session) {
+    _schedule.add(session);
+  }
+
+  void removeFromSchedule(TrainingSession session) {
+    _schedule.remove(session);
+  }
+
+  void setCycleDurationInDays(int cycleDurationInDays) {
+    _cycleDurationInDays = cycleDurationInDays;
+  }
+
+  int getCycleDurationInDays() {
+    return _cycleDurationInDays;
   }
 }

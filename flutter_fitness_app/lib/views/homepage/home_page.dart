@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_fitness_app/views/homepage/goal_tab.dart';
+import 'package:flutter_fitness_app/views/homepage/profile_tab.dart';
 import 'package:flutter_fitness_app/views/homepage/regiment_tab.dart';
 import 'package:flutter_fitness_app/views/homepage/session_tab.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,8 +20,8 @@ class _HomePageState extends State<HomePage> {
   List<Widget> tabs = [
     const RegimentTab(),
     const SessionTab(),
-    const RegimentTab(),
-    const RegimentTab()
+    const GoalTab(),
+    const ProfileTab()
   ];
 
   Future<void> signOut() async {
