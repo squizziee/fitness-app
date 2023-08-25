@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/training_regiment.dart';
+import 'package:flutter_fitness_app/models/new_training_regiment.dart';
 import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/route_generator.dart';
 import 'package:flutter_fitness_app/views/authentication/auth_widget_tree.dart';
@@ -10,7 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => TrainingRegiment()),
+    ChangeNotifierProvider(create: (context) => NewTrainingRegiment()),
     ChangeNotifierProvider(create: (context) => AppUser())
   ], child: const MyApp()));
 }
