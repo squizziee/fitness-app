@@ -61,4 +61,8 @@ class TrainingRegiment {
   int getCycleDurationInDays() {
     return _cycleDurationInDays;
   }
+
+  List<TrainingSession> getSchedule() {
+    return _schedule;
+  }
 }

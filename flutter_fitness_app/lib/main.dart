@@ -4,6 +4,7 @@ import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/route_generator.dart';
 import 'package:flutter_fitness_app/views/authentication/auth_widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/testpage.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -35,7 +36,7 @@ class _MyAppState extends State<MyApp> {
             ButtonThemeData(buttonColor: Theme.of(context).primaryColor),
         useMaterial3: true,
       ),
-      home: const AuthWidgetTree(),
+      home: const TestPage(), //const AuthWidgetTree(),
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

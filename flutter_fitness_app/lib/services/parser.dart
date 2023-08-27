@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class Parser {
-// Для использования: fetchAndParse(
+// Для использования: Parser.fetchAndParse(
 //          "https://strengthlevel.com/api/exercises?limit=320&exercise.fields=category,name_url,bodypart,count,aliases,icon_url&standard=yes");
 // Это для получения всех упражнений
   static Future<String> fetchContent(String url) async {
