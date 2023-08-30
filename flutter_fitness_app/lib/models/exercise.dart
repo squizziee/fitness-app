@@ -1,7 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter_fitness_app/models/exercise_type.dart';
 
 class Exercise {
-  var type = ExerciseType();
+  ExerciseType? exerciseType;
   String bodyPartBias = '';
   String notes = '';
 }

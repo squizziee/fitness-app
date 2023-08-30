@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/exercise_type.dart';
+import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_training_exercise.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';

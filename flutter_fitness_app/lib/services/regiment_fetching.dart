@@ -58,17 +58,23 @@ abstract class DatabaseAPI {
   }
 
   static Future<ExerciseType> getExerciseTypeByID(String id) async {
-    var result = ExerciseType();
     for (var collection in exerciseCollections) {
       var exerciseCollection =
           FirebaseFirestore.instance.collection(collection);
       var exerciseSnapshot = await exerciseCollection
           .where(FieldPath.documentId, isEqualTo: id)
           .get();
-      result.name = exerciseSnapshot.docs[0]['name'];
-      result.bodyPartBias = exerciseSnapshot.docs[0]['body_part_biases'][0];
+      if (exerciseSnapshot.docs.isEmpty) {
+        continue;
+      }
+      var doc = exerciseSnapshot.docs[0];
+      return ExerciseType(
+          name: doc['name'],
+          bodyPart: doc['bodypart'],
+          iconURL: doc['icon_url'],
+          category: doc['category']);
     }
-    return result;
+    throw Exception('Wrong exercise ID has been provided');
   }
 
   static Future<TrainingSession> getTrainingSessionByID(String id) async {
@@ -84,7 +90,7 @@ abstract class DatabaseAPI {
       var exercises = trainingSessionQuerySnapshot.docs[0]['exercises'];
       for (var exerciseDatabaseInstance in exercises) {
         var exercise = handlers[key]!.handle(exerciseDatabaseInstance);
-        exercise.type = await getExerciseTypeByID(
+        exercise.exerciseType = await getExerciseTypeByID(
             exerciseDatabaseInstance['exercise_link'].toString().trim());
         result.exercises.add(exercise);
       }
