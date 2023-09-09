@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_fitness_app/models/new_training_regiment.dart';
@@ -49,7 +50,7 @@ class _SetTypePageState extends State<SetTypePage> {
                     return InputChip(
                       label: Text(trainingTypeOptions[index].toString()),
                       selected: _value == index,
-                      avatar: trainingTypeOptions[index].getIcon(),
+                      avatar: FaIcon(trainingTypeOptions[index].getIconData()),
                       onSelected: (bool selected) {
                         setState(() {
                           _value = selected ? index : 0;

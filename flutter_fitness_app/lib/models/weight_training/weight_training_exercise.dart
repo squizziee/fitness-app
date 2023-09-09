@@ -3,6 +3,15 @@ import 'package:flutter_fitness_app/models/exercise.dart';
 
 class WeightTrainingExercise extends Exercise {
   List<WeightTrainingSet> sets = [];
+
+  @override
+  Widget getExercisePreviewWidgetLayout() {
+    return Column(children: [
+      Text(exerciseType!.name),
+      Text(exerciseType!.bodyPart),
+      Text(sets.length.toString()),
+    ]);
+  }
 }
 
 class WeightTrainingSet {
@@ -12,13 +21,11 @@ class WeightTrainingSet {
   int weightInKilograms = 0;
 
   Widget getWidget() {
-    return Container(
-      child: Column(children: [
-        Text(notes),
-        Text(repetitions.toString()),
-        Text(setIndex.toString()),
-        Text(weightInKilograms.toString())
-      ]),
-    );
+    return Column(children: [
+      Text(notes),
+      Text(repetitions.toString()),
+      Text(setIndex.toString()),
+      Text(weightInKilograms.toString())
+    ]);
   }
 }

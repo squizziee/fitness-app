@@ -15,7 +15,7 @@ Widget _regimentPreview(TrainingRegiment regiment) {
   return Card(
     child: Column(mainAxisSize: MainAxisSize.max, children: [
       ListTile(
-        leading: regiment.getTrainingType()!.getIcon(),
+        leading: FaIcon(regiment.getTrainingType()!.getIconData()),
         title: Text(regiment.getName()),
         subtitle: Text(regiment.getNotes()),
       )

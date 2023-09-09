@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/services/post_exercises.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});

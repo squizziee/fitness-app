@@ -1,9 +1,10 @@
 //enum TrainingType { weightTraining, swimming, running, cycling, mixed }
 
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 abstract class TrainingType {
-  FaIcon getIcon();
+  IconData getIconData();
 }
 
 class WeightTraining extends TrainingType {
@@ -13,8 +14,8 @@ class WeightTraining extends TrainingType {
   }
 
   @override
-  FaIcon getIcon() {
-    return const FaIcon(FontAwesomeIcons.dumbbell);
+  IconData getIconData() {
+    return FontAwesomeIcons.dumbbell;
   }
 }
 
@@ -25,8 +26,8 @@ class Swimming extends TrainingType {
   }
 
   @override
-  FaIcon getIcon() {
-    return const FaIcon(FontAwesomeIcons.personSwimming);
+  IconData getIconData() {
+    return FontAwesomeIcons.personSwimming;
   }
 }
 
@@ -37,8 +38,8 @@ class Cycling extends TrainingType {
   }
 
   @override
-  FaIcon getIcon() {
-    return const FaIcon(FontAwesomeIcons.personRunning);
+  IconData getIconData() {
+    return FontAwesomeIcons.personRunning;
   }
 }
 
@@ -49,8 +50,8 @@ class Running extends TrainingType {
   }
 
   @override
-  FaIcon getIcon() {
-    return const FaIcon(FontAwesomeIcons.bicycle);
+  IconData getIconData() {
+    return FontAwesomeIcons.bicycle;
   }
 }
 
@@ -61,8 +62,8 @@ class Mixed extends TrainingType {
   }
 
   @override
-  FaIcon getIcon() {
-    return const FaIcon(FontAwesomeIcons.rotateRight);
+  IconData getIconData() {
+    return FontAwesomeIcons.rotateRight;
   }
 }
 
@@ -73,8 +74,8 @@ class Rowing extends TrainingType {
   }
 
   @override
-  FaIcon getIcon() {
-    return const FaIcon(FontAwesomeIcons.sailboat);
+  IconData getIconData() {
+    return FontAwesomeIcons.sailboat;
   }
 }
 
@@ -85,8 +86,8 @@ class CombatTraining extends TrainingType {
   }
 
   @override
-  FaIcon getIcon() {
-    return const FaIcon(FontAwesomeIcons.handFist);
+  IconData getIconData() {
+    return FontAwesomeIcons.handFist;
   }
 }
 
