@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Container(
+      body: SizedBox(
         height: double.infinity,
         width: double.infinity,
         child: tabs[_selectedIndex],

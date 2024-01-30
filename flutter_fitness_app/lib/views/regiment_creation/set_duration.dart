@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/widgets/number_entry_field.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_fitness_app/models/new_training_regiment.dart';
-import 'package:flutter_fitness_app/views/regiment_creation/widgets/entry_field.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/title.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/submit_button.dart';
 
-class SetNamePage extends StatefulWidget {
-  const SetNamePage({super.key});
+class SetDurationPage extends StatefulWidget {
+  const SetDurationPage({super.key});
 
   @override
-  State<SetNamePage> createState() => _SetNamePageState();
+  State<SetDurationPage> createState() => _SetDurationPageState();
 }
 
-class _SetNamePageState extends State<SetNamePage> {
+class _SetDurationPageState extends State<SetDurationPage> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -27,18 +28,19 @@ class _SetNamePageState extends State<SetNamePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            title('Choose a name'),
+            title('Choose cycle duration'),
             const SizedBox(
               height: 20,
             ),
-            entryField(context, 'Type here', _controller),
+            numberEntryField(context, 'Type here', _controller),
             const SizedBox(
               height: 20,
             ),
             submitButton(context, () {
               Provider.of<NewTrainingRegiment>(context, listen: false).regiment
-                  .name = _controller.text;
-              Navigator.pushNamed(context, '/set_type');
+                  .cycleDurationInDays = int.parse(_controller.text);
+              Provider.of<NewTrainingRegiment>(context, listen: false).regiment.schedule = List.filled(int.parse(_controller.text), TrainingSession());
+              Navigator.pushNamed(context, '/set_regiment_calendar');
             }, 'Next')
           ],
         ),

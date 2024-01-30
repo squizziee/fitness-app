@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
-import 'package:flutter_fitness_app/models/training_types.dart';
-import 'package:flutter_fitness_app/services/regiment_fetching.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,7 +24,7 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
             style: GoogleFonts.montserrat(
                 fontSize: 15, fontWeight: FontWeight.w700, height: 1)),
         Text(
-            '$indexOfSession day on ${regiment == null ? "unnamed regiment" : regiment!.getName()}',
+            '$indexOfSession day on ${regiment == null ? "unnamed regiment" : regiment!.name}',
             style: GoogleFonts.montserrat(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -73,7 +71,7 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
                   FaIcon(
                     regiment == null
                         ? FontAwesomeIcons.question
-                        : regiment!.getTrainingType()!.getIconData(),
+                        : regiment!.trainingType!.getIconData(),
                     size: 18,
                   ),
                   const SizedBox(
@@ -81,7 +79,7 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
                   ),
                   Text(regiment == null
                           ? 'Undefined training type'
-                          : regiment!.getTrainingType()!.toString()
+                          : regiment!.trainingType!.toString()
                       //style: const TextStyle(fontWeight: FontWeight.w900),
                       ),
                   const SizedBox(

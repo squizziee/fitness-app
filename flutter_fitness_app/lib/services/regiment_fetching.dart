@@ -31,17 +31,17 @@ abstract class DatabaseAPI {
             .get();
         // filling TrainingRegiment model
         var regiment = TrainingRegiment();
-        regiment.setName(regimentSnapshot.docs[0]['name'].toString());
-        regiment.setNotes(regimentSnapshot.docs[0]['notes'].toString());
-        regiment.setId(userRegimentId);
-        regiment.setTrainingType(
-            getTrainingType(regimentSnapshot.docs[0]['training_type']));
+        regiment.name = regimentSnapshot.docs[0]['name'].toString();
+        regiment.notes = regimentSnapshot.docs[0]['notes'].toString();
+        regiment.id = userRegimentId;
+        regiment.trainingType =
+            getTrainingType(regimentSnapshot.docs[0]['training_type']);
         var schedule = regimentSnapshot.docs[0]['schedule'];
         for (var day in schedule) {
           var session = await getTrainingSessionByID(
               day['training_session'].toString().trim());
           session.dayInSchedule = day['day'];
-          regiment.addToSchedule(session);
+          regiment.schedule.add(session);
         }
         // model ready
         result.add(regiment);

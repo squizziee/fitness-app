@@ -64,8 +64,9 @@ class _SetTypePageState extends State<SetTypePage> {
               height: 40,
             ),
             submitButton(context, () {
-              Provider.of<NewTrainingRegiment>(context, listen: false)
-                  .setTrainingType(trainingTypeOptions[_value]);
+              Provider.of<NewTrainingRegiment>(context, listen: false).regiment
+                  .trainingType = trainingTypeOptions[_value];
+              Navigator.pushNamed(context, '/set_duration');
             }, 'Next')
           ],
         ),
