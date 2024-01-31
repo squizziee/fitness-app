@@ -11,6 +11,6 @@ class SessionTab extends StatefulWidget {
 class _SessionTabState extends State<SessionTab> {
   @override
   Widget build(BuildContext context) {
-    return const TrainingSessionScreen();
+    return const TrainingSessionScreen(sessionIndex: 0);
   }
 }

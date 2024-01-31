@@ -3,12 +3,12 @@ import 'package:flutter_fitness_app/models/exercise.dart';
 
 class TrainingSession {
   String id = '';
-  String name = 'default';
+  String name = 'New Training Session';
   List<Exercise> exercises = [];
   String notes = '';
   int dayInSchedule = 0;
 
-  Widget getGeneralMetricText() {
-    return const Text('undefined metric');
+  String getGeneralMetricText() {
+    return 'undefined metric';
   }
 }

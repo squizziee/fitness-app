@@ -12,7 +12,7 @@ class WeightTrainingSession extends TrainingSession {
   }
 
   @override
-  Widget getGeneralMetricText() {
-    return Text("${getTotalSetCount()} sets");
+  String getGeneralMetricText() {
+    return "${getTotalSetCount()} sets";
   }
 }

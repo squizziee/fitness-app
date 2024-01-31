@@ -24,8 +24,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const SetRegimentCalendarPage());
       //case '/select_training_session':
         //return MaterialPageRoute(builder: (_) => SelectTrainingSessionPage());
-      case '/training_session_screen':
-        return MaterialPageRoute(builder: (_) => const TrainingSessionScreen());
+      //case '/training_session_screen':
+        //return MaterialPageRoute(builder: (_) => const TrainingSessionScreen());
       case '/login':
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case '/register':

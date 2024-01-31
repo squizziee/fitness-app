@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/training_session_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,10 +12,10 @@ class SelectTrainingSessionPage extends StatefulWidget {
   State<SelectTrainingSessionPage> createState() => _SelectTrainingSessionPageState();
 }
 
-Widget _addTrainingSessionButton(BuildContext context) {
+Widget _addTrainingSessionButton(BuildContext context, int index) {
   return GestureDetector(
     onTap: () {
-      Navigator.of(context).pushNamed('/training_session_screen');
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => TrainingSessionScreen(sessionIndex: index)));
     },
     child: Container(
       padding: const EdgeInsets.all(30),
@@ -44,7 +45,7 @@ class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
     sessionIndex = widget.sessionIndex;
     return SafeArea(
       child: Column(children: [
-        _addTrainingSessionButton(context),
+        _addTrainingSessionButton(context, sessionIndex),
         Text(sessionIndex.toString())
       ],),
     );
