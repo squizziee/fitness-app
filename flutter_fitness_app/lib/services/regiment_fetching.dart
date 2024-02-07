@@ -112,11 +112,12 @@ class WeightTrainingExerciseHandler implements ExerciseHandler {
     var setList = exerciseDatabaseInstance['Sets'];
     var exercise = WeightTrainingExercise();
     for (var setDatabseInstance in setList) {
-      var set = WeightTrainingSet();
-      set.notes = setDatabseInstance['notes'];
-      set.repetitions = setDatabseInstance['repetitions'];
-      set.setIndex = setDatabseInstance['set_index'];
-      set.weightInKilograms = setDatabseInstance['weight'];
+      var set = WeightTrainingSet(
+        notes: setDatabseInstance['notes'],
+        repetitions: setDatabseInstance['repetitions'],
+        weightInKilograms: setDatabseInstance['weight'],
+        setIndex: setDatabseInstance['set_index']
+      );
       exercise.sets.add(set);
     }
     return exercise;

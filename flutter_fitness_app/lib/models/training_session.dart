@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
 
 class TrainingSession {
@@ -7,6 +6,9 @@ class TrainingSession {
   List<Exercise> exercises = [];
   String notes = '';
   int dayInSchedule = 0;
+
+  @override
+  int get hashCode => exercises.hashCode >> dayInSchedule;
 
   String getGeneralMetricText() {
     return 'undefined metric';

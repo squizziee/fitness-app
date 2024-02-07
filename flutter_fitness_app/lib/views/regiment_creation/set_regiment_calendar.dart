@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/OpenedTrainingSession.dart';
 import 'package:flutter_fitness_app/models/new_training_regiment.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/select_training_session.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/training_session_screen.dart';
@@ -38,7 +39,8 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
                         onTap: () {
                             //Navigator.of(context).push(MaterialPageRoute(builder: (context) 
                             //  => SelectTrainingSessionPage(sessionIndex: index)));
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SelectTrainingSessionPage(sessionIndex: index)));
+                            Provider.of<OpenedTrainingSession>(context, listen: false).sessionIndex = index;
+                            Navigator.of(context).pushNamed('/select_training_session');
                           },
                         child: Container(
                           decoration: BoxDecoration(

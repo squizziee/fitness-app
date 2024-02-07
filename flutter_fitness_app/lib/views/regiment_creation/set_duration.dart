@@ -19,8 +19,12 @@ class SetDurationPage extends StatefulWidget {
  void _createTrainingSessionAccordingToType(TrainingType type, BuildContext context, 
   TextEditingController controller) {
     if (type is WeightTraining) {
-      Provider.of<NewTrainingRegiment>(context, listen: false).regiment.schedule = 
-        List.filled(int.parse(controller.text), WeightTrainingSession());
+      var length = int.parse(controller.text);
+      for (int i = 0; i < length; i++) {
+        var temp = WeightTrainingSession();
+        temp.dayInSchedule = i;
+        Provider.of<NewTrainingRegiment>(context, listen: false).regiment.schedule.add(temp);
+      }
       return;
     }
     throw Exception('Wrong training type $type');

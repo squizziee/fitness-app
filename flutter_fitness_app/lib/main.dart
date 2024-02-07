@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/OpenedTrainingSession.dart';
 import 'package:flutter_fitness_app/models/new_training_regiment.dart';
 import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/route_generator.dart';
@@ -11,7 +12,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => NewTrainingRegiment()),
-    ChangeNotifierProvider(create: (context) => AppUser())
+    ChangeNotifierProvider(create: (context) => AppUser()),
+    ChangeNotifierProvider(create: (context) => OpenedTrainingSession())
   ], child: const MyApp()));
 }
 

@@ -20,6 +20,13 @@ class WeightTrainingSet {
   int setIndex = 0;
   int weightInKilograms = 0;
 
+  WeightTrainingSet({
+    required this.weightInKilograms, 
+    required this.repetitions, 
+    required this.notes,
+    required this.setIndex
+  });
+
   Widget getWidget() {
     return Column(children: [
       Text(notes),

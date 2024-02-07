@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/OpenedTrainingSession.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/training_session_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SelectTrainingSessionPage extends StatefulWidget {
-  const SelectTrainingSessionPage({super.key, required this.sessionIndex});
-
-  final int sessionIndex;
+  const SelectTrainingSessionPage({super.key});
 
   @override
   State<SelectTrainingSessionPage> createState() => _SelectTrainingSessionPageState();
@@ -15,7 +15,7 @@ class SelectTrainingSessionPage extends StatefulWidget {
 Widget _addTrainingSessionButton(BuildContext context, int index) {
   return GestureDetector(
     onTap: () {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => TrainingSessionScreen(sessionIndex: index)));
+      Navigator.of(context).pushNamed('/training_session_screen');
     },
     child: Container(
       padding: const EdgeInsets.all(30),
@@ -42,7 +42,7 @@ class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
 
   @override
   Widget build(BuildContext context) {
-    sessionIndex = widget.sessionIndex;
+    sessionIndex = Provider.of<OpenedTrainingSession>(context).sessionIndex;
     return SafeArea(
       child: Column(children: [
         _addTrainingSessionButton(context, sessionIndex),
