@@ -37,7 +37,8 @@ Functionality:
 
 Application class diagram:
 
-![oop](https://github.com/squizziee/fitness-app/assets/50028911/21840905-46ef-4cf9-af94-6574849348d0)
+![Диаграмма без названия](https://github.com/squizziee/fitness-app/assets/50028911/40e2c6ba-6123-41ab-a240-2c1c1128d39a)
+
 
 Model description:
 + TrainingRegiment – an instance of a training regiment. Contains general info including name, Firestore ID in regiment collection, type of training, description, length of schedule and the schedule itself.
