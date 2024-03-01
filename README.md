@@ -38,3 +38,13 @@ Functionality:
 Application class diagram:
 
 ![oop](https://github.com/squizziee/fitness-app/assets/50028911/21840905-46ef-4cf9-af94-6574849348d0)
+
+Model description:
++ TrainingRegiment – an instance of a training regiment. Contains general info including name, Firestore ID in regiment collection, type of training, description, length of schedule and the schedule itself.
++ TrainingType – type of training, contains an icon for visual interface.
++ TrainingSession – an instance of a training session. Contains Firestore ID in session collection, name, notes and list of exercises.It is also a parent class. If a new type of training is added to the application, this class needs to be inherited (e.g. SwimmingTrainingSession).
++ Exercise – an instance of an exercise. Contains type of exercise (movement) and notes. It is a parent class just like the previous one. Needs to be inherited to add new training type.
++ ExerciseType – type of movement (e.g. Squat, Bench Press, Run, etc). It is retrieved from Firestore and searched through with CustomSearchDelegate.
++ GoalWatcher – goal manager. Notifies the user when a goal is due.
++ Goal – goal instance. Contains goal description, exercise and deadline for a goal
+
