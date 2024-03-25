@@ -1,31 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ExerciseType {
+class WeightExerciseType {
   String name = '';
   String bodyPart = '';
   String iconURL = '';
   String category = '';
 
-  ExerciseType(
+  WeightExerciseType(
       {required this.name,
       required this.bodyPart,
       required this.iconURL,
       required this.category});
 
-  factory ExerciseType.fromJson(Map<String, dynamic> data) {
+  factory WeightExerciseType.fromJson(Map<String, dynamic> data) {
     final String name = data['name'];
     final String bodyPart = data['bodypart'];
     final String iconURL = data['icon_url'];
     final String category = data['category'];
-    return ExerciseType(
+    return WeightExerciseType(
         name: name, bodyPart: bodyPart, iconURL: iconURL, category: category);
   }
 
-  factory ExerciseType.fromFirestore(
+  factory WeightExerciseType.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot,
       SnapshotOptions? options) {
     final data = snapshot.data();
-    return ExerciseType(
+    return WeightExerciseType(
         name: data?['name'],
         bodyPart: data?['bodypart'],
         iconURL: data?['icon_url'],

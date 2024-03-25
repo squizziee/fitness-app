@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'package:flutter_fitness_app/models/new_training_regiment.dart';
+import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/entry_field.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/title.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/submit_button.dart';
@@ -15,6 +13,7 @@ class SetNamePage extends StatefulWidget {
 
 class _SetNamePageState extends State<SetNamePage> {
   final TextEditingController _controller = TextEditingController();
+  final RegimentService _regimentService = RegimentService();
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +35,8 @@ class _SetNamePageState extends State<SetNamePage> {
               height: 20,
             ),
             submitButton(context, () {
-              Provider.of<NewTrainingRegiment>(context, listen: false).regiment
-                  .name = _controller.text;
+              _regimentService.createAndOpenEmptyRegiment(context);
+              _regimentService.setName(context, _controller.text);
               Navigator.pushNamed(context, '/set_type');
             }, 'Next')
           ],

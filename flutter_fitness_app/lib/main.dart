@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/OpenedTrainingSession.dart';
-import 'package:flutter_fitness_app/models/new_training_regiment.dart';
+import 'package:flutter_fitness_app/repos/current_exercise.dart';
+import 'package:flutter_fitness_app/repos/current_training_session.dart';
+import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/route_generator.dart';
 import 'package:flutter_fitness_app/views/authentication/auth_widget_tree.dart';
@@ -11,9 +12,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => NewTrainingRegiment()),
     ChangeNotifierProvider(create: (context) => AppUser()),
-    ChangeNotifierProvider(create: (context) => OpenedTrainingSession())
+    ChangeNotifierProvider(create: (context) => CurrentTrainingRegiment()),
+    ChangeNotifierProvider(create: (context) => CurrentTrainingSession()),
+    ChangeNotifierProvider(create: (context) => CurrentExercise())
   ], child: const MyApp()));
 }
 

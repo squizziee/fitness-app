@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/OpenedTrainingSession.dart';
+import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/repos/current_training_session.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
-import 'package:flutter_fitness_app/models/new_training_regiment.dart';
-import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
-import 'package:flutter_fitness_app/views/regiment_creation/weight_exercise_creation/set_exercise.dart';
-import 'package:flutter_fitness_app/views/regiment_creation/weight_exercise_creation/weight_training_exercises_list_screen.dart';
+import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
+import 'package:flutter_fitness_app/services/exercise_service.dart';
+import 'package:flutter_fitness_app/services/session_service.dart';
+import 'package:flutter_fitness_app/services/weight_exercise_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -18,18 +18,16 @@ class TrainingSessionScreen extends StatefulWidget {
 }
 
 class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
-  TrainingRegiment? regiment;
+  final SessionService _sessionService = SessionService();
+  ExerciseService? _exerciseService;
 
-  int sessionIndex = -1;
-
-  Widget _title(int index) {
+  Widget _title(int sessionIndex, String regimentName) {
     return Column(
       children: [
         Text('Training Session',
             style: GoogleFonts.montserrat(
                 fontSize: 15, fontWeight: FontWeight.w700, height: 1)),
-        Text(
-            'Day ${index + 1} on ${regiment == null ? "unnamed regiment" : regiment!.name}',
+        Text('Day ${sessionIndex + 1} on $regimentName',
             style: GoogleFonts.montserrat(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -41,14 +39,15 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
 
   Widget _exercisePreview(Exercise exercise, BuildContext context, int index) {
     return StatefulBuilder(builder: (context, setState) {
-      if (regiment!.schedule[sessionIndex].exercises.contains(exercise)) {
+      var session = Provider.of<CurrentTrainingSession>(context).session;
+      if (session!.exercises.contains(exercise)) {
         return GestureDetector(
           onLongPress: () => showDialog<String>(
               context: context,
               builder: (context) => AlertDialog(
                     title: const Text('Confirmation'),
                     content: Text(
-                        'Are you sure you want to delete "${exercise.exerciseType!.name}"?'),
+                        'Are you sure you want to delete "${exercise.getExerciseTypeName()}"?'),
                     actions: <Widget>[
                       TextButton(
                           onPressed: () {
@@ -57,8 +56,7 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
                           child: const Text('Cancel')),
                       TextButton(
                           onPressed: () {
-                            regiment!.schedule[sessionIndex].exercises
-                                .remove(exercise);
+                            _sessionService.removeExercise(context, exercise);
                             setState(() {});
                             Navigator.of(context).pop();
                           },
@@ -69,8 +67,7 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
                     ],
                   )),
           onTap: () {
-            Provider.of<OpenedTrainingSession>(context, listen: false)
-                .exerciseIndex = index;
+            _exerciseService!.openExercise(context, index);
             Navigator.of(context)
                 .pushNamed('/set_exercise')
                 .then((value) => setState(
@@ -83,7 +80,7 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
             decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 borderRadius: const BorderRadius.all(Radius.circular(10))),
-            child: exercise.getExercisePreviewWidgetLayout(),
+            child: Text(exercise.getExerciseTypeName()),
           ),
         );
       } else {
@@ -94,15 +91,23 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    sessionIndex =
-        Provider.of<OpenedTrainingSession>(context, listen: false).sessionIndex;
-    regiment = Provider.of<NewTrainingRegiment>(context).regiment;
-    var session = regiment!.schedule[sessionIndex];
+    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment;
+    var session = Provider.of<CurrentTrainingSession>(context).session;
+
+    if (regiment!.trainingType is WeightTraining) {
+      _exerciseService = WeightExerciseService();
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: _title(sessionIndex),
+          title: _title(session!.dayInSchedule, regiment.name!),
           centerTitle: true,
+          bottom: PreferredSize(
+            preferredSize: Size(MediaQuery.of(context).size.width, 1),
+            child: Container(
+                height: 1, color: const Color.fromRGBO(0, 0, 0, 0.05)),
+          ),
         ),
         body: StatefulBuilder(builder: (context, setState) {
           return Column(children: [
@@ -122,17 +127,13 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
                     Wrap(
                       children: [
                         FaIcon(
-                          regiment == null
-                              ? FontAwesomeIcons.question
-                              : regiment!.trainingType!.getIconData(),
+                          regiment.trainingType!.getIconData(),
                           size: 18,
                         ),
                         const SizedBox(
                           width: 5,
                         ),
-                        Text(regiment == null
-                                ? 'Undefined training type'
-                                : regiment!.trainingType!.toString()
+                        Text(regiment.trainingType!.toString()
                             //style: const TextStyle(fontWeight: FontWeight.w900),
                             ),
                         const SizedBox(
@@ -153,8 +154,7 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: () {
-                  Provider.of<OpenedTrainingSession>(context, listen: false)
-                      .exerciseIndex = -1;
+                  _exerciseService!.createAndOpenEmptyExercise(context);
                   Navigator.of(context)
                       .pushNamed('/set_exercise')
                       .then((value) => setState(
@@ -176,12 +176,10 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: regiment!.schedule[sessionIndex].exercises.length,
+                  itemCount: session.exercises.length,
                   itemBuilder: (context, index) {
                     return _exercisePreview(
-                        regiment!.schedule[sessionIndex].exercises[index],
-                        context,
-                        index);
+                        session.exercises[index], context, index);
                   }),
             ),
           ]);

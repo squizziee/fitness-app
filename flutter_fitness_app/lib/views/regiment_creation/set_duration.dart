@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
-import 'package:flutter_fitness_app/models/training_types.dart';
-import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
+import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/number_entry_field.dart';
-import 'package:provider/provider.dart';
-
-import 'package:flutter_fitness_app/models/new_training_regiment.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/title.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/submit_button.dart';
 
@@ -16,22 +11,9 @@ class SetDurationPage extends StatefulWidget {
   State<SetDurationPage> createState() => _SetDurationPageState();
 }
 
- void _createTrainingSessionAccordingToType(TrainingType type, BuildContext context, 
-  TextEditingController controller) {
-    if (type is WeightTraining) {
-      var length = int.parse(controller.text);
-      for (int i = 0; i < length; i++) {
-        var temp = WeightTrainingSession();
-        temp.dayInSchedule = i;
-        Provider.of<NewTrainingRegiment>(context, listen: false).regiment.schedule.add(temp);
-      }
-      return;
-    }
-    throw Exception('Wrong training type $type');
- }
-
 class _SetDurationPageState extends State<SetDurationPage> {
   final TextEditingController _controller = TextEditingController();
+  final RegimentService _regimentService = RegimentService();
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +35,8 @@ class _SetDurationPageState extends State<SetDurationPage> {
               height: 20,
             ),
             submitButton(context, () {
-              Provider.of<NewTrainingRegiment>(context, listen: false).regiment
-                  .cycleDurationInDays = int.parse(_controller.text);
-              _createTrainingSessionAccordingToType(
-                Provider.of<NewTrainingRegiment>(context, listen: false).regiment.trainingType!, context, _controller);
+              _regimentService.setCycleDurationInDays(
+                  context, int.parse(_controller.text));
               Navigator.pushNamed(context, '/set_regiment_calendar');
             }, 'Next')
           ],
