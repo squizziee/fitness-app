@@ -8,7 +8,7 @@ import 'package:flutter_fitness_app/views/regiment_creation/set_name.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/set_regiment_calendar.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/set_type.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/training_session_screen.dart';
-import 'package:flutter_fitness_app/views/regiment_creation/weight_exercise_creation/set_exercise.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/weight_exercise_creation/set_weight_exercise.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -30,7 +30,7 @@ class RouteGenerator {
       case '/training_session_screen':
         return MaterialPageRoute(builder: (_) => const TrainingSessionScreen());
       case '/set_exercise':
-        return MaterialPageRoute(builder: (_) => const SetExercisePage());
+        return MaterialPageRoute(builder: (_) => const SetWeightExercisePage());
       case '/login':
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case '/register':

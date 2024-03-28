@@ -8,10 +8,10 @@ void fillDatabaseWithExercises(String json) {
   var exerciseCollection = FirebaseFirestore.instance
       .collection('strength_exercises')
       .withConverter(
-          fromFirestore: ExerciseType.fromFirestore,
-          toFirestore: (ExerciseType e, options) => e.toFirestore());
+          fromFirestore: WeightExerciseType.fromFirestore,
+          toFirestore: (WeightExerciseType e, options) => e.toFirestore());
   for (var obj in parsedJson) {
-    var exerciseType = ExerciseType.fromJson(obj);
+    var exerciseType = WeightExerciseType.fromJson(obj);
     exerciseCollection.add(exerciseType);
   }
 }

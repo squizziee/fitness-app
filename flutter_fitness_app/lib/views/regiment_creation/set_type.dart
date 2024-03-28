@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-
-import 'package:flutter_fitness_app/models/new_training_regiment.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/title.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/submit_button.dart';
 
@@ -16,6 +14,8 @@ class SetTypePage extends StatefulWidget {
 
 class _SetTypePageState extends State<SetTypePage> {
   int _value = -1;
+  final RegimentService _regimentService = RegimentService();
+
   List<TrainingType> trainingTypeOptions = [
     WeightTraining(),
     Swimming(),
@@ -64,8 +64,8 @@ class _SetTypePageState extends State<SetTypePage> {
               height: 40,
             ),
             submitButton(context, () {
-              Provider.of<NewTrainingRegiment>(context, listen: false).regiment
-                  .trainingType = trainingTypeOptions[_value];
+              _regimentService.setTrainingType(
+                  context, trainingTypeOptions[_value]);
               Navigator.pushNamed(context, '/set_duration');
             }, 'Next')
           ],
