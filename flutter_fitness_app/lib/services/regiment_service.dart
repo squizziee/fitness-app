@@ -63,6 +63,27 @@ class RegimentService {
         .schedule = schedule;
   }
 
+  void startRegiment(BuildContext context) {
+    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate =
+        DateTime.now();
+  }
+
+  void stopRegiment(BuildContext context) {
+    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate = null;
+  }
+
+  void pauseRegiment(BuildContext context) {
+    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    regiment.dayOfPause = regiment.getCurrentDay();
+  }
+
+  void resumeRegiment(BuildContext context) {
+    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    regiment.startDate =
+        DateTime.now().subtract(Duration(days: regiment.dayOfPause));
+    regiment.dayOfPause = -1;
+  }
+
   void saveRegimentToDatabase() {
     // next time...
   }

@@ -1,8 +1,17 @@
 // ignore_for_file: unused_field
 
 class Goal {
-  DateTime? _deadline;
-  String? _exerciseUID;
-  String? _metric;
-  int? _number;
+  DateTime? deadline;
+  String? exerciseName;
+  Set<GoalMetric>? metrics;
+
+  Goal({this.deadline, this.exerciseName, this.metrics});
+}
+
+class GoalMetric {
+  String? metricName;
+  double? metricSize;
+  String? metricScale = "";
+
+  GoalMetric({this.metricName, this.metricSize, this.metricScale});
 }

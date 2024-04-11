@@ -1,6 +1,6 @@
 import 'package:flutter_fitness_app/models/exercise.dart';
 
-class TrainingSession {
+abstract class TrainingSession {
   String id = '';
   String name = 'New Training Session';
   List<Exercise> exercises = [];

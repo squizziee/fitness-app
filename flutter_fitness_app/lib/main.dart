@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/repos/current_exercise.dart';
+import 'package:flutter_fitness_app/repos/current_goal.dart';
 import 'package:flutter_fitness_app/repos/current_training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/models/user.dart';
@@ -15,7 +16,8 @@ Future<void> main() async {
     ChangeNotifierProvider(create: (context) => AppUser()),
     ChangeNotifierProvider(create: (context) => CurrentTrainingRegiment()),
     ChangeNotifierProvider(create: (context) => CurrentTrainingSession()),
-    ChangeNotifierProvider(create: (context) => CurrentExercise())
+    ChangeNotifierProvider(create: (context) => CurrentExercise()),
+    ChangeNotifierProvider(create: (context) => CurrentGoal()),
   ], child: const MyApp()));
 }
 

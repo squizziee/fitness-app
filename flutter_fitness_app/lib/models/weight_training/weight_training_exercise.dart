@@ -1,5 +1,6 @@
 import 'package:flutter_fitness_app/models/exercise.dart';
-import 'package:flutter_fitness_app/models/exercise_type.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_training_set.dart';
 
 class WeightTrainingExercise extends Exercise {
   WeightExerciseType? exerciseType;
@@ -9,17 +10,4 @@ class WeightTrainingExercise extends Exercise {
   String getExerciseTypeName() {
     return exerciseType == null ? "" : exerciseType!.name;
   }
-}
-
-class WeightTrainingSet {
-  String notes = '';
-  int repetitions = 0;
-  int setIndex = 0;
-  double weightInKilograms = 0;
-
-  WeightTrainingSet(
-      {required this.weightInKilograms,
-      required this.repetitions,
-      required this.notes,
-      required this.setIndex});
 }

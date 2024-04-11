@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_fitness_app/models/exercise_type.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_exercise.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_training_set.dart';
 
-abstract class DatabaseAPI {
+// TODO Rewrite all this to instances
+abstract class DatabaseService {
   static var handlers = {
     'strength_training_sessions': WeightTrainingExerciseHandler()
   };
@@ -42,13 +44,13 @@ abstract class DatabaseAPI {
             getTrainingType(regimentSnapshot.docs[0]['training_type']);
 
         var scheduleSnapshot = regimentSnapshot.docs[0]['schedule'];
-        for (var day in scheduleSnapshot) {
-          var session = await getTrainingSessionByID(
-              day['training_session'].toString().trim());
+        // for (var day in scheduleSnapshot) {
+        //   var session = await getTrainingSessionByID(
+        //       day['training_session'].toString().trim());
 
-          session.dayInSchedule = day['day'];
-          schedule.add(session);
-        }
+        //   session.dayInSchedule = day['day'];
+        //   schedule.add(session);
+        // }
         var regiment = TrainingRegiment(
             name: name,
             notes: notes,
@@ -62,6 +64,27 @@ abstract class DatabaseAPI {
     }
     return result;
   }
+
+  // static Future<List<TrainingRegiment>> getUserRegiments(String userId) async {
+  //   List<TrainingRegiment> result = [];
+  //   var userCollection = FirebaseFirestore.instance.collection('users');
+  //   var userSnapshot = await userCollection.doc("users/$userId").get();
+
+  //   assert(userSnapshot.data()!.isNotEmpty);
+
+  //   var regimentIdList = userSnapshot.data()!["regiments"];
+  //   for (var regimentId in regimentIdList) {
+  //     result.add(getRegiment(regimentId));
+  //   }
+  //   return result;
+  // }
+
+  // static TrainingRegiment getRegiment(dynamic reference) {
+  //   var regimentCollection = FirebaseFirestore.instance.collection('regiments');
+  //   if (reference.get()) {
+
+  //   }
+  // }
 
   static TrainingType getTrainingType(dynamic str) {
     if (str == 'weightTraining') {
@@ -90,27 +113,27 @@ abstract class DatabaseAPI {
     throw Exception('Wrong exercise ID has been provided');
   }
 
-  static Future<TrainingSession> getTrainingSessionByID(String id) async {
-    var result = TrainingSession();
-    for (var key in handlers.keys) {
-      var trainingSessionCollection =
-          FirebaseFirestore.instance.collection(key);
-      var trainingSessionQuerySnapshot = await trainingSessionCollection
-          .where(FieldPath.documentId, isEqualTo: id)
-          .get();
-      var sessionName = trainingSessionQuerySnapshot.docs[0]['name'];
-      var sessionNotes = trainingSessionQuerySnapshot.docs[0]['notes'];
-      var exercises = trainingSessionQuerySnapshot.docs[0]['exercises'];
-      for (var exerciseDatabaseInstance in exercises) {
-        var exercise = await handlers[key]!.handle(exerciseDatabaseInstance);
-        result.exercises.add(exercise);
-      }
-      result.name = sessionName;
-      result.notes = sessionNotes;
-      result.id = id;
-    }
-    return result;
-  }
+  // static Future<TrainingSession> getTrainingSessionByID(String id) async {
+  //   var result = TrainingSession();
+  //   for (var key in handlers.keys) {
+  //     var trainingSessionCollection =
+  //         FirebaseFirestore.instance.collection(key);
+  //     var trainingSessionQuerySnapshot = await trainingSessionCollection
+  //         .where(FieldPath.documentId, isEqualTo: id)
+  //         .get();
+  //     var sessionName = trainingSessionQuerySnapshot.docs[0]['name'];
+  //     var sessionNotes = trainingSessionQuerySnapshot.docs[0]['notes'];
+  //     var exercises = trainingSessionQuerySnapshot.docs[0]['exercises'];
+  //     for (var exerciseDatabaseInstance in exercises) {
+  //       var exercise = await handlers[key]!.handle(exerciseDatabaseInstance);
+  //       result.exercises.add(exercise);
+  //     }
+  //     result.name = sessionName;
+  //     result.notes = sessionNotes;
+  //     result.id = id;
+  //   }
+  //   return result;
+  // }
 }
 
 abstract class ExerciseHandler {
@@ -130,7 +153,7 @@ class WeightTrainingExerciseHandler implements ExerciseHandler {
           setIndex: setDatabseInstance['set_index']);
       exercise.sets.add(set);
     }
-    exercise.exerciseType = await DatabaseAPI.getExerciseTypeByID(
+    exercise.exerciseType = await DatabaseService.getExerciseTypeByID(
         exerciseDatabaseInstance['exercise_link'].toString().trim());
     return exercise;
   }
