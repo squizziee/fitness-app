@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_fitness_app/models/exercise_type.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 
 void fillDatabaseWithExercises(String json) {
   final parsedJson = jsonDecode(json);

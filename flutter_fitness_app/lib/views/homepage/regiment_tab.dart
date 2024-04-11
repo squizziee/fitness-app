@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/services/regiment_fetching.dart';
+import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -53,7 +53,8 @@ class _RegimentTabState extends State<RegimentTab> {
   @override
   void initState() {
     super.initState();
-    regiments = DatabaseAPI.getUserRegiments('szNuV93yQ3OZ9ZoVQGpJkJiZoNp1');
+    regiments =
+        DatabaseService.getUserRegiments('szNuV93yQ3OZ9ZoVQGpJkJiZoNp1');
   }
 
   @override

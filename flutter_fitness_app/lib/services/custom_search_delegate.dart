@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/exercise_type.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomSearchDelegate extends SearchDelegate<WeightExerciseType> {

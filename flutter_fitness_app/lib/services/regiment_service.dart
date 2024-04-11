@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/combat_training/combat_training_session.dart';
+import 'package:flutter_fitness_app/models/cycling/cycling_session.dart';
+import 'package:flutter_fitness_app/models/rowing/rowing_session.dart';
+import 'package:flutter_fitness_app/models/running/running_session.dart';
+import 'package:flutter_fitness_app/models/swimming/swimming_session.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
@@ -53,6 +58,16 @@ class RegimentService {
       TrainingSession? session;
       if (trainingType is WeightTraining) {
         session = WeightTrainingSession();
+      } else if (trainingType is Swimming) {
+        session = SwimmingSession();
+      } else if (trainingType is Cycling) {
+        session = CyclingSession();
+      } else if (trainingType is Running) {
+        session = RunningSession();
+      } else if (trainingType is Rowing) {
+        session = RowingSession();
+      } else if (trainingType is CombatTraining) {
+        session = CombatTrainingSession();
       }
       session!.dayInSchedule = i;
       schedule.add(session);
@@ -61,6 +76,27 @@ class RegimentService {
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
         .regiment!
         .schedule = schedule;
+  }
+
+  void startRegiment(BuildContext context) {
+    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate =
+        DateTime.now();
+  }
+
+  void stopRegiment(BuildContext context) {
+    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate = null;
+  }
+
+  void pauseRegiment(BuildContext context) {
+    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    regiment.dayOfPause = regiment.getCurrentDay();
+  }
+
+  void resumeRegiment(BuildContext context) {
+    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    regiment.startDate =
+        DateTime.now().subtract(Duration(days: regiment.dayOfPause));
+    regiment.dayOfPause = -1;
   }
 
   void saveRegimentToDatabase() {

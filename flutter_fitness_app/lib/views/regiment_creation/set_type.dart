@@ -23,7 +23,6 @@ class _SetTypePageState extends State<SetTypePage> {
     Cycling(),
     Rowing(),
     CombatTraining(),
-    Mixed(),
   ];
 
   @override

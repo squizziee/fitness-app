@@ -55,18 +55,6 @@ class Running extends TrainingType {
   }
 }
 
-class Mixed extends TrainingType {
-  @override
-  String toString() {
-    return "Mixed";
-  }
-
-  @override
-  IconData getIconData() {
-    return FontAwesomeIcons.rotateRight;
-  }
-}
-
 class Rowing extends TrainingType {
   @override
   String toString() {
