@@ -23,6 +23,6 @@ class SwimmingSession extends TrainingSession {
 
   @override
   String getGeneralMetricText() {
-    return "${getTotalSetCount()} sets";
+    return "${getTotalDistance()} km";
   }
 }
