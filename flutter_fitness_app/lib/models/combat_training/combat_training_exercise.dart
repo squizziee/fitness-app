@@ -6,6 +6,8 @@ class CombatTrainingExercise extends Exercise {
   int? heartbeatCeiling;
   Duration? time;
 
+  CombatTrainingExercise({required super.notes, required super.id});
+
   @override
   String getExerciseTypeName() {
     return exerciseType == null ? "" : exerciseType!.name;

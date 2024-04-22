@@ -7,6 +7,12 @@ abstract class TrainingSession {
   String notes = '';
   int dayInSchedule = 0;
 
+  TrainingSession(
+      {required this.id,
+      required this.name,
+      required this.notes,
+      required this.exercises,
+      required this.dayInSchedule});
   @override
   int get hashCode => exercises.hashCode >> dayInSchedule;
 

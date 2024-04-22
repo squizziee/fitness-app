@@ -15,6 +15,7 @@ class TrainingRegiment {
 
   TrainingRegiment(
       {this.name,
+      this.id,
       this.notes,
       this.trainingType,
       this.schedule,

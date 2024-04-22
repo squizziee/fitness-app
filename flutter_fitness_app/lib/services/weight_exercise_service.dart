@@ -76,7 +76,7 @@ class WeightExerciseService extends ExerciseService {
   void createAndOpenEmptyExercise(BuildContext context) {
     var session =
         Provider.of<CurrentTrainingSession>(context, listen: false).session;
-    var exercise = WeightTrainingExercise();
+    var exercise = WeightTrainingExercise(sets: [], notes: '', id: '');
     session!.exercises.add(exercise);
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
     Provider.of<CurrentTrainingSession>(context, listen: false).session =

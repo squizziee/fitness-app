@@ -8,6 +8,8 @@ class CyclingExercise extends Exercise {
   int? heartbeatCeiling;
   Duration? time;
 
+  CyclingExercise({required super.notes, required super.id});
+
   @override
   String getExerciseTypeName() {
     return exerciseType == null ? "" : exerciseType!.name;

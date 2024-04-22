@@ -57,17 +57,23 @@ class RegimentService {
     for (int i = 0; i < cycleDurationInDays; i++) {
       TrainingSession? session;
       if (trainingType is WeightTraining) {
-        session = WeightTrainingSession();
+        session = WeightTrainingSession(
+            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Swimming) {
-        session = SwimmingSession();
+        session = SwimmingSession(
+            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Cycling) {
-        session = CyclingSession();
+        session = CyclingSession(
+            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Running) {
-        session = RunningSession();
+        session = RunningSession(
+            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Rowing) {
-        session = RowingSession();
+        session = RowingSession(
+            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is CombatTraining) {
-        session = CombatTrainingSession();
+        session = CombatTrainingSession(
+            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
       }
       session!.dayInSchedule = i;
       schedule.add(session);
