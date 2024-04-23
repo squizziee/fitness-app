@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   final User? user = Auth().currentUser;
   int _selectedIndex = 0;
   List<Widget> tabs = [
-    const RegimentTab(),
+    RegimentTab(),
     const SessionTab(),
     const GoalTab(),
     const ProfileTab()

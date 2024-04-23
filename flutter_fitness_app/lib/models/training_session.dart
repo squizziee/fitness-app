@@ -1,7 +1,7 @@
 import 'package:flutter_fitness_app/models/exercise.dart';
 
 abstract class TrainingSession {
-  String id = '';
+  dynamic id;
   String name = 'New Training Session';
   List<Exercise> exercises = [];
   String notes = '';

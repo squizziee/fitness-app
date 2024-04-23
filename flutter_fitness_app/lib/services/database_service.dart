@@ -1,12 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_app_serialization/weight_training_firestore_serializer.dart';
-import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
-import 'package:flutter_fitness_app/models/weight_training/weight_training_exercise.dart';
-import 'package:flutter_fitness_app/models/weight_training/weight_training_set.dart';
 
 // TODO Rewrite all this to instances
 // abstract class DatabaseService {
@@ -134,31 +129,7 @@ import 'package:flutter_fitness_app/models/weight_training/weight_training_set.d
 //   //   return result;
 //   // }
 // }
-
-abstract class ExerciseHandler {
-  Future<Exercise> handle(dynamic exerciseDatabaseInstance);
-}
-
-class WeightTrainingHandler implements ExerciseHandler {
-  @override
-  // TODO rewrite with serializers
-  Future<Exercise> handle(dynamic exerciseDatabaseInstance) async {
-    // var setList = exerciseDatabaseInstance['Sets'];
-    // var exercise = WeightTrainingExercise(sets: [], notes: '', id: '');
-    // for (var setDatabseInstance in setList) {
-    //   var set = WeightTrainingSet(
-    //       notes: setDatabseInstance['notes'],
-    //       repetitions: setDatabseInstance['repetitions'],
-    //       weightInKilograms: setDatabseInstance['weight'],
-    //       setIndex: setDatabseInstance['set_index']);
-    //   exercise.sets.add(set);
-    // }
-    // exercise.exerciseType = await DatabaseService.getExerciseTypeByID(
-    //     exerciseDatabaseInstance['exercise_id'].toString().trim());
-    // return
-  }
-}
-
+// TODO Rewrite this to just call each session serialization
 class DatabaseService {
   Future<List<TrainingRegiment>> getUserRegiments(String userId) async {
     var db = FirebaseFirestore.instance;
@@ -167,20 +138,20 @@ class DatabaseService {
 
     // Final result to be stored here
     List<TrainingRegiment> regiments = [];
-
+    //var obj = (await db.doc(userId).get()).data;
     // Iterate through all regiment refs, e.g. /regiments/random_id_string
     for (var regimentRef in user["regiments"]) {
-      var regimentDoc = (await db.doc(regimentRef).get()).data();
-      regiments
-          .add(await serializer.deserializeRegiment(regimentDoc, regimentRef));
+      var regimentDoc = (await regimentRef.get()).data()!;
+      var regiment =
+          await serializer.deserializeRegiment(regimentDoc, regimentRef);
+      regiments.add(regiment);
     }
     return regiments;
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getExerciseTypeByID(
-      String id) async {
-    var exerciseType = FirebaseFirestore.instance.doc(id);
-    return exerciseType.get();
+      ref) async {
+    return ref.get();
   }
 
   TrainingType getTrainingType(String str) {

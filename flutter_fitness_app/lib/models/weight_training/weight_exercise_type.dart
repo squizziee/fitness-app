@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WeightExerciseType {
+  dynamic id;
   String name = '';
   String bodyPart = '';
   String iconURL = '';

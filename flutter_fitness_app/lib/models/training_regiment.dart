@@ -3,7 +3,7 @@ import 'package:flutter_fitness_app/models/training_session.dart';
 
 class TrainingRegiment {
   // TODO make this able to be set only one time
-  String? id;
+  dynamic id;
   String? name;
   String? notes;
   TrainingType? trainingType;
