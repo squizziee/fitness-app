@@ -6,7 +6,11 @@ class SwimmingExercise extends Exercise {
   SwimmingExerciseType? exerciseType;
   List<SwimmingSet> sets = [];
 
-  SwimmingExercise({required super.notes, required super.id});
+  SwimmingExercise(
+      {required super.notes,
+      required super.id,
+      required this.sets,
+      required this.exerciseType});
 
   @override
   String getExerciseTypeName() {

@@ -192,7 +192,7 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
                     ],
                   ),
                 ),
-                Container(
+                SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(wset.notes))
               ],

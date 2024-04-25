@@ -61,7 +61,7 @@ class _RegimentTabState extends State<RegimentTab> {
   final RegimentService _regimentService = RegimentService();
   @override
   void initState() {
-    regiments = _dbService.getUserRegiments('/users/abWbLcBiD2xRyYTI5ZQ0');
+    regiments = _dbService.getUserRegimentsNew('/users/abWbLcBiD2xRyYTI5ZQ0');
     super.initState();
   }
 

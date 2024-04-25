@@ -5,6 +5,7 @@ class SwimmingSet {
   double? distanceInMeters;
   Duration? time;
   String? notes = "";
+  int setIndex;
 
   SwimmingSet(
       {this.isPreset,
@@ -12,5 +13,6 @@ class SwimmingSet {
       required this.repetitions,
       required this.distanceInMeters,
       required this.time,
+      required this.setIndex,
       this.notes});
 }

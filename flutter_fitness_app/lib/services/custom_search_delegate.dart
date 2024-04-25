@@ -14,7 +14,7 @@ class CustomSearchDelegate extends SearchDelegate<WeightExerciseType> {
   Widget _searchResultWidget(WeightExerciseType e, Function func) {
     return GestureDetector(
       onTap: () => func,
-      child: Container(
+      child: SizedBox(
         height: 50,
         child: Wrap(children: [
           Image.network(

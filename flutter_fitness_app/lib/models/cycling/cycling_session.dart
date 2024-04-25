@@ -12,7 +12,7 @@ class CyclingSession extends TrainingSession {
   double getTotalDistance() {
     double total = 0;
     for (var e in exercises) {
-      total += (e as CyclingExercise).distanceInKilometers!;
+      total += (e as CyclingExercise).distanceInMeters!;
     }
     return total;
   }

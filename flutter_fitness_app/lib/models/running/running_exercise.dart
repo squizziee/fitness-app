@@ -1,13 +1,18 @@
-import 'package:flutter_fitness_app/models/cycling/cycling_exercise_type.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/running/running_exercise_type.dart';
 
 class RunningExercise extends Exercise {
-  CyclingExerciseType? exerciseType;
-  double? distanceInKilometers;
+  RunningExerciseType? exerciseType;
+  double? distanceInMeters;
   int? heartbeatCeiling;
   Duration? time;
 
-  RunningExercise({required super.notes, required super.id});
+  RunningExercise(
+      {required super.notes,
+      required super.id,
+      required this.distanceInMeters,
+      required this.exerciseType,
+      this.heartbeatCeiling});
 
   @override
   String getExerciseTypeName() {

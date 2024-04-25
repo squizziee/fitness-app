@@ -8,7 +8,8 @@ class WeightExerciseType {
   String category = '';
 
   WeightExerciseType(
-      {required this.name,
+      {this.id,
+      required this.name,
       required this.bodyPart,
       required this.iconURL,
       required this.category});

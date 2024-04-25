@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitness_app_serialization/firestore_serializer.dart';
 import 'package:fitness_app_serialization/weight_training_firestore_serializer.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 
 // TODO Rewrite all this to instances
 // abstract class DatabaseService {
@@ -129,21 +131,50 @@ import 'package:flutter_fitness_app/models/training_types.dart';
 //   //   return result;
 //   // }
 // }
-// TODO Rewrite this to just call each session serialization
 class DatabaseService {
   Future<List<TrainingRegiment>> getUserRegiments(String userId) async {
     var db = FirebaseFirestore.instance;
     var user = (await db.doc(userId).get()).data()!;
-    var serializer = WeightTrainingFirestoreSerializer();
+    FirestoreSerializer? serializer;
 
     // Final result to be stored here
     List<TrainingRegiment> regiments = [];
-    //var obj = (await db.doc(userId).get()).data;
-    // Iterate through all regiment refs, e.g. /regiments/random_id_string
+
+    // Iterate through all regiments
     for (var regimentRef in user["regiments"]) {
       var regimentDoc = (await regimentRef.get()).data()!;
+      if (getTrainingType(regimentDoc["training_type"]) is WeightTraining) {
+        serializer = WeightTrainingFirestoreSerializer();
+      }
       var regiment =
-          await serializer.deserializeRegiment(regimentDoc, regimentRef);
+          await serializer!.deserializeRegiment(regimentDoc, regimentRef);
+      regiments.add(regiment);
+    }
+    return regiments;
+  }
+
+  Future<List<TrainingRegiment>> getUserRegimentsNew(String userId) async {
+    var db = FirebaseFirestore.instance;
+    var user = (await db.doc(userId).get()).data()!;
+    WeightTrainingFirestoreSerializer? serializer;
+
+    // Final result to be stored here
+    List<TrainingRegiment> regiments = [];
+
+    // Iterate through all regiments
+    for (var regimentRef in user["regiments"]) {
+      var regimentDoc = (await regimentRef.get()).data()!;
+      if (getTrainingType(regimentDoc["training_type"]) is WeightTraining) {
+        // serializer = WeightTrainingFirestoreSerializer();
+      }
+      var regiment =
+          await serializer!.deserializeRegimentNew(regimentDoc, regimentRef);
+      var sessionRefList = regimentDoc["schedule"];
+      var count = 0;
+      for (var sessionRef in sessionRefList) {
+        await serializer.deserializeSession(
+            (await sessionRef.get()).data()!, count++, sessionRef);
+      }
       regiments.add(regiment);
     }
     return regiments;
@@ -159,5 +190,21 @@ class DatabaseService {
       return WeightTraining();
     }
     throw Exception("No such training type");
+  }
+
+  Future<List<WeightExerciseType>> loadWeightExerciseList() async {
+    var exerciseCollection =
+        FirebaseFirestore.instance.collection('strength_exercises');
+    var exerciseSnapshot = await exerciseCollection.get();
+    List<WeightExerciseType> result = [];
+    for (var doc in exerciseSnapshot.docs) {
+      result.add(WeightExerciseType(
+          name: doc['name'],
+          bodyPart: doc['bodypart'],
+          iconURL: doc['icon_url'],
+          category: doc['category'],
+          id: doc));
+    }
+    return result;
   }
 }
