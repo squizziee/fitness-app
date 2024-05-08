@@ -1,6 +1,6 @@
 abstract class Exercise {
   dynamic id;
-  String notes = '';
+  String? notes = '';
 
   Exercise({required this.notes, required this.id});
 
