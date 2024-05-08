@@ -29,14 +29,5 @@ class AppUser extends ChangeNotifier {
           GoalMetric(metricName: "weight", metricSize: 180, metricScale: "kg")
         })
   ];
-  List<TrainingRegiment>? regiments;
-  bool firstTime = false;
-
-  Future<void> setFirstTimeUsing(bool val) async {
-    firstTime = val;
-  }
-
-  bool isFirstTimeUsing() {
-    return firstTime;
-  }
+  List<TrainingRegiment>? regiments = [];
 }

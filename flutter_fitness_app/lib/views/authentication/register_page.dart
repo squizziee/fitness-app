@@ -53,8 +53,8 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           _errorMessage(),
           submitButton('Register', () async {
-            await createUserWithEmailAndPassword();
-            Navigator.of(context).pushNamed('/home');
+            await createUserWithEmailAndPassword()
+                .then((value) => Navigator.of(context).pushNamed('/home'));
           }, context),
           const SizedBox(
             height: 10,

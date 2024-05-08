@@ -4,16 +4,20 @@ import 'package:flutter_fitness_app/models/weight_training/weight_training_exerc
 import 'package:flutter_fitness_app/models/weight_training/weight_training_set.dart';
 import 'package:flutter_fitness_app/repos/current_exercise.dart';
 import 'package:flutter_fitness_app/repos/current_training_session.dart';
+import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/exercise_service.dart';
 import 'package:provider/provider.dart';
 
 class WeightExerciseService extends ExerciseService {
-  void setExerciseType(BuildContext context, WeightExerciseType exerciseType) {
+  final DatabaseService _dbService = DatabaseService();
+
+  void setExerciseType(BuildContext context, WeightExerciseType? exerciseType) {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
     exercise.exerciseType = exerciseType;
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
+    _saveSessionToDatabase(context);
   }
 
   void addSet(BuildContext context, String notes, int repetitions,
@@ -32,6 +36,7 @@ class WeightExerciseService extends ExerciseService {
         setIndex: setIndex));
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
+    _saveSessionToDatabase(context);
   }
 
   void updateSetWeight(
@@ -43,6 +48,7 @@ class WeightExerciseService extends ExerciseService {
     exercise.sets[setIndex].weightInKilograms = weightInKilograms;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
+    _saveSessionToDatabase(context);
   }
 
   void updateSetRepetitions(
@@ -54,6 +60,7 @@ class WeightExerciseService extends ExerciseService {
     exercise.sets[setIndex].repetitions = repetitions;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
+    _saveSessionToDatabase(context);
   }
 
   void updateSetNotes(BuildContext context, int setIndex, String notes) {
@@ -63,6 +70,7 @@ class WeightExerciseService extends ExerciseService {
     exercise.sets[setIndex].notes = notes;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
+    _saveSessionToDatabase(context);
   }
 
   void removeLastSet(BuildContext context) {
@@ -70,6 +78,7 @@ class WeightExerciseService extends ExerciseService {
         .exercise! as WeightTrainingExercise);
     exercise.sets.remove(exercise.sets.last);
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
+    _saveSessionToDatabase(context);
   }
 
   @override
@@ -81,6 +90,7 @@ class WeightExerciseService extends ExerciseService {
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
     Provider.of<CurrentTrainingSession>(context, listen: false).session =
         session;
+    //_saveSessionToDatabase(context);
   }
 
   @override
@@ -88,5 +98,15 @@ class WeightExerciseService extends ExerciseService {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
     return (exercise.exerciseType == null);
+  }
+
+  void _saveSessionToDatabase(context) {
+    var exercise = (Provider.of<CurrentExercise>(context, listen: false)
+        .exercise! as WeightTrainingExercise);
+    var session =
+        Provider.of<CurrentTrainingSession>(context, listen: false).session!;
+    if (exercise.exerciseType != null) {
+      _dbService.postSession(session);
+    }
   }
 }

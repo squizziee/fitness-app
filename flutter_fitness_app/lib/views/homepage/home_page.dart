@@ -26,6 +26,11 @@ class _HomePageState extends State<HomePage> {
     const ProfileTab()
   ];
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> signOut() async {
     await Auth().signOut();
   }

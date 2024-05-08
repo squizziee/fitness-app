@@ -14,6 +14,7 @@ class CyclingExercise extends Exercise {
       required this.exerciseType,
       required this.distanceInMeters,
       required this.time,
+      this.cadence,
       this.heartbeatCeiling});
 
   @override

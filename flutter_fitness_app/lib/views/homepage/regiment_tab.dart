@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
+import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class RegimentTab extends StatefulWidget {
   const RegimentTab({super.key});
@@ -24,7 +26,7 @@ Widget _regimentPreview(
         ListTile(
           leading: FaIcon(regiment.trainingType!.getIconData()),
           title: Text(regiment.name!),
-          subtitle: Text(regiment.notes!),
+          subtitle: Text(regiment.notes == null ? "" : regiment.notes!),
         )
       ]),
     ),
@@ -61,12 +63,14 @@ class _RegimentTabState extends State<RegimentTab> {
   final RegimentService _regimentService = RegimentService();
   @override
   void initState() {
-    regiments = _dbService.getUserRegimentsNew('/users/abWbLcBiD2xRyYTI5ZQ0');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    regiments =
+        _dbService.getUserRegiments(Provider.of<AppUser>(context).userUID!);
+    //regiments ??= [];
     return SafeArea(
       child: SizedBox(
           height: double.infinity,
@@ -74,25 +78,25 @@ class _RegimentTabState extends State<RegimentTab> {
           child: Column(
             children: [
               _addRegimentButton(context),
-              SizedBox(
-                height: 200,
-                width: double.infinity,
-                child: FutureBuilder(
-                    future: regiments,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(child: Text("Error - ${snapshot.error}"));
-                      } else if (!snapshot.hasData) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      return ListView.builder(
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return _regimentPreview(context,
-                                snapshot.data![index], _regimentService);
-                          });
-                    }),
-              )
+              FutureBuilder(
+                  future: regiments,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: Container(
+                            child: ListView.builder(
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _regimentPreview(context,
+                                      snapshot.data![index], _regimentService);
+                                })),
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  })
             ],
           )),
     );
