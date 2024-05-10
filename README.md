@@ -6,14 +6,14 @@ This project is a mobile application for planning workout routines of various ty
 Functionality:
 
 **Workout regiment creation (unlimited number of routines can be created):**
-+ Namesetting (with editing option)
++ Namesetting
 + Setting the duration of the routine in days
 + Setting the sport type
 + Writing a description
 + Setting a workout/rest day for each day of the regiment
 
 **Workout creation:**
-+ Name selection
++ Namesetting
 + Exercise addition (200+ options)
 + Exercise deletion
 + Exercise editing
@@ -21,7 +21,7 @@ Functionality:
 **Adding exercises to workout (each type of sport has its own exercise handler). For weight training:**
 + Exercise type selection (each exercise corresponds to a body part and exercise type - barbell, dumbbell, cables, bodyweight)
 + Set creation (selecting weight, number of repetitions, notes)
-+ Set edit
++ Set editing
 + Set deletion
 
 **Setting goals:**
@@ -31,14 +31,13 @@ Functionality:
 + Progress tracking
 
 **Other features:**
-+ Accees to a list of all workouts
++ Access to a list of all workouts
 + Profile editing
 + Bulletproof input
 
 Application class diagram:
 
-![Диаграмма без названия](https://github.com/squizziee/fitness-app/assets/50028911/40e2c6ba-6123-41ab-a240-2c1c1128d39a)
-
+![OOP_new drawio](https://github.com/squizziee/fitness-app/assets/50028911/95e61729-ec7c-4ead-bf0a-4808a040454e)
 
 Model description:
 + TrainingRegiment – an instance of a training regiment. Contains general info including name, Firestore ID in regiment collection, type of training, description, length of schedule and the schedule itself.
