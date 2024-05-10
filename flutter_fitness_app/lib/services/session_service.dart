@@ -36,12 +36,12 @@ class SessionService {
   }
 
   // TODO serialize regiment too to update references
-  void _saveSessionToDatabase(context) {
+  void _saveSessionToDatabase(context) async {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     var session =
         Provider.of<CurrentTrainingSession>(context, listen: false).session!;
-    _dbService.postSession(session);
-    _dbService.postRegiment(regiment);
+    await _dbService.postSession(session);
+    await _dbService.postRegiment(regiment);
   }
 }

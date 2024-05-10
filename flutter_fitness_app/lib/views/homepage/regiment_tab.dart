@@ -14,12 +14,29 @@ class RegimentTab extends StatefulWidget {
   State<RegimentTab> createState() => _RegimentTabState();
 }
 
-Widget _regimentPreview(
-    BuildContext context, TrainingRegiment regiment, RegimentService service) {
+Widget _regimentPreview(BuildContext context, TrainingRegiment regiment,
+    RegimentService service, Function setState) {
   return GestureDetector(
     onTap: () {
       service.openRegiment(context, regiment);
       Navigator.of(context).pushNamed("/set_regiment_calendar");
+    },
+    onLongPress: () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(children: [
+              ElevatedButton(
+                  onPressed: () {
+                    service.openRegiment(context, regiment);
+                    service.startRegiment(context);
+                  },
+                  child: const Text("Start"))
+            ]),
+          );
+        },
+      );
     },
     child: Card(
       child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -27,6 +44,9 @@ Widget _regimentPreview(
           leading: FaIcon(regiment.trainingType!.getIconData()),
           title: Text(regiment.name!),
           subtitle: Text(regiment.notes == null ? "" : regiment.notes!),
+        ),
+        LinearProgressIndicator(
+          value: (regiment.getCurrentDay() + 1) / regiment.cycleDurationInDays!,
         )
       ]),
     ),
@@ -89,8 +109,94 @@ class _RegimentTabState extends State<RegimentTab> {
                             child: ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return _regimentPreview(context,
-                                      snapshot.data![index], _regimentService);
+                                  var regiment = snapshot.data![index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      _regimentService.openRegiment(
+                                          context, regiment);
+                                      Navigator.of(context)
+                                          .pushNamed("/set_regiment_calendar");
+                                    },
+                                    onLongPress: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Column(children: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _regimentService
+                                                          .openRegiment(context,
+                                                              regiment);
+                                                      _regimentService
+                                                          .startRegiment(
+                                                              context);
+                                                    });
+                                                  },
+                                                  child: const Text("Start")),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _regimentService
+                                                          .openRegiment(context,
+                                                              regiment);
+                                                      _regimentService
+                                                          .startRegiment(
+                                                              context);
+                                                    });
+                                                  },
+                                                  child: const Text("Pause")),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _regimentService
+                                                          .openRegiment(context,
+                                                              regiment);
+                                                      _regimentService
+                                                          .resumeRegiment(
+                                                              context);
+                                                    });
+                                                  },
+                                                  child: const Text("Resume")),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _regimentService
+                                                          .openRegiment(context,
+                                                              regiment);
+                                                      _regimentService
+                                                          .pauseRegiment(
+                                                              context);
+                                                    });
+                                                  },
+                                                  child: const Text("Stop"))
+                                            ]),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Card(
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            ListTile(
+                                              leading: FaIcon(regiment
+                                                  .trainingType!
+                                                  .getIconData()),
+                                              title: Text(regiment.name!),
+                                              subtitle: Text(
+                                                  "Day ${regiment.getCurrentDay() + 1} of ${regiment.cycleDurationInDays}"),
+                                            ),
+                                            LinearProgressIndicator(
+                                              value: (regiment.getCurrentDay() +
+                                                      1) /
+                                                  regiment.cycleDurationInDays!,
+                                            )
+                                          ]),
+                                    ),
+                                  );
+                                  ;
                                 })),
                       );
                     } else {

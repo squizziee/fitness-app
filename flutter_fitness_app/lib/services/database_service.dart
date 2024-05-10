@@ -196,7 +196,7 @@ class DatabaseService {
     return regiments;
   }
 
-  void postAppUser(AppUser user) async {
+  Future<void> postAppUser(AppUser user) async {
     var db = FirebaseFirestore.instance;
     var collection = db.collection("users");
     var doc =
@@ -209,7 +209,7 @@ class DatabaseService {
   }
 
   // Works assuming all training sessions are posted already
-  void postRegiment(TrainingRegiment regiment) async {
+  Future<void> postRegiment(TrainingRegiment regiment) async {
     var db = FirebaseFirestore.instance;
     FirestoreSerializer serializer =
         _regimentSerializers[regiment.trainingType.runtimeType]!;
@@ -224,7 +224,7 @@ class DatabaseService {
     await regimentDoc.set(serializer.serializeRegiment(regiment));
   }
 
-  void postSession(TrainingSession session) async {
+  Future<void> postSession(TrainingSession session) async {
     var db = FirebaseFirestore.instance;
     FirestoreSerializer serializer =
         _sessionSerializers[session.runtimeType]!.$2;
@@ -254,9 +254,6 @@ class DatabaseService {
     var exerciseSnapshot = await exerciseCollection.get();
     List<WeightExerciseType> result = [];
     for (var doc in exerciseSnapshot.docs) {
-      if (doc.reference == null) {
-        print("funny\n\n");
-      }
       result.add(WeightExerciseType(
           name: doc['name'],
           bodyPart: doc['bodypart'],

@@ -100,13 +100,13 @@ class WeightExerciseService extends ExerciseService {
     return (exercise.exerciseType == null);
   }
 
-  void _saveSessionToDatabase(context) {
+  void _saveSessionToDatabase(context) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
     var session =
         Provider.of<CurrentTrainingSession>(context, listen: false).session!;
     if (exercise.exerciseType != null) {
-      _dbService.postSession(session);
+      await _dbService.postSession(session);
     }
   }
 }

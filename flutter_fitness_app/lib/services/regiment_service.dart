@@ -97,38 +97,43 @@ class RegimentService {
   }
 
   void startRegiment(BuildContext context) {
-    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate =
-        DateTime.now();
+    Provider.of<CurrentTrainingRegiment>(context, listen: false)
+        .regiment!
+        .startDate = DateTime.now();
     _saveRegimentToDatabase(context);
   }
 
   void stopRegiment(BuildContext context) {
-    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate = null;
+    Provider.of<CurrentTrainingRegiment>(context, listen: false)
+        .regiment!
+        .startDate = null;
     _saveRegimentToDatabase(context);
   }
 
   void pauseRegiment(BuildContext context) {
-    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     regiment.dayOfPause = regiment.getCurrentDay();
     _saveRegimentToDatabase(context);
   }
 
   void resumeRegiment(BuildContext context) {
-    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     regiment.startDate =
-        DateTime.now().subtract(Duration(days: regiment.dayOfPause));
+        DateTime.now().subtract(Duration(days: regiment.dayOfPause!));
     regiment.dayOfPause = -1;
     _saveRegimentToDatabase(context);
   }
 
   // TODO save AppUser too to update regiment references
-  void _saveRegimentToDatabase(BuildContext context) {
+  void _saveRegimentToDatabase(BuildContext context) async {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     var user = Provider.of<AppUser>(context, listen: false);
     if (regiment.trainingType != null && regiment.schedule != null) {
-      _dbService.postAppUser(user);
-      _dbService.postRegiment(regiment);
+      await _dbService.postAppUser(user);
+      await _dbService.postRegiment(regiment);
     }
   }
 }

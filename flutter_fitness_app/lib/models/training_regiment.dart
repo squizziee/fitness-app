@@ -10,7 +10,7 @@ class TrainingRegiment {
   List<TrainingSession>? schedule = [];
 
   DateTime? startDate;
-  int dayOfPause = -1;
+  int? dayOfPause = -1;
   int? cycleDurationInDays = 0;
 
   TrainingRegiment(
@@ -20,14 +20,15 @@ class TrainingRegiment {
       this.trainingType,
       this.schedule,
       this.startDate,
-      this.cycleDurationInDays});
+      this.cycleDurationInDays,
+      this.dayOfPause});
 
   int getCurrentDay() {
     if (startDate == null) {
       return -1;
     }
     if (isPaused()) {
-      return dayOfPause;
+      return dayOfPause!;
     }
     return DateTime.now().difference(startDate!).inDays % cycleDurationInDays!;
   }
