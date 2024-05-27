@@ -10,7 +10,7 @@ class TrainingRegiment {
   List<TrainingSession>? schedule = [];
 
   DateTime? startDate;
-  int? dayOfPause = -1;
+  int dayOfPause = -1;
   int? cycleDurationInDays = 0;
 
   TrainingRegiment(
@@ -21,7 +21,7 @@ class TrainingRegiment {
       this.schedule,
       this.startDate,
       this.cycleDurationInDays,
-      this.dayOfPause});
+      required this.dayOfPause});
 
   int getCurrentDay() {
     if (startDate == null) {
@@ -34,6 +34,6 @@ class TrainingRegiment {
   }
 
   bool isPaused() {
-    return dayOfPause != -1;
+    return dayOfPause != -1 && dayOfPause != null;
   }
 }

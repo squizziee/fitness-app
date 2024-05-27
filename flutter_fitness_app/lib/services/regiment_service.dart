@@ -17,7 +17,7 @@ class RegimentService {
   final DatabaseService _dbService = DatabaseService();
 
   void createAndOpenEmptyRegiment(BuildContext context) {
-    var newRegiment = TrainingRegiment();
+    var newRegiment = TrainingRegiment(dayOfPause: -1);
     Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment =
         newRegiment;
     Provider.of<AppUser>(context, listen: false).regiments!.add(newRegiment);
@@ -107,6 +107,9 @@ class RegimentService {
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
         .regiment!
         .startDate = null;
+    Provider.of<CurrentTrainingRegiment>(context, listen: false)
+        .regiment!
+        .dayOfPause = -1;
     _saveRegimentToDatabase(context);
   }
 
@@ -126,14 +129,13 @@ class RegimentService {
     _saveRegimentToDatabase(context);
   }
 
-  // TODO save AppUser too to update regiment references
   void _saveRegimentToDatabase(BuildContext context) async {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     var user = Provider.of<AppUser>(context, listen: false);
     if (regiment.trainingType != null && regiment.schedule != null) {
-      await _dbService.postAppUser(user);
       await _dbService.postRegiment(regiment);
+      await _dbService.postAppUser(user);
     }
   }
 }
