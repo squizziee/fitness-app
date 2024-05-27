@@ -8,7 +8,6 @@ class CombatTrainingExercise extends Exercise {
 
   CombatTrainingExercise(
       {required super.notes,
-      required super.id,
       required this.exerciseType,
       required this.time,
       this.heartbeatCeiling});

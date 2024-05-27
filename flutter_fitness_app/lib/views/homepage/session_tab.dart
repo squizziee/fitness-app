@@ -5,7 +5,6 @@ import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
-import 'package:flutter_fitness_app/views/regiment_creation/training_session_screen.dart';
 
 class SessionTab extends StatefulWidget {
   const SessionTab({super.key});

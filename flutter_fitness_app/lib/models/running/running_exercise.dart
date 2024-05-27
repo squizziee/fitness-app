@@ -9,7 +9,6 @@ class RunningExercise extends Exercise {
 
   RunningExercise(
       {required super.notes,
-      required super.id,
       required this.distanceInMeters,
       required this.exerciseType,
       this.heartbeatCeiling});

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/training_regiment.dart';
+import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/services/auth.dart';
+import 'package:flutter_fitness_app/services/database_service.dart';
+import 'package:flutter_fitness_app/services/regiment_service.dart';
+import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,6 +14,30 @@ class SelectTrainingSessionPage extends StatefulWidget {
   @override
   State<SelectTrainingSessionPage> createState() =>
       _SelectTrainingSessionPageState();
+}
+
+Widget _sessionWidget(
+    BuildContext context,
+    (TrainingSession, TrainingRegiment) session,
+    RegimentService _regimentService,
+    SessionService _sessionService) {
+  var openedSessionIndex = _sessionService.getOpenedSessionIndex(context);
+
+  return GestureDetector(
+    onTap: () {
+      _sessionService.copySession(context, session.$1, openedSessionIndex);
+      Navigator.of(context).pop();
+    },
+    child: Container(
+      color: Colors.amber,
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(10),
+      child: Column(children: [
+        Text(session.$2.name!),
+        Text(session.$1.name == "" ? "No name" : session.$1.name),
+      ]),
+    ),
+  );
 }
 
 Widget _addTrainingSessionButton(BuildContext context) {
@@ -38,6 +68,17 @@ Widget _addTrainingSessionButton(BuildContext context) {
 }
 
 class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
+  Future<List<(TrainingSession, TrainingRegiment)>>? sessionsList;
+  final RegimentService _regimentService = RegimentService();
+  final SessionService _sessionService = SessionService();
+
+  @override
+  void initState() {
+    super.initState();
+    sessionsList =
+        DatabaseService().getAllUserTrainingSessions(Auth().currentUser!.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,7 +86,25 @@ class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
         body: Column(
           children: [
             _addTrainingSessionButton(context),
-            const Text('To be continued')
+            FutureBuilder(
+                future: sessionsList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  } else if (snapshot.hasData) {
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            var session = snapshot.data![index];
+                            return _sessionWidget(context, session,
+                                _regimentService, _sessionService);
+                          }),
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                }),
           ],
         ),
       ),

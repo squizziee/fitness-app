@@ -124,7 +124,7 @@ class RegimentService {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     regiment.startDate =
-        DateTime.now().subtract(Duration(days: regiment.dayOfPause!));
+        DateTime.now().subtract(Duration(days: regiment.dayOfPause));
     regiment.dayOfPause = -1;
     _saveRegimentToDatabase(context);
   }

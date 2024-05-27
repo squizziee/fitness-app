@@ -10,7 +10,6 @@ class CyclingExercise extends Exercise {
 
   CyclingExercise(
       {required super.notes,
-      required super.id,
       required this.exerciseType,
       required this.distanceInMeters,
       required this.time,

@@ -70,6 +70,18 @@ class DatabaseService {
     return regiments;
   }
 
+  Future<List<(TrainingSession, TrainingRegiment)>> getAllUserTrainingSessions(
+      String userId) async {
+    var regiments = await getUserRegiments(userId);
+    List<(TrainingSession, TrainingRegiment)> result = [];
+    for (var regiment in regiments) {
+      for (var session in regiment.schedule!) {
+        result.add((session, regiment));
+      }
+    }
+    return result;
+  }
+
   Future<List<(TrainingSession, TrainingRegiment)>> getUserTrainingSessions(
       String userId) async {
     var regiments = await getUserRegiments(userId);

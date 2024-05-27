@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_training_exercise.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
@@ -16,9 +18,33 @@ class SessionService {
         regiment!.schedule![dayInSchedule];
   }
 
+  int getOpenedSessionIndex(BuildContext context) {
+    return Provider.of<CurrentTrainingSession>(context, listen: false)
+        .session!
+        .dayInSchedule;
+  }
+
   void openSessionByInstance(BuildContext context, TrainingSession session) {
     Provider.of<CurrentTrainingSession>(context, listen: false).session =
         session;
+  }
+
+  void copySession(
+      BuildContext context, TrainingSession session, int destIndex) {
+    var destSession =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false)
+            .regiment!
+            .schedule![destIndex];
+    if (destSession is WeightTrainingSession &&
+        session is WeightTrainingSession) {
+      destSession.name = session.name;
+      destSession.notes = session.notes;
+      for (var exercise in session.exercises) {
+        var _exercise = exercise as WeightTrainingExercise;
+        destSession.exercises.add(_exercise);
+      }
+    }
+    _saveSessionToDatabase(context);
   }
 
   void updateName(BuildContext context, String newName) {
@@ -41,7 +67,6 @@ class SessionService {
     _saveSessionToDatabase(context);
   }
 
-  // TODO serialize regiment too to update references
   void _saveSessionToDatabase(context) async {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;

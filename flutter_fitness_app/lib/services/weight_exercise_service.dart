@@ -11,13 +11,14 @@ import 'package:provider/provider.dart';
 class WeightExerciseService extends ExerciseService {
   final DatabaseService _dbService = DatabaseService();
 
-  void setExerciseType(BuildContext context, WeightExerciseType? exerciseType) {
+  Future<void> setExerciseType(
+      BuildContext context, WeightExerciseType? exerciseType) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
     exercise.exerciseType = exerciseType;
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
   void addSet(BuildContext context, String notes, int repetitions,
@@ -39,8 +40,8 @@ class WeightExerciseService extends ExerciseService {
     _saveSessionToDatabase(context);
   }
 
-  void updateSetWeight(
-      BuildContext context, int setIndex, double weightInKilograms) {
+  Future<void> updateSetWeight(
+      BuildContext context, int setIndex, double weightInKilograms) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
@@ -48,11 +49,11 @@ class WeightExerciseService extends ExerciseService {
     exercise.sets[setIndex].weightInKilograms = weightInKilograms;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
-  void updateSetRepetitions(
-      BuildContext context, int setIndex, int repetitions) {
+  Future<void> updateSetRepetitions(
+      BuildContext context, int setIndex, int repetitions) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
@@ -60,32 +61,33 @@ class WeightExerciseService extends ExerciseService {
     exercise.sets[setIndex].repetitions = repetitions;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
-  void updateSetNotes(BuildContext context, int setIndex, String notes) {
+  Future<void> updateSetNotes(
+      BuildContext context, int setIndex, String notes) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
     exercise.sets[setIndex].notes = notes;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
-  void removeLastSet(BuildContext context) {
+  Future<void> removeLastSet(BuildContext context) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
     exercise.sets.remove(exercise.sets.last);
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
   @override
   void createAndOpenEmptyExercise(BuildContext context) {
     var session =
         Provider.of<CurrentTrainingSession>(context, listen: false).session;
-    var exercise = WeightTrainingExercise(sets: [], notes: '', id: '');
+    var exercise = WeightTrainingExercise(sets: [], notes: '');
     session!.exercises.add(exercise);
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
     Provider.of<CurrentTrainingSession>(context, listen: false).session =
@@ -100,7 +102,7 @@ class WeightExerciseService extends ExerciseService {
     return (exercise.exerciseType == null);
   }
 
-  void _saveSessionToDatabase(context) async {
+  Future<void> _saveSessionToDatabase(context) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
     var session =
