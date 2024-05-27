@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
@@ -13,6 +14,11 @@ class SessionService {
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment;
     Provider.of<CurrentTrainingSession>(context, listen: false).session =
         regiment!.schedule![dayInSchedule];
+  }
+
+  void openSessionByInstance(BuildContext context, TrainingSession session) {
+    Provider.of<CurrentTrainingSession>(context, listen: false).session =
+        session;
   }
 
   void updateName(BuildContext context, String newName) {

@@ -19,132 +19,6 @@ import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
 
-// TODO Rewrite all this to instances
-// abstract class DatabaseService {
-//   static var handlers = {'strength_training_sessions': WeightTrainingHandler()};
-
-//   static var exerciseCollections = ['strength_exercises'];
-
-//   static Future<List<TrainingRegiment>> getUserRegiments(
-//       String currentUserId) async {
-//     List<TrainingRegiment> result = [];
-//     var userCollection = FirebaseFirestore.instance.collection('users');
-//     var regimentCollection = FirebaseFirestore.instance.collection('regiments');
-
-//     // find user document in user collection
-//     var userSnapshot =
-//         await userCollection.where('user_uid', isEqualTo: currentUserId).get();
-
-//     for (var userInstance in userSnapshot.docs) {
-//       // iterate through user training regiments in user document
-//       var regiments = userInstance['regiments'];
-//       for (var userRegimentId in regiments) {
-//         // find user regiment in regiment collection by ID
-//         var regimentSnapshot = await regimentCollection
-//             .where(FieldPath.documentId, isEqualTo: userRegimentId)
-//             .get();
-
-//         assert(regimentSnapshot.docs.isNotEmpty);
-
-//         // filling TrainingRegiment model
-//         var name = regimentSnapshot.docs[0]['name'].toString();
-//         var notes = regimentSnapshot.docs[0]['notes'].toString();
-//         var schedule = List<TrainingSession>.empty(growable: true);
-//         var trainingType =
-//             getTrainingType(regimentSnapshot.docs[0]['training_type']);
-
-//         //var scheduleSnapshot = regimentSnapshot.docs[0]['schedule'];
-//         // for (var day in scheduleSnapshot) {
-//         //   var session = await getTrainingSessionByID(
-//         //       day['training_session'].toString().trim());
-
-//         //   session.dayInSchedule = day['day'];
-//         //   schedule.add(session);
-//         // }
-//         var regiment = TrainingRegiment(
-//             name: name,
-//             notes: notes,
-//             trainingType: trainingType,
-//             schedule: schedule,
-//             cycleDurationInDays: schedule.length);
-//         regiment.id = userRegimentId;
-//         // model ready
-//         result.add(regiment);
-//       }
-//     }
-//     return result;
-//   }
-
-//   // static Future<List<TrainingRegiment>> getUserRegiments(String userId) async {
-//   //   List<TrainingRegiment> result = [];
-//   //   var userCollection = FirebaseFirestore.instance.collection('users');
-//   //   var userSnapshot = await userCollection.doc("users/$userId").get();
-
-//   //   assert(userSnapshot.data()!.isNotEmpty);
-
-//   //   var regimentIdList = userSnapshot.data()!["regiments"];
-//   //   for (var regimentId in regimentIdList) {
-//   //     result.add(getRegiment(regimentId));
-//   //   }
-//   //   return result;
-//   // }
-
-//   // static TrainingRegiment getRegiment(dynamic reference) {
-//   //   var regimentCollection = FirebaseFirestore.instance.collection('regiments');
-//   //   if (reference.get()) {
-
-//   //   }
-//   // }
-
-//   static TrainingType getTrainingType(dynamic str) {
-//     if (str == 'weightTraining') {
-//       return WeightTraining();
-//     }
-//     throw Exception('Wrong training type input');
-//   }
-
-//   static Future<WeightExerciseType> getExerciseTypeByID(String id) async {
-//     for (var collection in exerciseCollections) {
-//       var exerciseCollection =
-//           FirebaseFirestore.instance.collection(collection);
-//       var exerciseSnapshot = await exerciseCollection
-//           .where(FieldPath.documentId, isEqualTo: id)
-//           .get();
-//       if (exerciseSnapshot.docs.isEmpty) {
-//         continue;
-//       }
-//       var doc = exerciseSnapshot.docs[0];
-//       return WeightExerciseType(
-//           name: doc['name'],
-//           bodyPart: doc['bodypart'],
-//           iconURL: doc['icon_url'],
-//           category: doc['category']);
-//     }
-//     throw Exception('Wrong exercise ID has been provided');
-//   }
-
-//   // static Future<TrainingSession> getTrainingSessionByID(String id) async {
-//   //   var result = TrainingSession();
-//   //   for (var key in handlers.keys) {
-//   //     var trainingSessionCollection =
-//   //         FirebaseFirestore.instance.collection(key);
-//   //     var trainingSessionQuerySnapshot = await trainingSessionCollection
-//   //         .where(FieldPath.documentId, isEqualTo: id)
-//   //         .get();
-//   //     var sessionName = trainingSessionQuerySnapshot.docs[0]['name'];
-//   //     var sessionNotes = trainingSessionQuerySnapshot.docs[0]['notes'];
-//   //     var exercises = trainingSessionQuerySnapshot.docs[0]['exercises'];
-//   //     for (var exerciseDatabaseInstance in exercises) {
-//   //       var exercise = await handlers[key]!.handle(exerciseDatabaseInstance);
-//   //       result.exercises.add(exercise);
-//   //     }
-//   //     result.name = sessionName;
-//   //     result.notes = sessionNotes;
-//   //     result.id = id;
-//   //   }
-//   //   return result;
-//   // }
-// }
 class DatabaseService {
   static final Map<Type, FirestoreSerializer> _regimentSerializers = {
     WeightTraining: WeightTrainingFirestoreSerializer(),
@@ -194,6 +68,19 @@ class DatabaseService {
       regiments.add(regiment);
     }
     return regiments;
+  }
+
+  Future<List<(TrainingSession, TrainingRegiment)>> getUserTrainingSessions(
+      String userId) async {
+    var regiments = await getUserRegiments(userId);
+    List<(TrainingSession, TrainingRegiment)> result = [];
+    for (var regiment in regiments) {
+      var currentDay = regiment.getCurrentDay();
+      if (currentDay != -1) {
+        result.add((regiment.schedule![currentDay], regiment));
+      }
+    }
+    return result;
   }
 
   Future<void> postAppUser(AppUser user) async {
