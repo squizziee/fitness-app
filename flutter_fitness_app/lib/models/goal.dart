@@ -1,11 +1,12 @@
 // ignore_for_file: unused_field
 
 class Goal {
+  dynamic id;
   DateTime? deadline;
   String? exerciseName;
   Set<GoalMetric>? metrics;
 
-  Goal({this.deadline, this.exerciseName, this.metrics});
+  Goal({this.id, this.deadline, this.exerciseName, this.metrics});
 
   @override
   operator ==(other) {

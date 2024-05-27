@@ -7,10 +7,7 @@ class WeightTrainingExercise extends Exercise {
   List<WeightTrainingSet> sets = [];
 
   WeightTrainingExercise(
-      {required this.sets,
-      this.exerciseType,
-      required super.notes,
-      required super.id});
+      {required this.sets, this.exerciseType, super.notes, required super.id});
 
   @override
   String getExerciseTypeName() {

@@ -4,35 +4,45 @@ import 'package:flutter_fitness_app/models/cycling/cycling_session.dart';
 import 'package:flutter_fitness_app/models/rowing/rowing_session.dart';
 import 'package:flutter_fitness_app/models/running/running_session.dart';
 import 'package:flutter_fitness_app/models/swimming/swimming_session.dart';
+import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:provider/provider.dart';
 
 class RegimentService {
+  final DatabaseService _dbService = DatabaseService();
+
   void createAndOpenEmptyRegiment(BuildContext context) {
+    var newRegiment = TrainingRegiment(dayOfPause: -1);
     Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment =
-        TrainingRegiment();
+        newRegiment;
+    Provider.of<AppUser>(context, listen: false).regiments!.add(newRegiment);
+    _saveRegimentToDatabase(context);
   }
 
   void setName(BuildContext context, String name) {
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
         .regiment!
         .name = name;
+    _saveRegimentToDatabase(context);
   }
 
   void setNotes(BuildContext context, String notes) {
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
         .regiment!
         .notes = notes;
+    _saveRegimentToDatabase(context);
   }
 
   void setTrainingType(BuildContext context, TrainingType trainingType) {
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
         .regiment!
         .trainingType = trainingType;
+    _saveRegimentToDatabase(context);
   }
 
   void setCycleDurationInDays(BuildContext context, int cycleDurationInDays) {
@@ -40,6 +50,7 @@ class RegimentService {
         .regiment!
         .cycleDurationInDays = cycleDurationInDays;
     _setDefaultSchedule(context, cycleDurationInDays);
+    _saveRegimentToDatabase(context);
   }
 
   void openRegiment(BuildContext context, TrainingRegiment regiment) {
@@ -58,25 +69,26 @@ class RegimentService {
       TrainingSession? session;
       if (trainingType is WeightTraining) {
         session = WeightTrainingSession(
-            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
+            id: null, name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Swimming) {
         session = SwimmingSession(
-            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
+            id: null, name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Cycling) {
         session = CyclingSession(
-            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
+            id: null, name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Running) {
         session = RunningSession(
-            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
+            id: null, name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is Rowing) {
         session = RowingSession(
-            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
+            id: null, name: '', notes: '', exercises: [], dayInSchedule: 0);
       } else if (trainingType is CombatTraining) {
         session = CombatTrainingSession(
-            id: '', name: '', notes: '', exercises: [], dayInSchedule: 0);
+            id: null, name: '', notes: '', exercises: [], dayInSchedule: 0);
       }
       session!.dayInSchedule = i;
       schedule.add(session);
+      _dbService.postSession(session);
     }
 
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
@@ -85,27 +97,45 @@ class RegimentService {
   }
 
   void startRegiment(BuildContext context) {
-    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate =
-        DateTime.now();
+    Provider.of<CurrentTrainingRegiment>(context, listen: false)
+        .regiment!
+        .startDate = DateTime.now();
+    _saveRegimentToDatabase(context);
   }
 
   void stopRegiment(BuildContext context) {
-    Provider.of<CurrentTrainingRegiment>(context).regiment!.startDate = null;
+    Provider.of<CurrentTrainingRegiment>(context, listen: false)
+        .regiment!
+        .startDate = null;
+    Provider.of<CurrentTrainingRegiment>(context, listen: false)
+        .regiment!
+        .dayOfPause = -1;
+    _saveRegimentToDatabase(context);
   }
 
   void pauseRegiment(BuildContext context) {
-    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     regiment.dayOfPause = regiment.getCurrentDay();
+    _saveRegimentToDatabase(context);
   }
 
   void resumeRegiment(BuildContext context) {
-    var regiment = Provider.of<CurrentTrainingRegiment>(context).regiment!;
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     regiment.startDate =
-        DateTime.now().subtract(Duration(days: regiment.dayOfPause));
+        DateTime.now().subtract(Duration(days: regiment.dayOfPause!));
     regiment.dayOfPause = -1;
+    _saveRegimentToDatabase(context);
   }
 
-  void saveRegimentToDatabase() {
-    // next time...
+  void _saveRegimentToDatabase(BuildContext context) async {
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
+    var user = Provider.of<AppUser>(context, listen: false);
+    if (regiment.trainingType != null && regiment.schedule != null) {
+      await _dbService.postRegiment(regiment);
+      await _dbService.postAppUser(user);
+    }
   }
 }

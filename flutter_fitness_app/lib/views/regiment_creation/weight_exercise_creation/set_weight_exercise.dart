@@ -4,7 +4,7 @@ import 'package:flutter_fitness_app/repos/current_exercise.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_exercise.dart';
 import 'package:flutter_fitness_app/services/custom_search_delegate.dart';
-import 'package:flutter_fitness_app/services/load_exercise_list.dart';
+import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/weight_exercise_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +21,7 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
   Future<List<WeightExerciseType>>? exerciseList;
 
   final WeightExerciseService _exerciseService = WeightExerciseService();
+  final DatabaseService _dbService = DatabaseService();
 
   int setIndex = 0;
 
@@ -222,7 +223,7 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
   @override
   void initState() {
     super.initState();
-    exerciseList = loadExerciseList();
+    exerciseList = _dbService.loadWeightExerciseList();
   }
 
   @override
@@ -288,7 +289,7 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
                                     delegate:
                                         CustomSearchDelegate(snapshot.data))
                                 .then((type) => _exerciseService
-                                    .setExerciseType(context, type!));
+                                    .setExerciseType(context, type));
                             setState(() {});
                           },
                           child: Container(
