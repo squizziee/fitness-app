@@ -86,7 +86,7 @@ class DatabaseService {
     List<Goal> goals = [];
     for (var goalRef in user["goals"]) {
       var goalDoc = (await goalRef.get()).data()!;
-      var goal = await serializer.deserializeGoal(goalDoc);
+      var goal = await serializer.deserializeGoal(goalDoc, goalRef);
       goals.add(goal);
     }
     return goals;

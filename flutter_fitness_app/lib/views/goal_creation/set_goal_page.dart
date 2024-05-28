@@ -65,8 +65,8 @@ class _SetGoalPageState extends State<SetGoalPage> {
     _metricScaleController.text = "";
   }
 
-  Widget _metricWidget(
-      BuildContext context, GoalMetric metric, GoalService goalService) {
+  Widget _metricWidget(BuildContext context, GoalMetric metric,
+      GoalService goalService, int index) {
     return GestureDetector(
       onLongPress: () => showDialog<String>(
           context: context,
@@ -82,7 +82,8 @@ class _SetGoalPageState extends State<SetGoalPage> {
                       child: const Text('Cancel')),
                   TextButton(
                       onPressed: () {
-                        goalService.deleteMetric(context, metric.metricName!);
+                        //goalService.deleteMetric(context, metric.metricName!);
+                        goalService.deleteMetricByIndex(context, index);
                         setState(() {});
                         Navigator.of(context).pop();
                       },
@@ -264,7 +265,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
               itemCount: currentGoal.metrics!.length,
               itemBuilder: (context, index) {
                 var metric = currentGoal.metrics!.toList()[index];
-                return _metricWidget(context, metric, _goalService);
+                return _metricWidget(context, metric, _goalService, index);
               }),
         )
       ]),

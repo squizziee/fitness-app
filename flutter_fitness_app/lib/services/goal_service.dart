@@ -23,6 +23,13 @@ class GoalService {
     Provider.of<CurrentGoal>(context, listen: false).goal = goals![goalIndex];
   }
 
+  void removeGoalByIndex(BuildContext context, int goalIndex) {
+    var goals = Provider.of<AppUser>(context, listen: false).goals;
+    goals!.removeAt(goalIndex);
+    var user = Provider.of<AppUser>(context, listen: false);
+    _dbService.postAppUser(user);
+  }
+
   void openGoalByReference(BuildContext context, Goal goal) {
     Provider.of<CurrentGoal>(context, listen: false).goal = goal;
   }
@@ -53,6 +60,7 @@ class GoalService {
     await _saveGoalToDatabase(context);
   }
 
+  // TODO not working
   Future deleteMetric(BuildContext context, String metricName) async {
     var metric = Provider.of<CurrentGoal>(context, listen: false)
         .goal!
@@ -62,6 +70,13 @@ class GoalService {
         .goal!
         .metrics!
         .remove(metric);
+    await _saveGoalToDatabase(context);
+  }
+
+  Future deleteMetricByIndex(BuildContext context, int index) async {
+    var metrics =
+        Provider.of<CurrentGoal>(context, listen: false).goal!.metrics!;
+    metrics.remove(metrics.elementAt(index));
     await _saveGoalToDatabase(context);
   }
 

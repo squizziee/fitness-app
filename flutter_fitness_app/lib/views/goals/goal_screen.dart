@@ -39,26 +39,53 @@ Widget _addGoalButton(BuildContext context, GoalService goalService) {
   );
 }
 
-Widget _goalWidget(BuildContext context, Goal goal, GoalService goalService) {
-  return GestureDetector(
-    onTap: () {
-      goalService.openGoalByReference(context, goal);
-      Navigator.of(context).pushNamed("/set_goal");
-    },
-    child: Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(20),
-      child: Column(children: [
-        Text(goal.exerciseType!.name),
-        Text("${goal.deadline!}"),
-        Text("${goal.metrics!.length} metrics"),
-      ]),
-    ),
-  );
-}
-
 class _GoalScreenState extends State<GoalScreen> {
   final GoalService _goalService = GoalService();
+
+  Widget _goalWidget(
+      BuildContext context, Goal goal, GoalService goalService, int index) {
+    return GestureDetector(
+      onTap: () {
+        goalService.openGoalByReference(context, goal);
+        Navigator.of(context).pushNamed("/set_goal").then((value) => setState(
+              () {},
+            ));
+      },
+      onLongPress: () => showDialog<String>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Confirmation'),
+                content: Text(
+                    'Are you sure you want to delete "${goal.exerciseType!.name}" metric?'),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel')),
+                  TextButton(
+                      onPressed: () {
+                        goalService.removeGoalByIndex(context, index);
+                        setState(() {});
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.redAccent),
+                      )),
+                ],
+              )),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(20),
+        child: Column(children: [
+          Text(goal.exerciseType!.name),
+          Text("${goal.deadline!}"),
+          Text("${goal.metrics!.length} metrics"),
+        ]),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +100,8 @@ class _GoalScreenState extends State<GoalScreen> {
             child: ListView.builder(
                 itemCount: goals!.length,
                 itemBuilder: (context, index) {
-                  return _goalWidget(context, goals[index], _goalService);
+                  return _goalWidget(
+                      context, goals[index], _goalService, index);
                 }),
           ),
         ],
