@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,70 @@ class SetRegimentCalendarPage extends StatefulWidget {
   @override
   State<SetRegimentCalendarPage> createState() =>
       _SetRegimentCalendarPageState();
+}
+
+Widget _tagWidget(String text, Color backgroundColor) {
+  return Container(
+      margin: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: const BorderRadius.all(Radius.circular(5))),
+      child: Text(text.toUpperCase(),
+          style: GoogleFonts.montserrat(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+              height: 1)));
+}
+
+Widget _sessionWidget(BuildContext context, TrainingSession session,
+    SessionService sessionService) {
+  return GestureDetector(
+    onTap: () {
+      sessionService.openSessionByInstance(context, session);
+      Navigator.of(context).pushNamed('/select_training_session');
+    },
+    child: Container(
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 5,
+              blurRadius: 10,
+            ),
+          ],
+          color: session.exercises.isEmpty
+              ? const Color(0xff151515)
+              : Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(15.0))),
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.only(bottom: 20.0),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (session.exercises.isEmpty) {
+            return Text("Rest day",
+                style: GoogleFonts.montserrat(
+                    fontSize: 35,
+                    fontWeight: FontWeight.w800,
+                    height: 1,
+                    color: Colors.white));
+          }
+          return Wrap(children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text("Day #${session.dayInSchedule + 1}",
+                  style: GoogleFonts.montserrat(
+                      fontSize: 35, fontWeight: FontWeight.w800, height: 1)),
+              _tagWidget(
+                  "${session.exercises.length} exercises", Colors.blueAccent),
+              _tagWidget(session.getGeneralMetricText(), Colors.black),
+            ])
+          ]);
+        },
+      ),
+    ),
+  );
 }
 
 class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
@@ -44,49 +109,10 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
                       Provider.of<CurrentTrainingRegiment>(context)
                           .regiment!
                           .cycleDurationInDays!, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        //Navigator.of(context).push(MaterialPageRoute(builder: (context)
-                        //  => SelectTrainingSessionPage(sessionIndex: index)));
-                        _sessionService.openSession(context, index);
-                        Navigator.of(context)
-                            .pushNamed('/select_training_session');
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                spreadRadius: 5,
-                                blurRadius: 10,
-                              ),
-                            ],
-                            color: Colors.white,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15.0))),
-                        height: 150.0,
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.all(20),
-                        margin: const EdgeInsets.only(bottom: 20.0),
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return Wrap(children: [
-                              // Image.network(
-                              //   e.iconURL,
-                              //   height: constraints.maxHeight,
-                              // ),
-                              Column(children: [
-                                Text("Day #${index + 1}",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 35,
-                                        fontWeight: FontWeight.w800,
-                                        height: 1))
-                              ])
-                            ]);
-                          },
-                        ),
-                      ),
-                    );
+                    var session = Provider.of<CurrentTrainingRegiment>(context)
+                        .regiment!
+                        .schedule![index];
+                    return _sessionWidget(context, session, _sessionService);
                   }),
                 ),
               ),

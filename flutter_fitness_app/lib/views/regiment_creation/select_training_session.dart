@@ -19,21 +19,22 @@ class SelectTrainingSessionPage extends StatefulWidget {
 Widget _sessionWidget(
     BuildContext context,
     (TrainingSession, TrainingRegiment) session,
-    RegimentService _regimentService,
-    SessionService _sessionService) {
-  var openedSessionIndex = _sessionService.getOpenedSessionIndex(context);
+    SessionService sessionService) {
+  var openedSessionIndex = sessionService.getOpenedSessionIndex(context);
 
   return GestureDetector(
-    onTap: () {
-      _sessionService.copySession(context, session.$1, openedSessionIndex);
-      Navigator.of(context).pop();
+    onTap: () async {
+      await sessionService
+          .copySession(context, session.$1, openedSessionIndex)
+          .then((value) => Navigator.of(context).pop());
     },
     child: Container(
-      color: Colors.amber,
+      color: const Color.fromARGB(31, 180, 180, 180),
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(20),
       child: Column(children: [
-        Text(session.$2.name!),
+        Text(
+            "Day ${session.$1.dayInSchedule + 1} of ${session.$2.cycleDurationInDays} of ${session.$2.name!}"),
         Text(session.$1.name == "" ? "No name" : session.$1.name),
       ]),
     ),
@@ -86,6 +87,11 @@ class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
         body: Column(
           children: [
             _addTrainingSessionButton(context),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(20),
+              child: const Text("Or choose existing session to copy:"),
+            ),
             FutureBuilder(
                 future: sessionsList,
                 builder: (context, snapshot) {
@@ -97,8 +103,8 @@ class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             var session = snapshot.data![index];
-                            return _sessionWidget(context, session,
-                                _regimentService, _sessionService);
+                            return _sessionWidget(
+                                context, session, _sessionService);
                           }),
                     );
                   } else {

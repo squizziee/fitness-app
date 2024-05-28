@@ -29,14 +29,15 @@ class SessionService {
         session;
   }
 
-  void copySession(
-      BuildContext context, TrainingSession session, int destIndex) {
+  Future<void> copySession(
+      BuildContext context, TrainingSession session, int destIndex) async {
     var destSession =
         Provider.of<CurrentTrainingRegiment>(context, listen: false)
             .regiment!
             .schedule![destIndex];
     if (destSession is WeightTrainingSession &&
         session is WeightTrainingSession) {
+      destSession.exercises.clear();
       destSession.name = session.name;
       destSession.notes = session.notes;
       for (var exercise in session.exercises) {
@@ -44,7 +45,7 @@ class SessionService {
         destSession.exercises.add(_exercise);
       }
     }
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
   void updateName(BuildContext context, String newName) {
@@ -67,7 +68,7 @@ class SessionService {
     _saveSessionToDatabase(context);
   }
 
-  void _saveSessionToDatabase(context) async {
+  Future<void> _saveSessionToDatabase(context) async {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     var session =
