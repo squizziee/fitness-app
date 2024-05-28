@@ -3,12 +3,14 @@ import 'package:fitness_app_serialization/app_user_serializer.dart';
 import 'package:fitness_app_serialization/combat_training_firestore_serializer.dart';
 import 'package:fitness_app_serialization/cycling_firestore_serializer.dart';
 import 'package:fitness_app_serialization/firestore_serializer.dart';
+import 'package:fitness_app_serialization/goal_firestore_serializer.dart';
 import 'package:fitness_app_serialization/rowing_firestore_serializer.dart';
 import 'package:fitness_app_serialization/running_firestore_serializer.dart';
 import 'package:fitness_app_serialization/swimming_firestore_serializer.dart';
 import 'package:fitness_app_serialization/weight_training_firestore_serializer.dart';
 import 'package:flutter_fitness_app/models/combat_training/combat_training_session.dart';
 import 'package:flutter_fitness_app/models/cycling/cycling_session.dart';
+import 'package:flutter_fitness_app/models/goal.dart';
 import 'package:flutter_fitness_app/models/rowing/rowing_session.dart';
 import 'package:flutter_fitness_app/models/running/running_session.dart';
 import 'package:flutter_fitness_app/models/swimming/swimming_session.dart';
@@ -68,6 +70,26 @@ class DatabaseService {
       regiments.add(regiment);
     }
     return regiments;
+  }
+
+  Future<List<Goal>> getUserGoals(String userId) async {
+    var db = FirebaseFirestore.instance;
+    var user = (await db
+            .collection("users")
+            .where("user_uid", isEqualTo: userId)
+            .get())
+        .docs[0]
+        .data();
+
+    var serializer = GoalFirestoreSerializer();
+
+    List<Goal> goals = [];
+    for (var goalRef in user["goals"]) {
+      var goalDoc = (await goalRef.get()).data()!;
+      var goal = await serializer.deserializeGoal(goalDoc);
+      goals.add(goal);
+    }
+    return goals;
   }
 
   Future<List<(TrainingSession, TrainingRegiment)>> getAllUserTrainingSessions(
@@ -138,6 +160,21 @@ class DatabaseService {
     var temp = serializer.serializeSession(session);
     // If the session is new, create Firestore doc for it and put it in object as a field
     await sessionDoc.set(temp);
+  }
+
+  Future<void> postGoal(Goal goal) async {
+    var db = FirebaseFirestore.instance;
+    var serializer = GoalFirestoreSerializer();
+    var collection = db.collection("goals");
+    var goalDoc = goal.id;
+    if (goalDoc == null) {
+      goalDoc = collection.doc();
+      goal.id = goalDoc;
+    }
+
+    var temp = serializer.serializeGoal(goal);
+    // If the session is new, create Firestore doc for it and put it in object as a field
+    await goalDoc.set(temp);
   }
 
   TrainingType getTrainingType(String str) {

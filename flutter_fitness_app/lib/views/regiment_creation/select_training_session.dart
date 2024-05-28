@@ -3,7 +3,6 @@ import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
-import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -70,7 +69,6 @@ Widget _addTrainingSessionButton(BuildContext context) {
 
 class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
   Future<List<(TrainingSession, TrainingRegiment)>>? sessionsList;
-  final RegimentService _regimentService = RegimentService();
   final SessionService _sessionService = SessionService();
 
   @override

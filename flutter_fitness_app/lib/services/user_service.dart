@@ -16,7 +16,7 @@ class UserService {
     _handleUserExistence(context, appUser.userUID!);
 
     appUser.regiments = await _dbService.getUserRegiments(appUser.userUID!);
-    // TODO fetch current user goals
+    appUser.goals = await _dbService.getUserGoals(appUser.userUID!);
   }
 
   // Creates user document if not present already

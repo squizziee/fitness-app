@@ -1,19 +1,21 @@
 // ignore_for_file: unused_field
 
+import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
+
 class Goal {
   dynamic id;
   DateTime? deadline;
-  String? exerciseName;
+  WeightExerciseType? exerciseType;
   Set<GoalMetric>? metrics;
 
-  Goal({this.id, this.deadline, this.exerciseName, this.metrics});
+  Goal({this.id, this.deadline, this.exerciseType, this.metrics});
 
   @override
   operator ==(other) {
     return other is Goal &&
         deadline == other.deadline &&
         //metrics!.difference(other.metrics!).isEmpty &&
-        exerciseName == other.exerciseName;
+        exerciseType!.name == other.exerciseType!.name;
   }
 }
 
@@ -31,4 +33,8 @@ class GoalMetric {
         metricScale == other.metricScale &&
         metricSize == other.metricSize;
   }
+
+  @override
+  int get hashCode =>
+      metricName.hashCode - metricScale.hashCode + metricSize.hashCode << 2;
 }

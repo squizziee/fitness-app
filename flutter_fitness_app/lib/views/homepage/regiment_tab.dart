@@ -210,7 +210,6 @@ class _RegimentTabState extends State<RegimentTab> {
                                           ]),
                                     ),
                                   );
-                                  ;
                                 })),
                       );
                     } else {

@@ -16,12 +16,12 @@ class SessionTab extends StatefulWidget {
 Widget _sessionWidget(
     BuildContext context,
     (TrainingSession, TrainingRegiment) session,
-    RegimentService _regimentService,
-    SessionService _sessionService) {
+    RegimentService regimentService,
+    SessionService sessionService) {
   return GestureDetector(
     onTap: () {
-      _regimentService.openRegiment(context, session.$2);
-      _sessionService.openSessionByInstance(context, session.$1);
+      regimentService.openRegiment(context, session.$2);
+      sessionService.openSessionByInstance(context, session.$1);
       Navigator.of(context).pushNamed("/training_session_screen");
     },
     child: Container(
@@ -64,7 +64,7 @@ class _SessionTabState extends State<SessionTab> {
                       context, session, _regimentService, _sessionService);
                 }));
           } else {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
