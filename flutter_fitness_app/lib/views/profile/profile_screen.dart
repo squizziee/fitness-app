@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
+import 'package:flutter_fitness_app/services/notfication_service.dart';
 import 'package:flutter_fitness_app/services/user_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -237,6 +238,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _removeAllGoalsButton(context, _userService),
         _changeEmailButton(context, _authService),
         _changePasswordButton(context, _authService),
+        ElevatedButton(
+            onPressed: () {
+              NotificationService()
+                  .showNotification(title: 'Sample title', body: 'It works!');
+            },
+            child: const Text("Test notification"))
       ]),
     ));
   }
