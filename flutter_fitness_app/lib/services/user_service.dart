@@ -10,13 +10,14 @@ class UserService {
   final Auth _authService = Auth();
   final DatabaseService _dbService = DatabaseService();
 
-  void loadUserData(BuildContext context) async {
+  Future<int> loadUserData(BuildContext context) async {
     var appUser = Provider.of<AppUser>(context, listen: false);
     appUser.userUID = _authService.currentUser!.uid;
     _handleUserExistence(context, appUser.userUID!);
 
     appUser.regiments = await _dbService.getUserRegiments(appUser.userUID!);
     appUser.goals = await _dbService.getUserGoals(appUser.userUID!);
+    return 0;
   }
 
   // Creates user document if not present already

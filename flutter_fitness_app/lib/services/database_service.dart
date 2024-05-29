@@ -43,6 +43,17 @@ class DatabaseService {
     CombatTrainingSession: ("", CombatTrainingFirestoreSerializer())
   };
 
+  // Future<AppUser> getAppUser(String userId) async {
+  //   var db = FirebaseFirestore.instance;
+  //   var user = (await db
+  //           .collection("users")
+  //           .where("user_uid", isEqualTo: userId)
+  //           .get())
+  //       .docs[0];
+  // var appUser = AppUser();
+  // appUser.
+  // }
+
   Future<List<TrainingRegiment>> getUserRegiments(String userId) async {
     var db = FirebaseFirestore.instance;
     var user = (await db
