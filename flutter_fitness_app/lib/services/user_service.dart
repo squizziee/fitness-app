@@ -12,6 +12,9 @@ class UserService {
 
   Future<int> loadUserData(BuildContext context) async {
     var appUser = Provider.of<AppUser>(context, listen: false);
+    if (_authService.currentUser == null) {
+      return 1;
+    }
     appUser.userUID = _authService.currentUser!.uid;
     _handleUserExistence(context, appUser.userUID!);
 
@@ -29,7 +32,7 @@ class UserService {
         await collection.where("user_uid", isEqualTo: firebaseAuthUID).get();
     if (userQuery.docs.isEmpty) {
       var newAppUserDoc = collection.doc();
-      var appUser = Provider.of<AppUser>(context);
+      var appUser = Provider.of<AppUser>(context, listen: false);
       await newAppUserDoc.set(AppUserSerializer().serialize(appUser));
       // var user = userQuery.docs[0];
     }

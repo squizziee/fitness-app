@@ -1,10 +1,14 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   Future initNotification() async {
+    //_configureLocalTimeZone();
     AndroidInitializationSettings androidInitializationSettings =
         const AndroidInitializationSettings('barbell');
 
@@ -26,7 +30,7 @@ class NotificationService {
   notificationDetails() {
     return const NotificationDetails(
         android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
+            importance: Importance.max, priority: Priority.high),
         iOS: DarwinNotificationDetails());
   }
 
@@ -34,5 +38,38 @@ class NotificationService {
       {int id = 0, String? title, String? body, String? payLoad}) async {
     return notificationsPlugin.show(
         id, title, body, await notificationDetails());
+  }
+
+  Future _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+    //final String timezone = await FlutterNativeTimezone.getLocalTimezone();
+    //tz.setLocalLocation(tz.getLocation(timezone));
+  }
+
+  Future scheduleNotification(
+      {int id = 1,
+      String? title,
+      String? body,
+      String? payLoad,
+      required DateTime scheduledNotificationDateTime}) async {
+    var a = tz.local;
+    return notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime.add(Duration(
+              hours: scheduledNotificationDateTime.timeZoneOffset.inHours)),
+          tz.getLocation('Europe/Minsk'),
+        ),
+        const NotificationDetails(
+            android: AndroidNotificationDetails('channelId', 'channelName',
+                importance: Importance.max, priority: Priority.high),
+            iOS: DarwinNotificationDetails()),
+        // ignore: deprecated_member_use
+        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 }

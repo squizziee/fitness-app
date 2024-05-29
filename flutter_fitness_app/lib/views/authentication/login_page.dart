@@ -54,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
           _errorMessage(),
           submitButton('Log in', () async {
             await signInWithEmailAndPassword();
-            Navigator.of(context).pushNamed('/home');
           }, context),
           const SizedBox(
             height: 10,

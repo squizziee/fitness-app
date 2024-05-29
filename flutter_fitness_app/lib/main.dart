@@ -9,10 +9,12 @@ import 'package:flutter_fitness_app/services/notfication_service.dart';
 import 'package:flutter_fitness_app/views/authentication/auth_widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  tz.initializeTimeZones();
   await NotificationService().initNotification();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AppUser()),
