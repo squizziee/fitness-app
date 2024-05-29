@@ -238,23 +238,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _removeAllGoalsButton(context, _userService),
         _changeEmailButton(context, _authService),
         _changePasswordButton(context, _authService),
-        ElevatedButton(
-            onPressed: () async {
-              await NotificationService().showNotification(
-                title: 'Non-scheduled Notification',
-                body: 'huh?',
-              );
-            },
-            child: const Text("Test instant notification")),
+        //   ElevatedButton(
+        //       onPressed: () async {
+        //         await NotificationService().showNotification(
+        //           title: 'Non-scheduled Notification',
+        //           body: 'huh?',
+        //         );
+        //       },
+        //       child: const Text("Test instant notification")),
+        //   ElevatedButton(
+        //       onPressed: () async {
+        //         await NotificationService().scheduleNotification(
+        //             title: 'Scheduled Notification',
+        //             body: 'huh?',
+        //             scheduledNotificationDateTime:
+        //                 DateTime.now().add(const Duration(seconds: 5)));
+        //       },
+        //       child: const Text("Test notification"))
+        // ]),
         ElevatedButton(
             onPressed: () async {
               await NotificationService().scheduleNotification(
-                  title: 'Scheduled Notification',
-                  body: 'huh?',
-                  scheduledNotificationDateTime:
-                      DateTime.now().add(const Duration(seconds: 5)));
+                  "Scheduled dat shit",
+                  "yeah",
+                  DateTime.now().add(const Duration(seconds: 5)));
             },
-            child: const Text("Test notification"))
+            child: const Text("Schedule notification"))
       ]),
     ));
   }

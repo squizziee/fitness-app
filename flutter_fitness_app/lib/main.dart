@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/repos/current_exercise.dart';
 import 'package:flutter_fitness_app/repos/current_goal.dart';
@@ -14,8 +15,24 @@ import 'package:timezone/data/latest.dart' as tz;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  tz.initializeTimeZones();
-  await NotificationService().initNotification();
+  AwesomeNotifications().initialize(null, [
+    NotificationChannel(
+        channelGroupKey: "reminders",
+        channelKey: "instant_notifications",
+        channelName: "Basic instant notifications",
+        channelDescription: 'whatever',
+        defaultColor: const Color(0xffffc400),
+        importance: NotificationImportance.High,
+        ledColor: Colors.white),
+    NotificationChannel(
+        channelGroupKey: "reminders",
+        channelKey: "scheduled_notifications",
+        channelName: "Scheduled notifications",
+        channelDescription: 'whatever',
+        defaultColor: const Color.fromARGB(255, 0, 110, 255),
+        importance: NotificationImportance.High,
+        ledColor: Colors.white)
+  ]);
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AppUser()),
     ChangeNotifierProvider(create: (context) => CurrentTrainingRegiment()),
