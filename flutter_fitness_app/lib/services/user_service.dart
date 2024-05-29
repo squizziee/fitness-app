@@ -33,4 +33,16 @@ class UserService {
       // var user = userQuery.docs[0];
     }
   }
+
+  Future removeAllUserRegiments(BuildContext context) async {
+    var user = Provider.of<AppUser>(context, listen: false);
+    user.regiments = [];
+    await _dbService.removeAllUserRegiments(user);
+  }
+
+  Future removeAllUserGoals(BuildContext context) async {
+    var user = Provider.of<AppUser>(context, listen: false);
+    user.goals = [];
+    await _dbService.removeAllUserGoals(user);
+  }
 }

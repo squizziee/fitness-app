@@ -72,6 +72,24 @@ class DatabaseService {
     return regiments;
   }
 
+  Future removeAllUserRegiments(AppUser appUser) async {
+    var regiments = await getUserRegiments(appUser.userUID!);
+    for (var regiment in regiments) {
+      regiment.id.delete();
+    }
+
+    await postAppUser(appUser);
+  }
+
+  Future removeAllUserGoals(AppUser appUser) async {
+    var goals = await getUserGoals(appUser.userUID!);
+    for (var goal in goals) {
+      goal.id.delete();
+    }
+
+    await postAppUser(appUser);
+  }
+
   Future<List<Goal>> getUserGoals(String userId) async {
     var db = FirebaseFirestore.instance;
     var user = (await db
