@@ -7,8 +7,14 @@ class Goal {
   DateTime? deadline;
   WeightExerciseType? exerciseType;
   Set<GoalMetric>? metrics;
+  int? notificationId;
 
-  Goal({this.id, this.deadline, this.exerciseType, this.metrics});
+  Goal(
+      {this.id,
+      this.deadline,
+      this.exerciseType,
+      this.metrics,
+      this.notificationId});
 
   @override
   operator ==(other) {

@@ -65,6 +65,7 @@ class _GoalScreenState extends State<GoalScreen> {
                       child: const Text('Cancel')),
                   TextButton(
                       onPressed: () {
+                        goalService.openGoal(context, index);
                         goalService.removeGoalByIndex(context, index);
                         setState(() {});
                         Navigator.of(context).pop();

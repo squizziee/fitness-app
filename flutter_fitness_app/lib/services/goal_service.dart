@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/goal.dart';
@@ -11,10 +12,7 @@ import 'package:provider/provider.dart';
 
 class GoalService {
   final DatabaseService _dbService = DatabaseService();
-  bool _notificationWereLaunched = false;
   final NotificationService _notificationService = NotificationService();
-  Timer? _notificationTimer;
-
   Future<void> createAndOpenEmptyGoal(BuildContext context) async {
     var user = Provider.of<AppUser>(context, listen: false);
     var goal = Goal(metrics: <GoalMetric>{});
@@ -35,9 +33,7 @@ class GoalService {
     var user = Provider.of<AppUser>(context, listen: false);
     _dbService.postAppUser(user);
 
-    if (_notificationTimer != null) {
-      _notificationTimer!.cancel();
-    }
+    _cancelNotifications(context);
   }
 
   void openGoalByReference(BuildContext context, Goal goal) {
@@ -58,6 +54,22 @@ class GoalService {
     Provider.of<CurrentGoal>(context, listen: false).goal!.exerciseType =
         newExerciseType;
     await _saveGoalToDatabase(context);
+  }
+
+  void _startNotifications(BuildContext context) {
+    var goal = Provider.of<CurrentGoal>(context, listen: false).goal!;
+
+    var id = Random().nextInt(0x7FFFFFF1);
+    _notificationService.scheduleNotification(
+        "Goal for '${goal.exerciseType == null ? "" : goal.exerciseType!.name}' is due",
+        "It is ${goal.deadline == null ? "" : goal.deadline!} already!",
+        goal.deadline!,
+        id);
+  }
+
+  void _cancelNotifications(BuildContext context) {
+    var goal = Provider.of<CurrentGoal>(context, listen: false).goal!;
+    goal.notificationId = null;
   }
 
   Future addMetric(BuildContext context, String metric, double metricSize,
@@ -96,14 +108,8 @@ class GoalService {
     if (goal.deadline == null) return;
     if (goal.exerciseType == null) return;
 
-    if (!_notificationWereLaunched) {
-      _notificationTimer = Timer(goal.deadline!.difference(DateTime.now()), () {
-        _notificationService.instantNotify(
-            "Goal for ${goal.exerciseType!.name} is due",
-            "It is ${goal.deadline} already!");
-      });
-      _notificationWereLaunched = true;
-    }
+    _cancelNotifications(context);
+    _startNotifications(context);
 
     var user = Provider.of<AppUser>(context, listen: false);
     await _dbService.postGoal(goal);
