@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
-import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/repos/current_training_session.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';

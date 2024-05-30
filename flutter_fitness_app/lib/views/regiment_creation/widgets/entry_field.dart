@@ -4,6 +4,8 @@ Widget entryField(BuildContext context, String placeholder,
     TextEditingController controller) {
   return TextField(
       controller: controller,
+      toolbarOptions: ToolbarOptions(
+          copy: false, paste: false, cut: false, selectAll: true),
       decoration: InputDecoration(
         labelText: placeholder,
         contentPadding:

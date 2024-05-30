@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/user.dart';
-import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -80,8 +79,7 @@ Widget _addRegimentButton(BuildContext context) {
 }
 
 class _RegimentTabState extends State<RegimentTab> {
-  Future<List<TrainingRegiment>>? regiments;
-  final DatabaseService _dbService = DatabaseService();
+  List<TrainingRegiment>? regiments;
   final RegimentService _regimentService = RegimentService();
   @override
   void initState() {
@@ -90,9 +88,7 @@ class _RegimentTabState extends State<RegimentTab> {
 
   @override
   Widget build(BuildContext context) {
-    regiments =
-        _dbService.getUserRegiments(Provider.of<AppUser>(context).userUID!);
-    //regiments ??= [];
+    regiments = Provider.of<AppUser>(context).regiments; //regiments ??= [];
     return SafeArea(
       child: SizedBox(
           height: double.infinity,
@@ -100,111 +96,100 @@ class _RegimentTabState extends State<RegimentTab> {
           child: Column(
             children: [
               _addRegimentButton(context),
-              FutureBuilder(
-                  future: regiments,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Container(
-                          child: Expanded(
-                        child: ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var regiment = snapshot.data![index];
-                              String cardText = "";
-                              if (regiment.startDate == null) {
-                                cardText = "Not started";
-                              } else if (regiment.dayOfPause == -1) {
-                                cardText =
-                                    "Day ${regiment.getCurrentDay() + 1} of ${regiment.cycleDurationInDays}";
-                              } else if (regiment.dayOfPause != -1) {
-                                cardText =
-                                    "Paused on day ${regiment.dayOfPause + 1} of ${regiment.cycleDurationInDays}";
-                              }
-                              return GestureDetector(
-                                onTap: () {
-                                  _regimentService.openRegiment(
-                                      context, regiment);
-                                  Navigator.of(context)
-                                      .pushNamed("/set_regiment_calendar")
-                                      .then((value) => setState(
-                                            () {},
-                                          ));
-                                },
-                                onLongPress: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: Column(children: [
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _regimentService.openRegiment(
-                                                      context, regiment);
-                                                  _regimentService
-                                                      .startRegiment(context);
-                                                });
-                                              },
-                                              child: const Text("Start")),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _regimentService.openRegiment(
-                                                      context, regiment);
-                                                  _regimentService
-                                                      .pauseRegiment(context);
-                                                });
-                                              },
-                                              child: const Text("Pause")),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _regimentService.openRegiment(
-                                                      context, regiment);
-                                                  _regimentService
-                                                      .resumeRegiment(context);
-                                                });
-                                              },
-                                              child: const Text("Resume")),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _regimentService.openRegiment(
-                                                      context, regiment);
-                                                  _regimentService
-                                                      .stopRegiment(context);
-                                                });
-                                              },
-                                              child: const Text("Stop"))
-                                        ]),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Card(
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        ListTile(
-                                          leading: FaIcon(regiment.trainingType!
-                                              .getIconData()),
-                                          title: Text(regiment.name!),
-                                          subtitle: Text(cardText),
-                                        ),
-                                        LinearProgressIndicator(
-                                          value:
-                                              (regiment.getCurrentDay() + 1) /
-                                                  regiment.cycleDurationInDays!,
-                                        )
-                                      ]),
-                                ),
+              Container(
+                  child: Expanded(
+                child: ListView.builder(
+                    itemCount: regiments!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var regiment = regiments![index];
+                      String cardText = "";
+                      if (regiment.startDate == null) {
+                        cardText = "Not started";
+                      } else if (regiment.dayOfPause == -1) {
+                        cardText =
+                            "Day ${regiment.getCurrentDay() + 1} of ${regiment.cycleDurationInDays}";
+                      } else if (regiment.dayOfPause != -1) {
+                        cardText =
+                            "Paused on day ${regiment.dayOfPause + 1} of ${regiment.cycleDurationInDays}";
+                      }
+                      return GestureDetector(
+                        onTap: () {
+                          _regimentService.openRegiment(context, regiment);
+                          Navigator.of(context)
+                              .pushNamed("/set_regiment_calendar")
+                              .then((value) => setState(
+                                    () {},
+                                  ));
+                        },
+                        onLongPress: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Column(children: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _regimentService.openRegiment(
+                                              context, regiment);
+                                          _regimentService
+                                              .startRegiment(context);
+                                        });
+                                      },
+                                      child: const Text("Start")),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _regimentService.openRegiment(
+                                              context, regiment);
+                                          _regimentService
+                                              .pauseRegiment(context);
+                                        });
+                                      },
+                                      child: const Text("Pause")),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _regimentService.openRegiment(
+                                              context, regiment);
+                                          _regimentService
+                                              .resumeRegiment(context);
+                                        });
+                                      },
+                                      child: const Text("Resume")),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _regimentService.openRegiment(
+                                              context, regiment);
+                                          _regimentService
+                                              .stopRegiment(context);
+                                        });
+                                      },
+                                      child: const Text("Stop"))
+                                ]),
                               );
-                            }),
-                      ));
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  })
+                            },
+                          );
+                        },
+                        child: Card(
+                          child:
+                              Column(mainAxisSize: MainAxisSize.max, children: [
+                            ListTile(
+                              leading:
+                                  FaIcon(regiment.trainingType!.getIconData()),
+                              title: Text(regiment.name!),
+                              subtitle: Text(cardText),
+                            ),
+                            LinearProgressIndicator(
+                              value: (regiment.getCurrentDay() + 1) /
+                                  regiment.cycleDurationInDays!,
+                            )
+                          ]),
+                        ),
+                      );
+                    }),
+              ))
             ],
           )),
     );
