@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+//import 'package:timezone/data/latest.dart' as tz;
+//import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -76,14 +76,14 @@ class NotificationService {
   //           UILocalNotificationDateInterpretation.absoluteTime);
   // }
 
-  Future<bool> instantNotify() async {
+  Future<bool> instantNotify(String title, String body) async {
     final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
     return awesomeNotifications.createNotification(
         content: NotificationContent(
-            id: Random().nextInt(100),
+            id: Random().nextInt(0x7FFFFFF1),
             channelKey: "instant_notifications",
-            title: "Awesome title",
-            body: "HUHH??"));
+            title: title,
+            body: body));
   }
 
   Future<bool> scheduleNotification(

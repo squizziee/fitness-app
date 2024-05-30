@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/combat_training/combat_training_session.dart';
 import 'package:flutter_fitness_app/models/cycling/cycling_session.dart';
@@ -11,10 +13,13 @@ import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
+import 'package:flutter_fitness_app/services/notfication_service.dart';
 import 'package:provider/provider.dart';
 
 class RegimentService {
   final DatabaseService _dbService = DatabaseService();
+  final NotificationService _notificationService = NotificationService();
+  Timer? _notificationTimer;
 
   void createAndOpenEmptyRegiment(BuildContext context) {
     var newRegiment = TrainingRegiment(dayOfPause: -1);
@@ -101,6 +106,29 @@ class RegimentService {
         .regiment!
         .startDate = DateTime.now();
     _saveRegimentToDatabase(context);
+
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
+
+    var session = regiment.schedule![regiment.getCurrentDay()];
+
+    var now = DateTime.now();
+
+    var notificationStartDate = now
+        .add(const Duration(days: 1))
+        .subtract(
+            Duration(hours: now.hour, minutes: now.minute, seconds: now.second))
+        .add(const Duration(hours: 8));
+
+    // send push message every day at 8 am
+
+    Timer(notificationStartDate.difference(now), () {
+      _notificationTimer = Timer.periodic(const Duration(days: 1), (timer) {
+        _notificationService.instantNotify(
+            "Today`s training session on ${regiment.name}",
+            "Session #${session.dayInSchedule} (${session.name == "" ? "No name" : session.name}) is to perform today");
+      });
+    });
   }
 
   void stopRegiment(BuildContext context) {
@@ -111,6 +139,10 @@ class RegimentService {
         .regiment!
         .dayOfPause = -1;
     _saveRegimentToDatabase(context);
+
+    if (_notificationTimer != null) {
+      _notificationTimer!.cancel();
+    }
   }
 
   void pauseRegiment(BuildContext context) {
@@ -118,6 +150,10 @@ class RegimentService {
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     regiment.dayOfPause = regiment.getCurrentDay();
     _saveRegimentToDatabase(context);
+
+    if (_notificationTimer != null) {
+      _notificationTimer!.cancel();
+    }
   }
 
   void resumeRegiment(BuildContext context) {
@@ -127,6 +163,14 @@ class RegimentService {
         DateTime.now().subtract(Duration(days: regiment.dayOfPause));
     regiment.dayOfPause = -1;
     _saveRegimentToDatabase(context);
+
+    var session = regiment.schedule![regiment.getCurrentDay()];
+
+    _notificationTimer = Timer.periodic(const Duration(days: 1), (timer) {
+      _notificationService.instantNotify(
+          "Today`s training session on ${regiment.name}",
+          "Session #${session.dayInSchedule} (${session.name == "" ? "No name" : session.name}) is to perform today");
+    });
   }
 
   void _saveRegimentToDatabase(BuildContext context) async {
