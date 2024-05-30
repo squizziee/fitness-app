@@ -5,6 +5,7 @@ import 'package:flutter_fitness_app/repos/current_goal.dart';
 import 'package:flutter_fitness_app/services/custom_search_delegate.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/goal_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -170,6 +171,12 @@ class _SetGoalPageState extends State<SetGoalPage> {
     datePicked = currentGoal.deadline;
     return SafeArea(
         child: Scaffold(
+      appBar: appBar(
+          context,
+          currentGoal.exerciseType == null
+              ? "New goal"
+              : "${currentGoal.exerciseType!.name} goal",
+          "Goal setup"),
       body: Column(children: [
         FutureBuilder(
             future: exerciseList,

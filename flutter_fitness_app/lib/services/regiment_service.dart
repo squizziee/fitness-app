@@ -25,6 +25,7 @@ class RegimentService {
     var newRegiment = TrainingRegiment(dayOfPause: -1);
     Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment =
         newRegiment;
+    newRegiment.notificationIdList = [];
     Provider.of<AppUser>(context, listen: false).regiments!.add(newRegiment);
     _saveRegimentToDatabase(context);
   }

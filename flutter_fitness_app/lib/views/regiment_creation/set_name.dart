@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/entry_field.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/title.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/submit_button.dart';
@@ -18,6 +19,7 @@ class _SetNamePageState extends State<SetNamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar(context, "Create new regiment", "Choose name"),
       body: Container(
         height: double.infinity,
         width: double.infinity,

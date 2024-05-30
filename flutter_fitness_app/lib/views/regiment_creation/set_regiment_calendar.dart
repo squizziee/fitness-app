@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -87,20 +88,16 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: appBar(
+            context,
+            Provider.of<CurrentTrainingRegiment>(context).regiment!.name!,
+            Provider.of<CurrentTrainingRegiment>(context)
+                .regiment!
+                .trainingType
+                .toString()),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                child: Column(children: [
-                  Text(Provider.of<CurrentTrainingRegiment>(context)
-                      .regiment!
-                      .name!),
-                  Text(Provider.of<CurrentTrainingRegiment>(context)
-                      .regiment!
-                      .trainingType
-                      .toString())
-                ]),
-              ),
               Container(
                 padding:
                     const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),

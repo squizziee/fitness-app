@@ -163,7 +163,15 @@ class DatabaseService {
             .docs[0]
             .reference;
 
-    // If the regiment is new, create Firestore doc for it and put it in object as a field
+    List<TrainingRegiment> nullFilteredRegiments = [];
+    for (var regiment in user.regiments!) {
+      if (regiment.id != null) {
+        nullFilteredRegiments.add(regiment);
+      }
+    }
+
+    user.regiments = nullFilteredRegiments;
+
     await doc.set(AppUserSerializer().serialize(user));
   }
 
@@ -211,7 +219,7 @@ class DatabaseService {
     }
 
     var temp = serializer.serializeGoal(goal);
-    // If the session is new, create Firestore doc for it and put it in object as a field
+    // If the goal is new, create Firestore doc for it and put it in object as a field
     await goalDoc.set(temp);
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_types.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/title.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/widgets/submit_button.dart';
@@ -28,6 +29,7 @@ class _SetTypePageState extends State<SetTypePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar(context, "Create new regiment", "Choose training type"),
       body: Container(
         height: double.infinity,
         width: double.infinity,
