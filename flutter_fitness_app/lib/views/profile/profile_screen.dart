@@ -256,14 +256,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         //       },
         //       child: const Text("Test notification"))
         // ]),
-        ElevatedButton(
-            onPressed: () async {
-              await NotificationService().scheduleNotification(
-                  "Scheduled dat shit",
-                  "yeah",
-                  DateTime.now().add(const Duration(seconds: 5)));
-            },
-            child: const Text("Schedule notification"))
       ]),
     ));
   }

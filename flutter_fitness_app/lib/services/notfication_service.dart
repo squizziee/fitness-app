@@ -87,7 +87,7 @@ class NotificationService {
   }
 
   Future<bool> scheduleNotification(
-      String title, String body, DateTime dateTime) async {
+      String title, String body, DateTime dateTime, int id) async {
     final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
     return await awesomeNotifications.createNotification(
         schedule: NotificationCalendar(
@@ -97,9 +97,14 @@ class NotificationService {
             minute: dateTime.minute,
             second: dateTime.second),
         content: NotificationContent(
-            id: Random().nextInt(100),
+            id: id,
             channelKey: "scheduled_notifications",
             title: title,
             body: body));
+  }
+
+  Future<void> cancelScheduledNotification(int id) async {
+    final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
+    await awesomeNotifications.cancel(id);
   }
 }

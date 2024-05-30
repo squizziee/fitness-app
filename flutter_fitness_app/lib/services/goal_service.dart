@@ -1,13 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/goal.dart';
 import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:flutter_fitness_app/repos/current_goal.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
+import 'package:flutter_fitness_app/services/notfication_service.dart';
 import 'package:provider/provider.dart';
 
 class GoalService {
   final DatabaseService _dbService = DatabaseService();
+  bool _notificationWereLaunched = false;
+  final NotificationService _notificationService = NotificationService();
+  Timer? _notificationTimer;
 
   Future<void> createAndOpenEmptyGoal(BuildContext context) async {
     var user = Provider.of<AppUser>(context, listen: false);
@@ -28,6 +34,10 @@ class GoalService {
     goals!.removeAt(goalIndex);
     var user = Provider.of<AppUser>(context, listen: false);
     _dbService.postAppUser(user);
+
+    if (_notificationTimer != null) {
+      _notificationTimer!.cancel();
+    }
   }
 
   void openGoalByReference(BuildContext context, Goal goal) {
@@ -85,6 +95,15 @@ class GoalService {
 
     if (goal.deadline == null) return;
     if (goal.exerciseType == null) return;
+
+    if (!_notificationWereLaunched) {
+      _notificationTimer = Timer(goal.deadline!.difference(DateTime.now()), () {
+        _notificationService.instantNotify(
+            "Goal for ${goal.exerciseType!.name} is due",
+            "It is ${goal.deadline} already!");
+      });
+      _notificationWereLaunched = true;
+    }
 
     var user = Provider.of<AppUser>(context, listen: false);
     await _dbService.postGoal(goal);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/combat_training/combat_training_session.dart';
@@ -19,7 +20,6 @@ import 'package:provider/provider.dart';
 class RegimentService {
   final DatabaseService _dbService = DatabaseService();
   final NotificationService _notificationService = NotificationService();
-  Timer? _notificationTimer;
 
   void createAndOpenEmptyRegiment(BuildContext context) {
     var newRegiment = TrainingRegiment(dayOfPause: -1);
@@ -101,34 +101,49 @@ class RegimentService {
         .schedule = schedule;
   }
 
-  void startRegiment(BuildContext context) {
-    Provider.of<CurrentTrainingRegiment>(context, listen: false)
-        .regiment!
-        .startDate = DateTime.now();
-    _saveRegimentToDatabase(context);
-
+  void _startNotifications(BuildContext context, int startingFromIndex) {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
 
-    var session = regiment.schedule![regiment.getCurrentDay()];
-
     var now = DateTime.now();
 
-    var notificationStartDate = now
-        .add(const Duration(days: 1))
+    var notificationDateTime = now
         .subtract(
             Duration(hours: now.hour, minutes: now.minute, seconds: now.second))
         .add(const Duration(hours: 8));
 
-    // send push message every day at 8 am
+    // var dummyDateTime = now.add(const Duration(seconds: 5));
 
-    Timer(notificationStartDate.difference(now), () {
-      _notificationTimer = Timer.periodic(const Duration(days: 1), (timer) {
-        _notificationService.instantNotify(
-            "Today`s training session on ${regiment.name}",
-            "Session #${session.dayInSchedule} (${session.name == "" ? "No name" : session.name}) is to perform today");
-      });
-    });
+    for (var i = startingFromIndex; i < regiment.schedule!.length; i++) {
+      var session = regiment.schedule![i];
+      var id = Random().nextInt(0x7FFFFFF1);
+      regiment.notificationIdList!.add(id);
+      _notificationService.scheduleNotification(
+          "Today`s training session on ${regiment.name}",
+          "Session #${session.dayInSchedule + 1} (${session.name == "" ? "No name" : session.name}) is to perform today",
+          notificationDateTime.add(Duration(days: i)),
+          id);
+    }
+  }
+
+  void _cancelNotifications(BuildContext context) {
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
+    for (var id in regiment.notificationIdList!) {
+      _notificationService.cancelScheduledNotification(id);
+    }
+
+    regiment.notificationIdList!.clear();
+  }
+
+  void startRegiment(BuildContext context) {
+    Provider.of<CurrentTrainingRegiment>(context, listen: false)
+        .regiment!
+        .startDate = DateTime.now();
+
+    _startNotifications(context, 0);
+
+    _saveRegimentToDatabase(context);
   }
 
   void stopRegiment(BuildContext context) {
@@ -138,11 +153,10 @@ class RegimentService {
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
         .regiment!
         .dayOfPause = -1;
-    _saveRegimentToDatabase(context);
 
-    if (_notificationTimer != null) {
-      _notificationTimer!.cancel();
-    }
+    _cancelNotifications(context);
+
+    _saveRegimentToDatabase(context);
   }
 
   void pauseRegiment(BuildContext context) {
@@ -151,9 +165,9 @@ class RegimentService {
     regiment.dayOfPause = regiment.getCurrentDay();
     _saveRegimentToDatabase(context);
 
-    if (_notificationTimer != null) {
-      _notificationTimer!.cancel();
-    }
+    _cancelNotifications(context);
+
+    //regiment.cancelNotifications();
   }
 
   void resumeRegiment(BuildContext context) {
@@ -162,15 +176,10 @@ class RegimentService {
     regiment.startDate =
         DateTime.now().subtract(Duration(days: regiment.dayOfPause));
     regiment.dayOfPause = -1;
+
+    _startNotifications(context, regiment.getCurrentDay());
+
     _saveRegimentToDatabase(context);
-
-    var session = regiment.schedule![regiment.getCurrentDay()];
-
-    _notificationTimer = Timer.periodic(const Duration(days: 1), (timer) {
-      _notificationService.instantNotify(
-          "Today`s training session on ${regiment.name}",
-          "Session #${session.dayInSchedule} (${session.name == "" ? "No name" : session.name}) is to perform today");
-    });
   }
 
   void _saveRegimentToDatabase(BuildContext context) async {

@@ -20,6 +20,7 @@ import 'package:flutter_fitness_app/models/training_types.dart';
 import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
+import 'package:flutter_fitness_app/services/regiment_service.dart';
 
 class DatabaseService {
   static final Map<Type, FirestoreSerializer> _regimentSerializers = {
@@ -80,6 +81,14 @@ class DatabaseService {
           await serializer!.deserializeRegiment(regimentDoc, regimentRef);
       regiments.add(regiment);
     }
+
+    for (var regiment in regiments) {
+      if (regiment.startDate != null) {
+        // regiment.initNotificationLaunchTime();
+        // regiment.startNotifications();
+      }
+    }
+
     return regiments;
   }
 
