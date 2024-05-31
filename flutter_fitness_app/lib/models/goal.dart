@@ -1,6 +1,9 @@
 // ignore_for_file: unused_field
 
+import 'dart:math';
+
 import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
+import 'package:flutter_fitness_app/services/notfication_service.dart';
 
 class Goal {
   dynamic id;
@@ -8,6 +11,8 @@ class Goal {
   WeightExerciseType? exerciseType;
   Set<GoalMetric>? metrics;
   int? notificationId;
+
+  final NotificationService _notificationService = NotificationService();
 
   Goal(
       {this.id,
@@ -22,6 +27,21 @@ class Goal {
         deadline == other.deadline &&
         //metrics!.difference(other.metrics!).isEmpty &&
         exerciseType!.name == other.exerciseType!.name;
+  }
+
+  void startNotifications() {
+    var id = Random().nextInt(0x7FFFFFF1);
+    _notificationService.scheduleNotification(
+        "Goal for '${exerciseType == null ? "" : exerciseType!.name}' is due",
+        "It is ${deadline == null ? "" : deadline!} already!",
+        deadline!,
+        id);
+  }
+
+  void cancelNotifications() {
+    if (notificationId == null) return;
+    _notificationService.cancelScheduledNotification(notificationId!);
+    notificationId = null;
   }
 }
 

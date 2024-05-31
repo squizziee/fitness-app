@@ -31,24 +31,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  Future<void> signOut() async {
-    await Auth().signOut();
-  }
-
-  Widget _userUID() {
-    return Text(user?.email ?? 'User email');
-  }
-
-  Widget _signOutButton() {
-    return ElevatedButton(
-        onPressed: () async {
-          await signOut();
-          // ignore: use_build_context_synchronously
-          Navigator.of(context).pushNamed('/login');
-        },
-        child: const Text('Sign out'));
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

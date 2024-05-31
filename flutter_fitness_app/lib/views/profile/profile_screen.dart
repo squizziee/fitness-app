@@ -225,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text("${_authService.currentUser!.email}"),
                 ElevatedButton(
                     onPressed: () async {
-                      await _authService.signOut();
+                      await _authService.signOut(context);
                     },
                     child: const FaIcon(
                       FontAwesomeIcons.doorOpen,

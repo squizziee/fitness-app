@@ -137,24 +137,24 @@ class RegimentService {
   }
 
   void startRegiment(BuildContext context) {
-    Provider.of<CurrentTrainingRegiment>(context, listen: false)
-        .regiment!
-        .startDate = DateTime.now();
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
 
-    _startNotifications(context, 0);
+    regiment.startDate = DateTime.now();
+
+    regiment.startNotifications(0);
 
     _saveRegimentToDatabase(context);
   }
 
   void stopRegiment(BuildContext context) {
-    Provider.of<CurrentTrainingRegiment>(context, listen: false)
-        .regiment!
-        .startDate = null;
-    Provider.of<CurrentTrainingRegiment>(context, listen: false)
-        .regiment!
-        .dayOfPause = -1;
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
 
-    _cancelNotifications(context);
+    regiment.startDate = null;
+    regiment.dayOfPause = -1;
+
+    regiment.cancelNotifications();
 
     _saveRegimentToDatabase(context);
   }
@@ -163,11 +163,10 @@ class RegimentService {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
     regiment.dayOfPause = regiment.getCurrentDay();
+
+    regiment.cancelNotifications();
+
     _saveRegimentToDatabase(context);
-
-    _cancelNotifications(context);
-
-    //regiment.cancelNotifications();
   }
 
   void resumeRegiment(BuildContext context) {
@@ -177,7 +176,7 @@ class RegimentService {
         DateTime.now().subtract(Duration(days: regiment.dayOfPause));
     regiment.dayOfPause = -1;
 
-    _startNotifications(context, regiment.getCurrentDay());
+    regiment.startNotifications(regiment.getCurrentDay());
 
     _saveRegimentToDatabase(context);
   }

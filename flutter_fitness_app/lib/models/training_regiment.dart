@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter_fitness_app/models/training_types.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/services/notfication_service.dart';
 
 class TrainingRegiment {
   dynamic id;
@@ -9,6 +12,8 @@ class TrainingRegiment {
   List<TrainingSession>? schedule = [];
   List<int>? notificationIdList = [];
   DateTime? launchTime;
+
+  final NotificationService _notificationService = NotificationService();
 
   DateTime? startDate;
   int dayOfPause = -1;
@@ -42,5 +47,35 @@ class TrainingRegiment {
 
   bool isPaused() {
     return dayOfPause != -1;
+  }
+
+  void startNotifications(int startingFromIndex) {
+    var now = DateTime.now();
+
+    var notificationDateTime = now
+        .subtract(
+            Duration(hours: now.hour, minutes: now.minute, seconds: now.second))
+        .add(const Duration(hours: 8));
+
+    // var dummyDateTime = now.add(const Duration(seconds: 5));
+
+    for (var i = startingFromIndex; i < schedule!.length; i++) {
+      var session = schedule![i];
+      var id = Random().nextInt(0x7FFFFFF1);
+      notificationIdList!.add(id);
+      _notificationService.scheduleNotification(
+          "Today`s training session on $name",
+          "Session #${session.dayInSchedule + 1} (${session.name == "" ? "No name" : session.name}) is to perform today",
+          notificationDateTime.add(Duration(days: i)),
+          id);
+    }
+  }
+
+  void cancelNotifications() {
+    for (var id in notificationIdList!) {
+      _notificationService.cancelScheduledNotification(id);
+    }
+
+    notificationIdList!.clear();
   }
 }

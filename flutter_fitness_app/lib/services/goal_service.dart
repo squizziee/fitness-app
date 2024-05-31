@@ -28,12 +28,14 @@ class GoalService {
   }
 
   void removeGoalByIndex(BuildContext context, int goalIndex) {
+    Provider.of<AppUser>(context, listen: false)
+        .goals![goalIndex]
+        .cancelNotifications();
+
     var goals = Provider.of<AppUser>(context, listen: false).goals;
     goals!.removeAt(goalIndex);
     var user = Provider.of<AppUser>(context, listen: false);
     _dbService.postAppUser(user);
-
-    _cancelNotifications(context);
   }
 
   void openGoalByReference(BuildContext context, Goal goal) {
@@ -108,8 +110,8 @@ class GoalService {
     if (goal.deadline == null) return;
     if (goal.exerciseType == null) return;
 
-    _cancelNotifications(context);
-    _startNotifications(context);
+    goal.cancelNotifications();
+    goal.startNotifications();
 
     var user = Provider.of<AppUser>(context, listen: false);
     await _dbService.postGoal(goal);

@@ -88,7 +88,7 @@ class _RegimentTabState extends State<RegimentTab> {
 
   @override
   Widget build(BuildContext context) {
-    regiments = Provider.of<AppUser>(context).regiments; //regiments ??= [];
+    regiments = Provider.of<AppUser>(context).regiments;
     return SafeArea(
       child: SizedBox(
           height: double.infinity,

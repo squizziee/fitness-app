@@ -19,6 +19,22 @@ class UserService {
     _handleUserExistence(context, appUser.userUID!);
 
     appUser.regiments = await _dbService.getUserRegiments(appUser.userUID!);
+
+    for (var regiment in appUser.regiments!) {
+      if (regiment.startDate != null) {
+        regiment.cancelNotifications();
+        regiment.startNotifications(
+            regiment.dayOfPause == -1 ? 0 : regiment.dayOfPause);
+      }
+    }
+
+    for (var goal in appUser.goals!) {
+      if (goal.notificationId != null) {
+        goal.cancelNotifications();
+        goal.startNotifications();
+      }
+    }
+
     appUser.goals = await _dbService.getUserGoals(appUser.userUID!);
     return 0;
   }
