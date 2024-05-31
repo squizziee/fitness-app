@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/goal.dart';
 import 'package:flutter_fitness_app/models/user.dart';
 import 'package:flutter_fitness_app/services/goal_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -77,13 +78,56 @@ class _GoalScreenState extends State<GoalScreen> {
                 ],
               )),
       child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: const BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20),
-        child: Column(children: [
-          Text(goal.exerciseType!.name),
-          Text("${goal.deadline!}"),
-          Text("${goal.metrics!.length} metrics"),
-        ]),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                goal.exerciseType!.name,
+                style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w800, fontSize: 20),
+              ),
+              Wrap(
+                spacing: 5,
+                children: [
+                  tagWidget(
+                      "${goal.deadline!.difference(DateTime.now()).inDays} days left",
+                      Colors.black),
+                  tagWidget(
+                      "${goal.metrics!.length} metrics", Colors.greenAccent,
+                      textColor: Colors.black),
+                ],
+              )
+            ]),
+            Container(
+              width: 30,
+              height: 30,
+              child: Stack(clipBehavior: Clip.none, children: [
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: FractionalTranslation(
+                    translation: const Offset(.5, -0.05),
+                    child: Opacity(
+                      opacity: .35,
+                      child: Image.asset(
+                        'assets/target.png',
+                        height: 140,
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }

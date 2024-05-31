@@ -17,23 +17,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final User? user = Auth().currentUser;
-  int _selectedIndex = 0;
-  List<Widget> tabs = [
-    const RegimentTab(),
-    const SessionTab(),
-    const GoalTab(),
-    const ProfileTab()
-  ];
+  PageController? _pageController;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
   }
+
+  int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+
+      _pageController!.animateToPage(index,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn);
     });
   }
 
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Regiments',
           ),
           BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.personWalking),
+            icon: FaIcon(FontAwesomeIcons.stopwatch20),
             label: 'Sessions',
           ),
           BottomNavigationBarItem(
@@ -65,10 +65,21 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: tabs[_selectedIndex],
+      body: SizedBox.expand(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          children: const [
+            RegimentTab(),
+            SessionTab(),
+            GoalTab(),
+            ProfileTab()
+          ],
+        ),
       ),
     );
   }

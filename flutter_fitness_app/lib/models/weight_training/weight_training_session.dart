@@ -19,6 +19,7 @@ class WeightTrainingSession extends TrainingSession {
 
   @override
   String getGeneralMetricText() {
-    return "${getTotalSetCount()} sets";
+    var setCount = getTotalSetCount();
+    return "$setCount ${setCount % 10 == 1 ? "set" : "sets"}";
   }
 }

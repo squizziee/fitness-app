@@ -55,7 +55,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Home Page',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        primaryColor: Colors.greenAccent,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         buttonTheme:
             ButtonThemeData(buttonColor: Theme.of(context).primaryColor),
         useMaterial3: true,

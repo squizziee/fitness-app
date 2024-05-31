@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/training_regiment.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
-import 'package:flutter_fitness_app/services/auth.dart';
-import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
+import 'package:flutter_fitness_app/services/user_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SessionTab extends StatefulWidget {
   const SessionTab({super.key});
@@ -15,59 +16,88 @@ class SessionTab extends StatefulWidget {
 
 Widget _sessionWidget(
     BuildContext context,
-    (TrainingSession, TrainingRegiment) session,
+    (TrainingSession, TrainingRegiment) data,
     RegimentService regimentService,
     SessionService sessionService) {
+  var session = data.$1;
+  var regiment = data.$2;
   return GestureDetector(
     onTap: () {
-      regimentService.openRegiment(context, session.$2);
-      sessionService.openSessionByInstance(context, session.$1);
+      regimentService.openRegiment(context, regiment);
+      sessionService.openSessionByInstance(context, session);
       Navigator.of(context).pushNamed("/training_session_screen");
     },
     child: Container(
-      color: Colors.amber,
+      decoration: const BoxDecoration(
+          border: Border(
+              bottom:
+                  BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(10),
-      child: Column(children: [
-        Text(session.$2.name!),
-        Text(session.$1.name == "" ? "No name" : session.$1.name),
-      ]),
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(
+                        width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
+            padding: const EdgeInsets.all(15),
+            child: Text(
+              "Session #${session.dayInSchedule + 1} — ${session.name == "" ? "No name" : session.name}",
+              style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w800, fontSize: 20),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.all(15),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Wrap(
+                spacing: 5,
+                children: [
+                  tagWidget("${regiment.name} regiment", Colors.greenAccent,
+                      textColor: Colors.black),
+                  tagWidget(
+                      "${session.dayInSchedule + 1} of ${regiment.cycleDurationInDays}",
+                      Colors.black),
+                ],
+              ),
+              const SizedBox(height: 2),
+              tagWidget("${session.exercises.length} exercises", Colors.white10,
+                  textColor: Colors.black),
+              const SizedBox(height: 2),
+              tagWidget(session.getGeneralMetricText(), Colors.white10,
+                  textColor: Colors.black),
+            ]),
+          ),
+        ],
+      ),
     ),
   );
 }
 
 class _SessionTabState extends State<SessionTab> {
-  Future<List<(TrainingSession, TrainingRegiment)>>? sessionsList;
+  List<(TrainingSession, TrainingRegiment)>? sessionsList;
   final RegimentService _regimentService = RegimentService();
   final SessionService _sessionService = SessionService();
 
   @override
   void initState() {
     super.initState();
-    sessionsList =
-        DatabaseService().getUserTrainingSessions(Auth().currentUser!.uid);
+    sessionsList = UserService().getCurrentUserSessions(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: FutureBuilder(
-        future: sessionsList,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data!.length,
+            body: ListView.builder(
+                itemCount: sessionsList!.length,
                 itemBuilder: ((context, index) {
-                  var session = snapshot.data![index];
+                  var session = sessionsList![index];
                   return _sessionWidget(
                       context, session, _regimentService, _sessionService);
-                }));
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-    ));
+                }))));
   }
 }
