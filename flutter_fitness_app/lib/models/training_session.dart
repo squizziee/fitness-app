@@ -19,4 +19,8 @@ abstract class TrainingSession {
   String getGeneralMetricText() {
     return 'undefined metric';
   }
+
+  List<String> getGeneralCategories() {
+    return [];
+  }
 }

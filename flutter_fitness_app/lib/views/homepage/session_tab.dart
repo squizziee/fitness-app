@@ -21,6 +21,7 @@ Widget _sessionWidget(
     SessionService sessionService) {
   var session = data.$1;
   var regiment = data.$2;
+  var categories = session.getGeneralCategories();
   return GestureDetector(
     onTap: () {
       regimentService.openRegiment(context, regiment);
@@ -28,6 +29,7 @@ Widget _sessionWidget(
       Navigator.of(context).pushNamed("/training_session_screen");
     },
     child: Container(
+      clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(
           border: Border(
               bottom:
@@ -51,25 +53,89 @@ Widget _sessionWidget(
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(15),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Wrap(
-                spacing: 5,
-                children: [
-                  tagWidget("${regiment.name} regiment", Colors.greenAccent,
-                      textColor: Colors.black),
-                  tagWidget(
-                      "${session.dayInSchedule + 1} of ${regiment.cycleDurationInDays}",
-                      Colors.black),
-                ],
-              ),
-              const SizedBox(height: 2),
-              tagWidget("${session.exercises.length} exercises", Colors.white10,
-                  textColor: Colors.black),
-              const SizedBox(height: 2),
-              tagWidget(session.getGeneralMetricText(), Colors.white10,
-                  textColor: Colors.black),
-            ]),
+            child: Row(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width - 30,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          spacing: 5,
+                          children: [
+                            tagWidget("${regiment.name}", Colors.greenAccent,
+                                textColor: Colors.black),
+                            tagWidget(
+                                "${session.dayInSchedule + 1} of ${regiment.cycleDurationInDays}",
+                                Colors.black),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        tagWidget("${session.exercises.length} exercises",
+                            Colors.transparent,
+                            textColor: Colors.black),
+                        const SizedBox(height: 2),
+                        tagWidget(
+                            session.getGeneralMetricText(), Colors.transparent,
+                            textColor: Colors.black),
+                        const SizedBox(height: 2),
+                        Wrap(
+                          spacing: 5,
+                          children: [
+                            categories.isNotEmpty
+                                ? tagWidget(categories[0], Colors.black12,
+                                    textColor: Colors.black)
+                                : const SizedBox(
+                                    height: 0,
+                                    width: 0,
+                                  ),
+                            categories.length > 1
+                                ? tagWidget(categories[1], Colors.black12,
+                                    textColor: Colors.black)
+                                : const SizedBox(
+                                    height: 0,
+                                    width: 0,
+                                  ),
+                            categories.length > 2
+                                ? tagWidget(categories[2], Colors.black12,
+                                    textColor: Colors.black)
+                                : const SizedBox(
+                                    height: 0,
+                                    width: 0,
+                                  ),
+                            categories.length > 3
+                                ? tagWidget("...", Colors.black12,
+                                    textColor: Colors.black)
+                                : const SizedBox(
+                                    height: 0,
+                                    width: 0,
+                                  ),
+                          ],
+                        ),
+                      ]),
+                ),
+                Container(
+                  width: 0,
+                  height: 0,
+                  child: Stack(clipBehavior: Clip.none, children: [
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: FractionalTranslation(
+                        translation: const Offset(0.4, -0.2),
+                        child: Opacity(
+                          opacity: .35,
+                          child: Image.asset(
+                            'assets/time.png',
+                            height: 160,
+                          ),
+                        ),
+                      ),
+                    )
+                  ]),
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -22,4 +22,23 @@ class WeightTrainingSession extends TrainingSession {
     var setCount = getTotalSetCount();
     return "$setCount ${setCount % 10 == 1 ? "set" : "sets"}";
   }
+
+  @override
+  List<String> getGeneralCategories() {
+    Map<String, int> result = {};
+
+    for (var exercise in exercises) {
+      var bodyPart =
+          (exercise as WeightTrainingExercise).exerciseType!.bodyPart;
+
+      if (result[bodyPart] == null) {
+        result[bodyPart] = 1;
+      } else {
+        result[bodyPart] = result[bodyPart]! + 1;
+      }
+    }
+    var temp = result.entries.toList();
+    temp.sort(((a, b) => a.value.compareTo(b.value)));
+    return Map.fromEntries(temp).keys.toList().reversed.toList();
+  }
 }

@@ -29,6 +29,18 @@ class RegimentService {
     _saveRegimentToDatabase(context);
   }
 
+  void removeRegiment(BuildContext context) {
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
+
+    regiment.cancelNotifications();
+
+    var user = Provider.of<AppUser>(context, listen: false);
+    user.regiments!.remove(regiment);
+
+    _saveRegimentToDatabase(context);
+  }
+
   void setName(BuildContext context, String name) {
     Provider.of<CurrentTrainingRegiment>(context, listen: false)
         .regiment!
