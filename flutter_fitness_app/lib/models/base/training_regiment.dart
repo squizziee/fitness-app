@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter_fitness_app/models/training_types.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/training_types.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/services/notfication_service.dart';
 
 class TrainingRegiment {
@@ -11,7 +11,6 @@ class TrainingRegiment {
   TrainingType? trainingType;
   List<TrainingSession>? schedule = [];
   List<int>? notificationIdList = [];
-  DateTime? launchTime;
 
   final NotificationService _notificationService = NotificationService();
 

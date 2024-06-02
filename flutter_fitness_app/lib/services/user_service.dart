@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_app_serialization/app_user_serializer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
-import 'package:flutter_fitness_app/models/user.dart';
+import 'package:flutter_fitness_app/models/base/training_regiment.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
+import 'package:flutter_fitness_app/models/base/user.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +70,10 @@ class UserService {
 
     for (var regiment in user.regiments!) {
       if (regiment.getCurrentDay() != -1) {
-        result.add((regiment.schedule![regiment.getCurrentDay()], regiment));
+        var session = regiment.schedule![regiment.getCurrentDay()];
+        if (session.exercises.isNotEmpty) {
+          result.add((regiment.schedule![regiment.getCurrentDay()], regiment));
+        }
       }
     }
 

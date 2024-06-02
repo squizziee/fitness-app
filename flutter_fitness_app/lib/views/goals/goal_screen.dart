@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/goal.dart';
-import 'package:flutter_fitness_app/models/user.dart';
+import 'package:flutter_fitness_app/models/base/goal.dart';
+import 'package:flutter_fitness_app/models/base/user.dart';
 import 'package:flutter_fitness_app/services/goal_service.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

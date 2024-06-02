@@ -1,4 +1,4 @@
-import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
 import 'package:flutter_fitness_app/models/rowing/rowing_exercise_type.dart';
 
 class RowingExercise extends Exercise {

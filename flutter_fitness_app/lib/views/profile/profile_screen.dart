@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/user_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -57,9 +58,32 @@ Widget _removeAllRegimentsButton(
               ],
             )),
     child: Container(
+        decoration: const BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20),
-        child: const Text("Delete all regiments")),
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 10,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  color: Colors.greenAccent),
+              child: const FaIcon(
+                FontAwesomeIcons.trash,
+                size: 14,
+              ),
+            ),
+            Text(
+              "Delete all regiments",
+              style: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
+            )
+          ],
+        )),
   );
 }
 
@@ -90,9 +114,30 @@ Widget _removeAllGoalsButton(BuildContext context, UserService userService) {
               ],
             )),
     child: Container(
+        decoration: const BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20),
-        child: const Text("Delete all Goals")),
+        child: Wrap(
+          spacing: 10,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  color: Colors.greenAccent),
+              child: const FaIcon(
+                FontAwesomeIcons.trash,
+                size: 14,
+              ),
+            ),
+            Text("Delete all Goals",
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
+          ],
+        )),
   );
 }
 
@@ -154,9 +199,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               )),
       child: Container(
+          decoration: const BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(
+                      width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(20),
-          child: const Text("Change email")),
+          child: Wrap(
+            spacing: 10,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    color: Colors.greenAccent),
+                child: const FaIcon(
+                  FontAwesomeIcons.solidEnvelopeOpen,
+                  size: 14,
+                ),
+              ),
+              Text("Change email",
+                  style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
+            ],
+          )),
     );
   }
 
@@ -204,9 +270,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               )),
       child: Container(
+          decoration: const BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(
+                      width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(20),
-          child: const Text("Change password")),
+          child: Wrap(
+            spacing: 15,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    color: Colors.greenAccent),
+                child: const FaIcon(
+                  FontAwesomeIcons.lockOpen,
+                  size: 14,
+                ),
+              ),
+              Text("Change password",
+                  style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
+            ],
+          )),
     );
   }
 
@@ -222,7 +309,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: WrapCrossAlignment.center,
               alignment: WrapAlignment.spaceBetween,
               children: [
-                Text("${_authService.currentUser!.email}"),
+                Text("${_authService.currentUser!.email}",
+                    style: GoogleFonts.montserrat(fontWeight: FontWeight.w800)),
                 ElevatedButton(
                     onPressed: () async {
                       await _authService.signOut(context);

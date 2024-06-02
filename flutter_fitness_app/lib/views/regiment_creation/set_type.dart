@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/models/base/training_types.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

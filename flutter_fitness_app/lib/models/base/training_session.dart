@@ -1,4 +1,4 @@
-import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
 
 abstract class TrainingSession {
   dynamic id;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/training_types.dart';
+import 'package:flutter_fitness_app/models/base/training_types.dart';
 import 'package:flutter_fitness_app/repos/current_training_session.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/services/exercise_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';

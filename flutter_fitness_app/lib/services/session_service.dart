@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_exercise.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_session.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter_fitness_app/models/swimming/swimming_exercise.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 
 class SwimmingSession extends TrainingSession {
   SwimmingSession(

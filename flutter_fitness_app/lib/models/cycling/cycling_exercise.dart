@@ -1,5 +1,5 @@
 import 'package:flutter_fitness_app/models/cycling/cycling_exercise_type.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
 
 class CyclingExercise extends Exercise {
   CyclingExerciseType? exerciseType;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/models/training_types.dart';
-import 'package:flutter_fitness_app/models/user.dart';
+import 'package:flutter_fitness_app/models/base/training_regiment.dart';
+import 'package:flutter_fitness_app/models/base/training_types.dart';
+import 'package:flutter_fitness_app/models/base/user.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';

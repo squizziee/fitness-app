@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/user.dart';
+import 'package:flutter_fitness_app/models/base/user.dart';
 import 'package:provider/provider.dart';
 
 void updateFirstTimeStatus(BuildContext context) {

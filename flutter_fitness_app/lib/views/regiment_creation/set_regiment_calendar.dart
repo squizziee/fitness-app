@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
