@@ -3,6 +3,7 @@ import 'package:flutter_fitness_app/models/base/training_regiment.dart';
 import 'package:flutter_fitness_app/models/base/training_types.dart';
 import 'package:flutter_fitness_app/models/base/user.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -127,54 +128,75 @@ class _RegimentTabState extends State<RegimentTab> {
               border: Border(
                   bottom: BorderSide(
                       width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
             children: [
-              Container(
-                child: LinearProgressIndicator(
-                    backgroundColor: Colors.white,
-                    value: (regiment.getCurrentDay() + 1) /
-                        regiment.cycleDurationInDays!),
+              Positioned(
+                left: 0,
+                top: 0,
+                height: 150,
+                child: Container(
+                  width: MediaQuery.of(context).size.width *
+                      (regiment.getCurrentDay() + 1) /
+                      regiment.cycleDurationInDays!,
+                  color: Color.fromRGBO(0, 0, 0, .05),
+                ),
               ),
-              Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            regiment.name!,
-                            style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w800, fontSize: 25),
-                          ),
-                          Text(cardText,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500))
-                        ]),
-                  ),
-                  Container(
-                    width: 0,
-                    height: 0,
-                    child: Stack(clipBehavior: Clip.none, children: [
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: FractionalTranslation(
-                          translation: const Offset(0.4, -0.12),
-                          child: Opacity(
-                            opacity: .35,
-                            child: Image.asset(
-                              imageSrc,
-                              height: 140,
-                            ),
-                          ),
+              Positioned(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  regiment.name!,
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 25),
+                                ),
+                                Wrap(
+                                  spacing: 5,
+                                  children: [
+                                    tagWidget(cardText, Colors.black),
+                                    regiment.getMainStatistic() == null
+                                        ? const SizedBox()
+                                        : tagWidget(
+                                            regiment.getMainStatistic()!,
+                                            Color(0xffffc400),
+                                            textColor: Colors.black),
+                                  ],
+                                )
+                              ]),
                         ),
-                      )
-                    ]),
-                  ),
-                ],
+                        Container(
+                          width: 0,
+                          height: 0,
+                          child: Stack(clipBehavior: Clip.none, children: [
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: FractionalTranslation(
+                                translation: const Offset(0.4, -0.12),
+                                child: Opacity(
+                                  opacity: .35,
+                                  child: Image.asset(
+                                    imageSrc,
+                                    height: 140,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ]),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           )),

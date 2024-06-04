@@ -5,9 +5,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SEVICE"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <application
-        android:label="flutter_fitness_app"
+        android:label="Hardcore"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/app_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

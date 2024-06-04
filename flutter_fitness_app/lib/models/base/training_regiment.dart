@@ -70,6 +70,23 @@ class TrainingRegiment {
     }
   }
 
+  String? getMainStatistic() {
+    if (trainingType is WeightTraining) {
+      if (cycleDurationInDays! < 7) {
+        return null;
+      }
+      var workDays = 0;
+      for (var i = 0; i < 7; i++) {
+        var session = schedule![i];
+        if (session.exercises.isNotEmpty) {
+          ++workDays;
+        }
+      }
+      return "$workDays ${workDays % 10 == 1 ? "day" : "days"} a week";
+    }
+    return null;
+  }
+
   void cancelNotifications() {
     for (var id in notificationIdList!) {
       _notificationService.cancelScheduledNotification(id);

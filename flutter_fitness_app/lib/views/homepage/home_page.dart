@@ -1,13 +1,11 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_fitness_app/views/homepage/goal_tab.dart';
 import 'package:flutter_fitness_app/views/homepage/profile_tab.dart';
 import 'package:flutter_fitness_app/views/homepage/regiment_tab.dart';
 import 'package:flutter_fitness_app/views/homepage/session_tab.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../services/auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

@@ -8,7 +8,7 @@ Widget tagWidget(String text, Color backgroundColor,
       decoration: BoxDecoration(
           boxShadow: const [
             BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, .075),
+                color: Color.fromRGBO(0, 0, 0, .05),
                 spreadRadius: 3,
                 blurRadius: 10)
           ],
