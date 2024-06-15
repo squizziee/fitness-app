@@ -102,15 +102,22 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
                 padding:
                     const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
                 child: Column(
-                  children: List.generate(
-                      Provider.of<CurrentTrainingRegiment>(context)
-                          .regiment!
-                          .cycleDurationInDays!, (index) {
-                    var session = Provider.of<CurrentTrainingRegiment>(context)
-                        .regiment!
-                        .schedule![index];
-                    return _sessionWidget(context, session, _sessionService);
-                  }),
+                  children: Provider.of<CurrentTrainingRegiment>(context)
+                              .regiment!
+                              .cycleDurationInDays ==
+                          null
+                      ? [SizedBox()]
+                      : List.generate(
+                          Provider.of<CurrentTrainingRegiment>(context)
+                              .regiment!
+                              .cycleDurationInDays!, (index) {
+                          var session =
+                              Provider.of<CurrentTrainingRegiment>(context)
+                                  .regiment!
+                                  .schedule![index];
+                          return _sessionWidget(
+                              context, session, _sessionService);
+                        }),
                 ),
               ),
             ],

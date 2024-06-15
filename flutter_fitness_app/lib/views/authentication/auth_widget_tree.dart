@@ -4,6 +4,7 @@ import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/user_service.dart';
 import 'package:flutter_fitness_app/views/authentication/login_page.dart';
 import 'package:flutter_fitness_app/views/homepage/home_page.dart';
+import 'package:flutter_fitness_app/views/misc/loading_screen.dart';
 
 class AuthWidgetTree extends StatefulWidget {
   const AuthWidgetTree({super.key});
@@ -40,7 +41,7 @@ class _AuthWidgetTreeState extends State<AuthWidgetTree> {
                 }
               }
               return const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingScreen(),
               );
             });
       },

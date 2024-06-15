@@ -9,6 +9,7 @@ import 'package:flutter_fitness_app/route_generator.dart';
 import 'package:flutter_fitness_app/views/authentication/auth_widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+// ignore: unused_import
 import 'package:dcdg/dcdg.dart';
 
 Future<void> main() async {
@@ -56,8 +57,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Home Page',
       theme: ThemeData(
-        primaryColor: Colors.greenAccent,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+        primaryColor: Color(0xffccb5b5),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xffccb5b5)),
         buttonTheme:
             ButtonThemeData(buttonColor: Theme.of(context).primaryColor),
         useMaterial3: true,

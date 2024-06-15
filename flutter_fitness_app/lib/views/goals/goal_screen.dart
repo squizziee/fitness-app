@@ -22,19 +22,19 @@ Widget _addGoalButton(BuildContext context, GoalService goalService) {
           .then((value) => Navigator.of(context).pushNamed('/set_goal'));
     },
     child: Container(
-      padding: const EdgeInsets.all(30),
-      width: double.infinity,
-      decoration: const BoxDecoration(color: Color.fromARGB(31, 180, 180, 180)),
-      child: Wrap(alignment: WrapAlignment.center, children: [
-        const FaIcon(FontAwesomeIcons.plus),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            'Add new goal'.toUpperCase(),
-            style:
-                GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.w500),
-          ),
-        )
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(35),
+      decoration: BoxDecoration(
+        border: Border(
+            bottom: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)),
+            top: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
+      ),
+      child: Wrap(spacing: 10, alignment: WrapAlignment.center, children: [
+        FaIcon(FontAwesomeIcons.plus),
+        Text(
+          "Add new goal".toUpperCase(),
+          style: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
       ]),
     ),
   );

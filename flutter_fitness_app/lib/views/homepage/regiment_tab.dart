@@ -3,6 +3,8 @@ import 'package:flutter_fitness_app/models/base/training_regiment.dart';
 import 'package:flutter_fitness_app/models/base/training_types.dart';
 import 'package:flutter_fitness_app/models/base/user.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
+import 'package:flutter_fitness_app/views/misc/regiment_preview.dart';
+import 'package:flutter_fitness_app/views/misc/route_base_button.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,6 +50,7 @@ class _RegimentTabState extends State<RegimentTab> {
   }
 
   Widget _regimentPreview(BuildContext context, TrainingRegiment regiment) {
+    var controlPanelOpacity = 0.0;
     String imageSrc = "";
     if (regiment.trainingType is WeightTraining) {
       imageSrc = "assets/weight-plates.png";
@@ -72,55 +75,72 @@ class _RegimentTabState extends State<RegimentTab> {
                 ));
       },
       onLongPress: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Column(children: [
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _regimentService.openRegiment(context, regiment);
-                        _regimentService.startRegiment(context);
-                      });
-                    },
-                    child: const Text("Start")),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _regimentService.openRegiment(context, regiment);
-                        _regimentService.pauseRegiment(context);
-                      });
-                    },
-                    child: const Text("Pause")),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _regimentService.openRegiment(context, regiment);
-                        _regimentService.resumeRegiment(context);
-                      });
-                    },
-                    child: const Text("Resume")),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _regimentService.openRegiment(context, regiment);
-                        _regimentService.stopRegiment(context);
-                      });
-                    },
-                    child: const Text("Stop")),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _regimentService.openRegiment(context, regiment);
-                        _regimentService.removeRegiment(context);
-                      });
-                    },
-                    child: const Text("Delete"))
-              ]),
-            );
-          },
-        );
+        controlPanelOpacity = 1.0;
+        setState(() {
+          controlPanelOpacity = 1.0;
+        });
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return Dialog(
+        //       child: Row(children: [
+        //         regiment.startDate != null
+        //             ? SizedBox()
+        //             : ElevatedButton(
+        //                 onPressed: () {
+        //                   setState(() {
+        //                     _regimentService.openRegiment(context, regiment);
+        //                     _regimentService.startRegiment(context);
+        //                   });
+        //                   Navigator.of(context).pop();
+        //                 },
+        //                 child: const Text("Start")),
+        //         regiment.isPaused()
+        //             ? SizedBox()
+        //             : ElevatedButton(
+        //                 onPressed: () {
+        //                   setState(() {
+        //                     _regimentService.openRegiment(context, regiment);
+        //                     _regimentService.pauseRegiment(context);
+        //                   });
+        //                   Navigator.of(context).pop();
+        //                 },
+        //                 child: const Text("Pause")),
+        //         !regiment.isPaused()
+        //             ? SizedBox()
+        //             : ElevatedButton(
+        //                 onPressed: () {
+        //                   setState(() {
+        //                     _regimentService.openRegiment(context, regiment);
+        //                     _regimentService.resumeRegiment(context);
+        //                   });
+        //                   Navigator.of(context).pop();
+        //                 },
+        //                 child: const Text("Resume")),
+        //         regiment.startDate == null
+        //             ? SizedBox()
+        //             : ElevatedButton(
+        //                 onPressed: () {
+        //                   setState(() {
+        //                     _regimentService.openRegiment(context, regiment);
+        //                     _regimentService.stopRegiment(context);
+        //                   });
+        //                   Navigator.of(context).pop();
+        //                 },
+        //                 child: const Text("Stop")),
+        //         ElevatedButton(
+        //             onPressed: () {
+        //               setState(() {
+        //                 _regimentService.openRegiment(context, regiment);
+        //                 _regimentService.removeRegiment(context);
+        //               });
+        //               Navigator.of(context).pop();
+        //             },
+        //             child: const Text("Delete"))
+        //       ]),
+        //     );
+        //   },
+        // );
       },
       child: Container(
           clipBehavior: Clip.hardEdge,
@@ -167,8 +187,8 @@ class _RegimentTabState extends State<RegimentTab> {
                                         ? const SizedBox()
                                         : tagWidget(
                                             regiment.getMainStatistic()!,
-                                            Color(0xffffc400),
-                                            textColor: Colors.black),
+                                            Theme.of(context).primaryColor,
+                                            textColor: Colors.white),
                                   ],
                                 )
                               ]),
@@ -198,6 +218,78 @@ class _RegimentTabState extends State<RegimentTab> {
                   ],
                 ),
               ),
+              Positioned(
+                  left: 0,
+                  top: 0,
+                  child: AnimatedOpacity(
+                    opacity: controlPanelOpacity,
+                    duration: const Duration(milliseconds: 200),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 150,
+                      color: Colors.black87,
+                      child: Row(children: [
+                        regiment.startDate != null
+                            ? SizedBox()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _regimentService.openRegiment(
+                                        context, regiment);
+                                    _regimentService.startRegiment(context);
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Start")),
+                        regiment.isPaused()
+                            ? SizedBox()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _regimentService.openRegiment(
+                                        context, regiment);
+                                    _regimentService.pauseRegiment(context);
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Pause")),
+                        !regiment.isPaused()
+                            ? SizedBox()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _regimentService.openRegiment(
+                                        context, regiment);
+                                    _regimentService.resumeRegiment(context);
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Resume")),
+                        regiment.startDate == null
+                            ? SizedBox()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _regimentService.openRegiment(
+                                        context, regiment);
+                                    _regimentService.stopRegiment(context);
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Stop")),
+                        ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _regimentService.openRegiment(
+                                    context, regiment);
+                                _regimentService.removeRegiment(context);
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Delete"))
+                      ]),
+                    ),
+                  )),
             ],
           )),
       // child: Card(
@@ -225,14 +317,16 @@ class _RegimentTabState extends State<RegimentTab> {
           width: double.infinity,
           child: Column(
             children: [
-              _addRegimentButton(context),
+              routeBaseButton(context, '/set_name', FontAwesomeIcons.plus,
+                  "Add new regiment"),
               Container(
                   child: Expanded(
                 child: ListView.builder(
                     itemCount: regiments!.length,
                     itemBuilder: (BuildContext context, int index) {
                       var regiment = regiments![index];
-                      return _regimentPreview(context, regiment);
+                      //return _regimentPreview(context, regiment);
+                      return RegimentPreview(regiment: regiment);
                     }),
               ))
             ],

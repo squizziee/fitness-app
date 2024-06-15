@@ -5,6 +5,7 @@ import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:flutter_fitness_app/services/user_service.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SessionTab extends StatefulWidget {
@@ -143,6 +144,35 @@ Widget _sessionWidget(
   );
 }
 
+Widget _emptyListPlaceholder(
+    BuildContext context, String text, String imageAsset) {
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height,
+    padding: const EdgeInsets.all(30),
+    child: Opacity(
+      opacity: 1,
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.roboto(fontWeight: FontWeight.w500),
+        ),
+        SizedBox(
+          height: 50,
+        ),
+        Opacity(
+          opacity: .75,
+          child: Image.asset(
+            imageAsset,
+            width: 100,
+          ),
+        )
+      ]),
+    ),
+  );
+}
+
 class _SessionTabState extends State<SessionTab> {
   List<(TrainingSession, TrainingRegiment)>? sessionsList;
   final RegimentService _regimentService = RegimentService();
@@ -158,12 +188,17 @@ class _SessionTabState extends State<SessionTab> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: ListView.builder(
-                itemCount: sessionsList!.length,
-                itemBuilder: ((context, index) {
-                  var session = sessionsList![index];
-                  return _sessionWidget(
-                      context, session, _regimentService, _sessionService);
-                }))));
+            body: sessionsList!.isEmpty
+                ? _emptyListPlaceholder(
+                    context,
+                    "You don`t have any training sessions today. Enjoy the rest day to the fullest!",
+                    "assets/sleeping.png")
+                : ListView.builder(
+                    itemCount: sessionsList!.length,
+                    itemBuilder: ((context, index) {
+                      var session = sessionsList![index];
+                      return _sessionWidget(
+                          context, session, _regimentService, _sessionService);
+                    }))));
   }
 }
