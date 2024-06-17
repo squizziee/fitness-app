@@ -42,9 +42,10 @@ class RegimentService {
   }
 
   void setName(BuildContext context, String name) {
-    Provider.of<CurrentTrainingRegiment>(context, listen: false)
-        .regiment!
-        .name = name;
+    var regiment =
+        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
+    if (name == "" && regiment.name == null) return;
+    regiment.name = name;
     _saveRegimentToDatabase(context);
   }
 

@@ -5,7 +5,6 @@ import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:flutter_fitness_app/services/user_service.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SessionTab extends StatefulWidget {
