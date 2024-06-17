@@ -12,4 +12,21 @@ class WeightTrainingExercise extends Exercise {
   String getExerciseTypeName() {
     return exerciseType == null ? "" : exerciseType!.name;
   }
+
+  @override
+  String getImageUrl() {
+    if (exerciseType == null) return "";
+    return exerciseType!.iconURL;
+  }
+
+  @override
+  String getMainMetricText() {
+    return "${sets.length} sets";
+  }
+
+  @override
+  String getSecondaryMetricText() {
+    if (exerciseType == null) return "";
+    return exerciseType!.bodyPart;
+  }
 }

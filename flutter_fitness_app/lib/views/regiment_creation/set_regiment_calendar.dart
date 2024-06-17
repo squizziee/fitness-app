@@ -4,6 +4,8 @@ import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/repos/current_training_regiment.dart';
 import 'package:flutter_fitness_app/services/regiment_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
+import 'package:flutter_fitness_app/views/misc/default_text_field.dart';
+import 'package:flutter_fitness_app/views/misc/string_cutter.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,34 +34,6 @@ Widget _tagWidget(String text, Color backgroundColor) {
               height: 1)));
 }
 
-Widget defaultTextField(
-    {String placeholder = "",
-    bool isMultiline = false,
-    required TextEditingController controller}) {
-  return TextField(
-    controller: controller,
-    style: GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500),
-    keyboardType: isMultiline ? TextInputType.multiline : TextInputType.text,
-    maxLines: isMultiline ? null : 1,
-    decoration: InputDecoration(
-        focusedBorder: UnderlineInputBorder(
-            borderRadius: BorderRadius.zero,
-            borderSide:
-                BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
-        enabledBorder: UnderlineInputBorder(
-            borderRadius: BorderRadius.zero,
-            borderSide:
-                BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
-        labelText: placeholder,
-        floatingLabelStyle: GoogleFonts.roboto(
-            color: Colors.black, fontWeight: FontWeight.w600),
-        contentPadding:
-            EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-        filled: true,
-        fillColor: Color.fromRGBO(0, 0, 0, .0)),
-  );
-}
-
 Widget _sessionWidget(BuildContext context, TrainingSession session,
     SessionService sessionService) {
   return GestureDetector(
@@ -81,7 +55,7 @@ Widget _sessionWidget(BuildContext context, TrainingSession session,
           if (session.exercises.isEmpty) {
             return Text("Rest day",
                 style: GoogleFonts.montserrat(
-                    fontSize: 35,
+                    fontSize: 25,
                     fontWeight: FontWeight.w800,
                     height: 1,
                     color: Colors.black));
@@ -94,9 +68,11 @@ Widget _sessionWidget(BuildContext context, TrainingSession session,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          "#${session.dayInSchedule + 1}. ${session.name == "" ? "No name" : session.name}",
+                          StringCutter.cut(
+                              "#${session.dayInSchedule + 1}. ${session.name == "" ? "No name" : session.name}",
+                              18),
                           style: GoogleFonts.montserrat(
-                              fontSize: 35,
+                              fontSize: 25,
                               fontWeight: FontWeight.w800,
                               height: 1)),
                       Wrap(
@@ -124,7 +100,7 @@ Widget _sessionWidget(BuildContext context, TrainingSession session,
                         opacity: .35,
                         child: Image.asset(
                           'assets/time.png',
-                          height: 160,
+                          height: 140,
                         ),
                       ),
                     ),
@@ -140,9 +116,6 @@ Widget _sessionWidget(BuildContext context, TrainingSession session,
 }
 
 class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
-  //Widget _sessionWidget() {
-
-  //}
   final SessionService _sessionService = SessionService();
   final RegimentService _regimentService = RegimentService();
 
@@ -162,10 +135,14 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              regiment.name!,
-              style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w800, fontSize: 25),
+            Container(
+              margin: EdgeInsets.only(bottom: 10),
+              width: MediaQuery.of(context).size.width - 40 - 30,
+              child: Text(
+                regiment.name!,
+                style: GoogleFonts.montserrat(
+                    height: 1, fontWeight: FontWeight.w800, fontSize: 25),
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -235,12 +212,16 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
             )
           ],
         ),
-        regiment.notes == null
-            ? Text(
-                "No notes",
-                style: GoogleFonts.roboto(fontSize: 14, color: Colors.black26),
-              )
-            : Text(regiment.notes!, style: GoogleFonts.roboto(fontSize: 14)),
+        Container(
+          width: MediaQuery.of(context).size.width - 40 - 30,
+          child: regiment.notes == null
+              ? Text(
+                  "No notes",
+                  style:
+                      GoogleFonts.roboto(fontSize: 14, color: Colors.black26),
+                )
+              : Text(regiment.notes!, style: GoogleFonts.roboto(fontSize: 14)),
+        )
       ]),
     );
   }

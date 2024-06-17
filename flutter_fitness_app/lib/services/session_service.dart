@@ -48,14 +48,14 @@ class SessionService {
     await _saveSessionToDatabase(context);
   }
 
-  void updateName(BuildContext context, String newName) {
+  void setName(BuildContext context, String newName) {
     Provider.of<CurrentTrainingSession>(context, listen: false).session!.name =
         newName;
     _saveSessionToDatabase(context);
   }
 
-  void updateNotes(BuildContext context, String newNotes) {
-    Provider.of<CurrentTrainingSession>(context, listen: false).session!.name =
+  void setNotes(BuildContext context, String newNotes) {
+    Provider.of<CurrentTrainingSession>(context, listen: false).session!.notes =
         newNotes;
     _saveSessionToDatabase(context);
   }
