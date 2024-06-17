@@ -5,8 +5,8 @@ abstract class Exercise {
 
   String getExerciseTypeName();
 
-  String getImageUrl() {
-    return "";
+  String? getImageUrl() {
+    return null;
   }
 
   String getMainMetricText() {

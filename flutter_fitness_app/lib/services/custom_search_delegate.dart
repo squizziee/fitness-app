@@ -45,12 +45,28 @@ class CustomSearchDelegate extends SearchDelegate<WeightExerciseType> {
         icon: const Icon(Icons.arrow_back));
   }
 
-  @override
-  Widget buildResults(BuildContext context) {
-    var searchResult = _searchList!
+  List<WeightExerciseType> search(String query) {
+    var baseResult = _searchList!
         .where((element) =>
             element.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
+
+    // Sorted by query appearance position in a given exercise name
+    baseResult.sort((a, b) {
+      // print(
+      //     "${a.name}(${a.name.toLowerCase().indexOf(query)}) - ${b.name}(${b.name.toLowerCase().indexOf(query)})");
+      return a.name
+          .toLowerCase()
+          .indexOf(query)
+          .compareTo(b.name.toLowerCase().indexOf(query));
+    });
+
+    return baseResult;
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    var searchResult = search(query);
     return ListView.builder(
         itemCount: searchResult.length,
         itemBuilder: (context, index) {

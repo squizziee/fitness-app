@@ -251,21 +251,24 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
                 Container(
                   margin: EdgeInsets.only(right: 20),
                   child: Container(
-                      padding: const EdgeInsets.all(12),
                       decoration: const BoxDecoration(
                           //color: Color.fromRGBO(0, 0, 0, .05),
                           borderRadius: BorderRadius.all(Radius.circular(100))),
-                      child: Image.network(
-                        exercise.getImageUrl(),
-                        height: 50,
-                      )),
+                      child: exercise.getImageUrl() == null
+                          ? SizedBox(
+                              width: 50,
+                            )
+                          : Image.network(
+                              exercise.getImageUrl()!,
+                              width: 50,
+                            )),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       margin: EdgeInsets.only(bottom: 5),
-                      width: MediaQuery.of(context).size.width - 40 - 100 - 20,
+                      width: MediaQuery.of(context).size.width - 40 - 50 - 20,
                       child: Text(
                         exercise.getExerciseTypeName(),
                         style: GoogleFonts.montserrat(

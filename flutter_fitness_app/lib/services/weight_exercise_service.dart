@@ -16,6 +16,8 @@ class WeightExerciseService extends ExerciseService {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
+    if (exercise.exerciseType != null && exerciseType == null) return;
+
     exercise.exerciseType = exerciseType;
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
     await _saveSessionToDatabase(context);
@@ -88,7 +90,6 @@ class WeightExerciseService extends ExerciseService {
     var session =
         Provider.of<CurrentTrainingSession>(context, listen: false).session;
     var exercise = WeightTrainingExercise(sets: [], notes: '');
-    session!.exercises.add(exercise);
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
     Provider.of<CurrentTrainingSession>(context, listen: false).session =
         session;
@@ -107,7 +108,11 @@ class WeightExerciseService extends ExerciseService {
         .exercise! as WeightTrainingExercise);
     var session =
         Provider.of<CurrentTrainingSession>(context, listen: false).session!;
+
     if (exercise.exerciseType != null) {
+      if (!session.exercises.contains(exercise)) {
+        session.exercises.add(exercise);
+      }
       await _dbService.postSession(session);
     }
   }

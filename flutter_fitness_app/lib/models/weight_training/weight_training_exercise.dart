@@ -14,8 +14,8 @@ class WeightTrainingExercise extends Exercise {
   }
 
   @override
-  String getImageUrl() {
-    if (exerciseType == null) return "";
+  String? getImageUrl() {
+    if (exerciseType == null) return null;
     return exerciseType!.iconURL;
   }
 
