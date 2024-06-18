@@ -23,12 +23,8 @@ class WeightExerciseService extends ExerciseService {
     await _saveSessionToDatabase(context);
   }
 
-  void addSet(BuildContext context, String notes, int repetitions,
-      double weightInKilograms, int setIndex) {
-    assert(repetitions > 0);
-    assert(setIndex >= 0);
-    assert(weightInKilograms >= 0);
-
+  Future<void> addSet(BuildContext context, String notes, int repetitions,
+      double weightInKilograms) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
@@ -36,10 +32,10 @@ class WeightExerciseService extends ExerciseService {
         weightInKilograms: weightInKilograms,
         repetitions: repetitions,
         notes: notes,
-        setIndex: setIndex));
+        setIndex: exercise.sets.length));
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
   Future<void> updateSetWeight(
@@ -47,7 +43,6 @@ class WeightExerciseService extends ExerciseService {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
-    assert(weightInKilograms >= 0);
     exercise.sets[setIndex].weightInKilograms = weightInKilograms;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
@@ -59,7 +54,6 @@ class WeightExerciseService extends ExerciseService {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
         .exercise! as WeightTrainingExercise);
 
-    assert(repetitions > 0);
     exercise.sets[setIndex].repetitions = repetitions;
 
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
@@ -82,6 +76,20 @@ class WeightExerciseService extends ExerciseService {
         .exercise! as WeightTrainingExercise);
     exercise.sets.remove(exercise.sets.last);
     Provider.of<CurrentExercise>(context, listen: false).exercise = exercise;
+    await _saveSessionToDatabase(context);
+  }
+
+  Future<void> removeSet(BuildContext context, int setIndex) async {
+    var sets = (Provider.of<CurrentExercise>(context, listen: false).exercise!
+            as WeightTrainingExercise)
+        .sets;
+
+    sets.removeAt(setIndex);
+
+    for (int i = 0; i < sets.length; i++) {
+      sets[i].setIndex = i;
+    }
+
     await _saveSessionToDatabase(context);
   }
 

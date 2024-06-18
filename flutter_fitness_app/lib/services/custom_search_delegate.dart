@@ -53,8 +53,6 @@ class CustomSearchDelegate extends SearchDelegate<WeightExerciseType> {
 
     // Sorted by query appearance position in a given exercise name
     baseResult.sort((a, b) {
-      // print(
-      //     "${a.name}(${a.name.toLowerCase().indexOf(query)}) - ${b.name}(${b.name.toLowerCase().indexOf(query)})");
       return a.name
           .toLowerCase()
           .indexOf(query)
