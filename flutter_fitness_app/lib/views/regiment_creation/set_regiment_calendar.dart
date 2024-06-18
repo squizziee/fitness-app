@@ -7,6 +7,7 @@ import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:flutter_fitness_app/views/misc/default_text_field.dart';
 import 'package:flutter_fitness_app/views/misc/string_cutter.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -32,87 +33,6 @@ Widget _tagWidget(String text, Color backgroundColor) {
               fontWeight: FontWeight.w500,
               color: Color(0xffffffff),
               height: 1)));
-}
-
-Widget _sessionWidget(BuildContext context, TrainingSession session,
-    SessionService sessionService) {
-  return GestureDetector(
-    onTap: () {
-      sessionService.openSessionByInstance(context, session);
-      Navigator.of(context).pushNamed('/select_training_session');
-    },
-    child: Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-            bottom: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
-      ),
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(20),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          if (session.exercises.isEmpty) {
-            return Text("Rest day",
-                style: GoogleFonts.montserrat(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w800,
-                    height: 1,
-                    color: Colors.black));
-          }
-          return Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 40,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          StringCutter.cut(
-                              "#${session.dayInSchedule + 1}. ${session.name == "" ? "No name" : session.name}",
-                              18),
-                          style: GoogleFonts.montserrat(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w800,
-                              height: 1)),
-                      Wrap(
-                        spacing: 5,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          _tagWidget("${session.exercises.length} exercises",
-                              Colors.black),
-                          _tagWidget(session.getGeneralMetricText(),
-                              Theme.of(context).primaryColor)
-                        ],
-                      ),
-                    ]),
-              ),
-              Container(
-                width: 0,
-                height: 0,
-                child: Stack(clipBehavior: Clip.none, children: [
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: FractionalTranslation(
-                      translation: const Offset(0.4, -0.2),
-                      child: Opacity(
-                        opacity: .35,
-                        child: Image.asset(
-                          'assets/time.png',
-                          height: 140,
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
-              ),
-            ],
-          );
-        },
-      ),
-    ),
-  );
 }
 
 class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
@@ -214,7 +134,7 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
         ),
         Container(
           width: MediaQuery.of(context).size.width - 40 - 30,
-          child: regiment.notes == null
+          child: regiment.notes == null || regiment.notes == ""
               ? Text(
                   "No notes",
                   style:
@@ -226,11 +146,197 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
     );
   }
 
+  Widget _sessionWidget(BuildContext context, TrainingSession session,
+      SessionService sessionService) {
+    var categories = session.getGeneralCategories();
+    return GestureDetector(
+      onTap: () {
+        sessionService.openSessionByInstance(context, session);
+        Navigator.of(context)
+            .pushNamed('/select_training_session')
+            .then((value) => setState(
+                  () {},
+                ));
+      },
+      child: Column(
+        children: [
+          Container(
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  bottom: BorderSide(
+                      width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
+            ),
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(20),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (session.exercises.isEmpty) {
+                  return Text("Rest day",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w800,
+                          height: 1,
+                          color: Colors.black));
+                }
+                return Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width - 40,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                StringCutter.cut(
+                                    "#${session.dayInSchedule + 1}. ${session.name == "" ? "No name" : session.name}",
+                                    18),
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1)),
+                            Wrap(
+                              spacing: 5,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                _tagWidget(
+                                    "${session.exercises.length} exercises",
+                                    Colors.black),
+                                _tagWidget(session.getGeneralMetricText(),
+                                    Theme.of(context).primaryColor)
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Wrap(
+                              spacing: 5,
+                              children: [
+                                Wrap(
+                                    spacing: 5,
+                                    children: List.generate(
+                                        categories.length > 3
+                                            ? 3
+                                            : categories.length, (index) {
+                                      return tagWidget(
+                                          categories[index], Colors.black);
+                                    })),
+                                categories.length > 3
+                                    ? tagWidget(
+                                        "...", Theme.of(context).primaryColor)
+                                    : SizedBox()
+                              ],
+                              // children: [
+                              //   categories.isNotEmpty
+                              //       ? tagWidget(categories[0], Colors.black,
+                              //           textColor: Colors.white)
+                              //       : const SizedBox(
+                              //           height: 0,
+                              //           width: 0,
+                              //         ),
+                              //   categories.length > 1
+                              //       ? tagWidget(categories[1], Colors.black12,
+                              //           textColor: Colors.black)
+                              //       : const SizedBox(
+                              //           height: 0,
+                              //           width: 0,
+                              //         ),
+                              //   categories.length > 2
+                              //       ? tagWidget(categories[2], Colors.black12,
+                              //           textColor: Colors.black)
+                              //       : const SizedBox(
+                              //           height: 0,
+                              //           width: 0,
+                              //         ),
+                              //   categories.length > 3
+                              //       ? tagWidget("...", Colors.black12,
+                              //           textColor: Colors.black)
+                              //       : const SizedBox(
+                              //           height: 0,
+                              //           width: 0,
+                              //         ),
+                              //],
+                            ),
+                          ]),
+                    ),
+                    Container(
+                      width: 0,
+                      height: 0,
+                      child: Stack(clipBehavior: Clip.none, children: [
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: FractionalTranslation(
+                            translation: const Offset(0.4, -0.2),
+                            child: Opacity(
+                              opacity: .35,
+                              child: Image.asset(
+                                'assets/time.png',
+                                height: 140,
+                              ),
+                            ),
+                          ),
+                        )
+                      ]),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          // session.exercises.isEmpty
+          //     ? SizedBox()
+          //     : Container(
+          //         padding: EdgeInsets.all(10),
+          //         width: MediaQuery.of(context).size.width,
+          //         decoration: BoxDecoration(
+          //           color: Colors.white,
+          //           border: Border(
+          //               bottom: BorderSide(
+          //                   width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
+          //         ),
+          //         child: Wrap(
+          //           spacing: 5,
+          //           children: [
+          //             categories.isNotEmpty
+          //                 ? tagWidget(categories[0], Colors.black12,
+          //                     textColor: Colors.black)
+          //                 : const SizedBox(
+          //                     height: 0,
+          //                     width: 0,
+          //                   ),
+          //             categories.length > 1
+          //                 ? tagWidget(categories[1], Colors.black12,
+          //                     textColor: Colors.black)
+          //                 : const SizedBox(
+          //                     height: 0,
+          //                     width: 0,
+          //                   ),
+          //             categories.length > 2
+          //                 ? tagWidget(categories[2], Colors.black12,
+          //                     textColor: Colors.black)
+          //                 : const SizedBox(
+          //                     height: 0,
+          //                     width: 0,
+          //                   ),
+          //             categories.length > 3
+          //                 ? tagWidget("...", Colors.black12,
+          //                     textColor: Colors.black)
+          //                 : const SizedBox(
+          //                     height: 0,
+          //                     width: 0,
+          //                   ),
+          //           ],
+          //         ),
+          //       )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: appBar(
+        appBar: defaultAppBar(
             context,
             Provider.of<CurrentTrainingRegiment>(context).regiment!.name!,
             Provider.of<CurrentTrainingRegiment>(context)

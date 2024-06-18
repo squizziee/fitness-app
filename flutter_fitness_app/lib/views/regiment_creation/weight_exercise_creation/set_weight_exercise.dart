@@ -6,6 +6,7 @@ import 'package:flutter_fitness_app/models/weight_training/weight_training_exerc
 import 'package:flutter_fitness_app/services/custom_search_delegate.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/weight_exercise_service.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/dialog.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/weight_exercise_creation/set_editing_form.dart';
@@ -26,35 +27,10 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
   final WeightExerciseService _exerciseService = WeightExerciseService();
   final DatabaseService _dbService = DatabaseService();
 
-  final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _repetitionsController = TextEditingController();
-  final TextEditingController _notesController = TextEditingController();
-
-  Widget _title(BuildContext context) {
-    var currentExercise = Provider.of<CurrentExercise>(context, listen: false)
-        .exercise as WeightTrainingExercise;
-    return Column(
-      children: [
-        Text('Exercise',
-            style: GoogleFonts.montserrat(
-                fontSize: 15, fontWeight: FontWeight.w700, height: 1)),
-        Text(
-            _exerciseService.isExerciseEmpty(context)
-                ? 'New exercise'
-                : currentExercise.exerciseType!.name,
-            style: GoogleFonts.montserrat(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                height: 1,
-                color: Colors.grey.shade500))
-      ],
-    );
-  }
-
   Widget _setWidget(WeightTrainingSet wset) {
     return StatefulBuilder(builder: (context, setState) {
       return GestureDetector(
-        onLongPress: () => showDialog<String>(
+        onTap: () => showDialog<String>(
             context: context,
             builder: (context) => defaultDialog(title: "Edit set", content: [
                   SetEditingForm(
@@ -107,6 +83,46 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
     });
   }
 
+  Widget _addSetButton(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+              bottom:
+                  BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
+      child: GestureDetector(
+        onTap: () => showDialog<String>(
+            context: context,
+            builder: (context) => defaultDialog(title: "Add set", content: [
+                  SetEditingForm(
+                    weightSet: WeightTrainingSet(
+                        weightInKilograms: 0,
+                        repetitions: 0,
+                        notes: '',
+                        setIndex: 0),
+                    isNewSet: true,
+                  )
+                ])),
+        child: Container(
+            height: 50,
+            width: 50,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border:
+                    Border.all(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)),
+                borderRadius: BorderRadius.all(Radius.circular(50))),
+            child: const FaIcon(
+              FontAwesomeIcons.plus,
+              size: 18,
+            )),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -119,15 +135,12 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
         .exercise as WeightTrainingExercise;
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: Size(MediaQuery.of(context).size.width, 1),
-          child:
-              Container(height: 1, color: const Color.fromRGBO(0, 0, 0, 0.05)),
-        ),
-        title: _title(context),
-        centerTitle: true,
-      ),
+      appBar: defaultAppBar(
+          context,
+          'Exercise',
+          _exerciseService.isExerciseEmpty(context)
+              ? 'New exercise'
+              : currentExercise.exerciseType!.name),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -141,66 +154,64 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
                         return const Center(child: CircularProgressIndicator());
                       } else {
                         return GestureDetector(
-                          onTap: () async {
-                            await showSearch(
-                                    context: context,
-                                    delegate:
-                                        CustomSearchDelegate(snapshot.data))
-                                .then((type) => _exerciseService
-                                    .setExerciseType(context, type));
-                            setState(() {});
-                          },
-                          child: Container(
-                              padding: const EdgeInsets.all(10),
-                              width: MediaQuery.of(context).size.width,
-                              decoration: const BoxDecoration(
-                                  border: Border(
-                                bottom: BorderSide(
-                                    color: Color.fromRGBO(0, 0, 0, 0.05),
-                                    width: 1),
-                              )),
-                              child: Wrap(
-                                spacing: 15,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
+                            onTap: () async {
+                              await showSearch(
+                                      context: context,
+                                      delegate:
+                                          CustomSearchDelegate(snapshot.data))
+                                  .then((type) => _exerciseService
+                                      .setExerciseType(context, type));
+                              setState(() {});
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(10),
+                                width: MediaQuery.of(context).size.width,
+                                decoration: const BoxDecoration(
+                                    border: Border(
+                                  bottom: BorderSide(
+                                      color: Color.fromRGBO(0, 0, 0, 0.05),
+                                      width: 1),
+                                )),
+                                child: Row(children: [
                                   Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: const BoxDecoration(
-                                          color: Color.fromRGBO(0, 0, 0, .05),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(100))),
-                                      height: 60,
-                                      width: 60,
+                                      padding: EdgeInsets.all(20),
                                       child:
                                           currentExercise.exerciseType == null
                                               ? const Icon(Icons.search)
                                               : Image.network(
                                                   currentExercise
                                                       .exerciseType!.iconURL,
-                                                  height: 20,
-                                                  width: 20,
+                                                  width: 50,
                                                 )),
                                   Container(
-                                    child: currentExercise.exerciseType == null
-                                        ? Text('No exercise chosen',
-                                            style: GoogleFonts.montserrat(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                                height: 1))
-                                        : Wrap(
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            spacing: 6,
-                                            children: [
-                                                Text(
-                                                    currentExercise
-                                                        .exerciseType!.name,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                            fontSize: 13,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            height: 1)),
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      currentExercise.exerciseType == null
+                                          ? Text('No exercise chosen',
+                                              style: GoogleFonts.montserrat(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600,
+                                                  height: 1))
+                                          : Container(
+                                              child: Text(
+                                                  currentExercise
+                                                      .exerciseType!.name,
+                                                  overflow: TextOverflow.fade,
+                                                  style: GoogleFonts.montserrat(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      height: 1))),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      currentExercise.exerciseType == null
+                                          ? SizedBox()
+                                          : Wrap(
+                                              spacing: 5,
+                                              children: [
                                                 tagWidget(
                                                     currentExercise
                                                         .exerciseType!.bodyPart,
@@ -210,87 +221,31 @@ class _SetWeightExercisePageState extends State<SetWeightExercisePage> {
                                                         .exerciseType!.category,
                                                     Theme.of(context)
                                                         .primaryColor),
-                                              ]),
-                                  ),
-                                ],
-                              )),
-                        );
+                                              ],
+                                            )
+                                    ],
+                                  ))
+                                ])));
                       }
                     }),
               ],
             );
           }),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: Color.fromRGBO(0, 0, 0, .05), width: 1))),
-            child: GestureDetector(
-              onTap: () => showDialog<String>(
-                context: context,
-                builder: (context) => defaultDialog(title: "Add set", content: [
-                  SetEditingForm(
-                    weightSet: WeightTrainingSet(
-                        weightInKilograms: 0,
-                        repetitions: 0,
-                        notes: '',
-                        setIndex: 0),
-                    isNewSet: true,
-                  )
-                ]),
-                // builder: (context) => AlertDialog(
-                //       title: const Text('Add new set'),
-                //       content: Column(
-                //         children: [
-                //           _weightField(""),
-                //           const SizedBox(height: 10),
-                //           _repetitionsField(""),
-                //           const SizedBox(height: 10),
-                //           _notesField(""),
-                //         ],
-                //       ),
-                //       actions: <Widget>[
-                //         TextButton(
-                //           onPressed: () => Navigator.pop(context),
-                //           child: const Text('Cancel'),
-                //         ),
-                //         TextButton(
-                //           onPressed: () {
-                //             _exerciseService.addSet(
-                //                 context,
-                //                 _notesController.text,
-                //                 int.parse(_repetitionsController.text),
-                //                 double.parse(_weightController.text),
-                //                 setIndex++);
-                //             _clearControllers();
-                //             Navigator.pop(context, 'OK');
-                //           },
-                //           child: const Text('OK'),
-                //         ),
-                //       ],
-                //     )),
-              ),
-              child: Container(
-                  height: 50,
-                  width: 50,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      color: Color.fromRGBO(0, 0, 0, .05)),
-                  child: const FaIcon(
-                    FontAwesomeIcons.plus,
-                    size: 18,
-                  )),
-            ),
-          ),
+          _addSetButton(context),
           Expanded(
-            child: ListView.builder(
+            child: ReorderableListView.builder(
+                onReorder: (oldIndex, newIndex) {
+                  _exerciseService
+                      .reinsertSet(context, oldIndex, newIndex)
+                      .then((value) => setState(
+                            () {},
+                          ));
+                },
                 itemCount: currentExercise.sets.length,
                 itemBuilder: (context, index) {
-                  return _setWidget(currentExercise.sets[index]);
+                  return Container(
+                      key: Key("$index"),
+                      child: _setWidget(currentExercise.sets[index]));
                 }),
           ),
         ],

@@ -19,7 +19,7 @@ class _SetNamePageState extends State<SetNamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "Create new regiment", "Choose name"),
+      appBar: defaultAppBar(context, "Create new regiment", "Choose name"),
       body: Container(
         height: double.infinity,
         width: double.infinity,

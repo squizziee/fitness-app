@@ -29,6 +29,21 @@ class SessionService {
         session;
   }
 
+  Future<void> reinsertExercise(
+      BuildContext context, int oldIndex, int newIndex) async {
+    var session =
+        Provider.of<CurrentTrainingSession>(context, listen: false).session!;
+
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    var exercise = session.exercises.removeAt(oldIndex);
+    session.exercises.insert(newIndex, exercise);
+
+    await _saveSessionToDatabase(context);
+  }
+
   Future<void> copySession(
       BuildContext context, TrainingSession session, int destIndex) async {
     var destSession =
@@ -60,12 +75,12 @@ class SessionService {
     _saveSessionToDatabase(context);
   }
 
-  void removeExercise(BuildContext context, Exercise exercise) {
+  Future<void> removeExercise(BuildContext context, Exercise exercise) async {
     Provider.of<CurrentTrainingSession>(context, listen: false)
         .session!
         .exercises
         .remove(exercise);
-    _saveSessionToDatabase(context);
+    await _saveSessionToDatabase(context);
   }
 
   Future<void> _saveSessionToDatabase(context) async {

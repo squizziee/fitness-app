@@ -9,6 +9,8 @@ import 'package:flutter_fitness_app/services/exercise_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
 import 'package:flutter_fitness_app/services/weight_exercise_service.dart';
 import 'package:flutter_fitness_app/views/misc/default_text_field.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/dialog.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,22 +29,6 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
-
-  Widget _title(int sessionIndex, String regimentName) {
-    return Column(
-      children: [
-        Text('Training Session',
-            style: GoogleFonts.montserrat(
-                fontSize: 15, fontWeight: FontWeight.w700, height: 1)),
-        Text('Day ${sessionIndex + 1} on $regimentName',
-            style: GoogleFonts.montserrat(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                height: 1,
-                color: Colors.grey.shade500))
-      ],
-    );
-  }
 
   Widget _infoBox(BuildContext context, TrainingRegiment regiment,
       TrainingSession session) {
@@ -205,30 +191,31 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
       var session = Provider.of<CurrentTrainingSession>(context).session;
       if (session!.exercises.contains(exercise)) {
         return GestureDetector(
-          onLongPress: () => showDialog<String>(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: const Text('Confirmation'),
-                    content: Text(
-                        'Are you sure you want to delete "${exercise.getExerciseTypeName()}"?'),
-                    actions: <Widget>[
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Cancel')),
-                      TextButton(
-                          onPressed: () {
-                            _sessionService.removeExercise(context, exercise);
-                            setState(() {});
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.redAccent),
-                          )),
-                    ],
-                  )),
+          onDoubleTap: () => showDialog<String>(
+            context: context,
+            builder: (context) => defaultDialog(
+                title: 'Delete "${exercise.getExerciseTypeName()}"?',
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel')),
+                  TextButton(
+                      onPressed: () {
+                        _sessionService
+                            .removeExercise(context, exercise)
+                            .then((value) => setState(
+                                  () {},
+                                ));
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.redAccent),
+                      )),
+                ]),
+          ),
           onTap: () {
             _exerciseService!.openExercise(context, index);
             Navigator.of(context)
@@ -346,30 +333,35 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: _title(session!.dayInSchedule, regiment.name!),
-          centerTitle: true,
-          bottom: PreferredSize(
-            preferredSize: Size(MediaQuery.of(context).size.width, 1),
-            child: Container(
-                height: 1, color: const Color.fromRGBO(0, 0, 0, 0.05)),
-          ),
-        ),
-        body: StatefulBuilder(builder: (context, setState) {
-          return Column(children: [
-            _infoBox(context, regiment, session),
-            _addExeciseButton(context),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: session.exercises.length,
-                  itemBuilder: (context, index) {
-                    return _exercisePreview(
-                        session.exercises[index], context, index);
-                  }),
-            ),
-          ]);
-        }),
-      ),
+          appBar: defaultAppBar(context, "Training Session",
+              'Day ${session!.dayInSchedule + 1} on ${regiment.name!}'),
+          body: StatefulBuilder(builder: (contextm, setState) {
+            return Column(children: [
+              _infoBox(context, regiment, session),
+              _addExeciseButton(context),
+              Expanded(
+                child: ReorderableListView.builder(
+                    onReorder: (oldIndex, newIndex) {
+                      _sessionService
+                          .reinsertExercise(context, oldIndex, newIndex)
+                          .then((value) => setState(
+                                () {},
+                              ));
+                    },
+                    itemCount: session.exercises.length,
+                    itemBuilder: (context, index) {
+                      if (index < session.exercises.length) {
+                        return Container(
+                          key: Key("$index"),
+                          child: _exercisePreview(
+                              session.exercises[index], context, index),
+                        );
+                      }
+                      return SizedBox(key: Key("$index"));
+                    }),
+              ),
+            ]);
+          })),
     );
   }
 }

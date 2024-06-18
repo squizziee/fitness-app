@@ -38,6 +38,29 @@ class WeightExerciseService extends ExerciseService {
     await _saveSessionToDatabase(context);
   }
 
+  void _renumerateSets(List<WeightTrainingSet> sets) {
+    for (int i = 0; i < sets.length; i++) {
+      sets[i].setIndex = i;
+    }
+  }
+
+  Future<void> reinsertSet(
+      BuildContext context, int oldIndex, int newIndex) async {
+    var exercise = Provider.of<CurrentExercise>(context, listen: false).exercise
+        as WeightTrainingExercise;
+
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    var set = exercise.sets.removeAt(oldIndex);
+    exercise.sets.insert(newIndex, set);
+
+    _renumerateSets(exercise.sets);
+
+    await _saveSessionToDatabase(context);
+  }
+
   Future<void> updateSetWeight(
       BuildContext context, int setIndex, double weightInKilograms) async {
     var exercise = (Provider.of<CurrentExercise>(context, listen: false)
@@ -86,9 +109,7 @@ class WeightExerciseService extends ExerciseService {
 
     sets.removeAt(setIndex);
 
-    for (int i = 0; i < sets.length; i++) {
-      sets[i].setIndex = i;
-    }
+    _renumerateSets(sets);
 
     await _saveSessionToDatabase(context);
   }

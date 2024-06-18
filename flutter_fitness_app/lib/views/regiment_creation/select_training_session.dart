@@ -85,7 +85,7 @@ class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: appBar(
+        appBar: defaultAppBar(
             context,
             "Session #${(Provider.of<CurrentTrainingSession>(context).session!.dayInSchedule + 1).toString()}",
             "Session variants"),

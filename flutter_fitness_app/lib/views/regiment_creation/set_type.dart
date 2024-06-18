@@ -29,7 +29,8 @@ class _SetTypePageState extends State<SetTypePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "Create new regiment", "Choose training type"),
+      appBar:
+          defaultAppBar(context, "Create new regiment", "Choose training type"),
       body: Container(
         height: double.infinity,
         width: double.infinity,

@@ -34,9 +34,11 @@ class SetEditingFormState extends State<SetEditingForm> {
 
   @override
   Widget build(BuildContext context) {
-    _weightController.text = widget.weightSet.weightInKilograms.toString();
-    _repetitionsController.text = widget.weightSet.repetitions.toString();
-    _notesController.text = widget.weightSet.notes.toString();
+    if (!widget.isNewSet) {
+      _weightController.text = widget.weightSet.weightInKilograms.toString();
+      _repetitionsController.text = widget.weightSet.repetitions.toString();
+      _notesController.text = widget.weightSet.notes.toString();
+    }
     return Form(
       key: _formKey,
       child: Column(
@@ -49,6 +51,7 @@ class SetEditingFormState extends State<SetEditingForm> {
               validator: (value) {
                 try {
                   var input = double.parse(value!);
+                  assert(input >= 0.0);
                 } catch (error) {
                   return "Wrong weight format";
                 }
@@ -61,6 +64,7 @@ class SetEditingFormState extends State<SetEditingForm> {
               validator: (value) {
                 try {
                   var input = int.parse(value!);
+                  assert(input >= 0.0);
                 } catch (error) {
                   return "Wrong repetitions format";
                 }

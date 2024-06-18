@@ -19,8 +19,8 @@ class _SetDurationPageState extends State<SetDurationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          appBar(context, "Create new regiment", "Choose regiment duration"),
+      appBar: defaultAppBar(
+          context, "Create new regiment", "Choose regiment duration"),
       body: Container(
         height: double.infinity,
         width: double.infinity,

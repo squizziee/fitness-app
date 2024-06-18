@@ -18,7 +18,7 @@ Widget _title(String top, String bottom) {
   );
 }
 
-PreferredSizeWidget appBar(
+PreferredSizeWidget defaultAppBar(
     BuildContext context, String topText, String bottomText) {
   return AppBar(
       title: _title(topText, bottomText),

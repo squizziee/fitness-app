@@ -171,7 +171,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
     datePicked = currentGoal.deadline;
     return SafeArea(
         child: Scaffold(
-      appBar: appBar(
+      appBar: defaultAppBar(
           context,
           currentGoal.exerciseType == null
               ? "New goal"
