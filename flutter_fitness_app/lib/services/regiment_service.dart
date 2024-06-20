@@ -13,12 +13,10 @@ import 'package:flutter_fitness_app/models/base/training_regiment.dart';
 import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/models/base/training_types.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
-import 'package:flutter_fitness_app/services/notfication_service.dart';
 import 'package:provider/provider.dart';
 
 class RegimentService {
   final DatabaseService _dbService = DatabaseService();
-  final NotificationService _notificationService = NotificationService();
 
   void createAndOpenEmptyRegiment(BuildContext context) {
     var newRegiment = TrainingRegiment(dayOfPause: -1);

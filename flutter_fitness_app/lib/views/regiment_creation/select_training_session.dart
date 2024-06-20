@@ -5,6 +5,7 @@ import 'package:flutter_fitness_app/repos/current_training_session.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/session_service.dart';
+import 'package:flutter_fitness_app/views/misc/route_base_button.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,53 +19,32 @@ class SelectTrainingSessionPage extends StatefulWidget {
       _SelectTrainingSessionPageState();
 }
 
-Widget _sessionWidget(
-    BuildContext context,
-    (TrainingSession, TrainingRegiment) session,
-    SessionService sessionService) {
+Widget _sessionWidget(BuildContext context,
+    (TrainingSession, TrainingRegiment) tuple, SessionService sessionService) {
   var openedSessionIndex = sessionService.getOpenedSessionIndex(context);
+
+  var session = tuple.$1;
+  var regiment = tuple.$2;
 
   return GestureDetector(
     onTap: () async {
       await sessionService
-          .copySession(context, session.$1, openedSessionIndex)
+          .copySession(context, session, openedSessionIndex)
           .then((value) => Navigator.of(context).pop());
     },
     child: Container(
-      color: const Color.fromARGB(31, 180, 180, 180),
+      decoration: BoxDecoration(
+        border: Border(
+            bottom: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
+      ),
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(20),
-      child: Column(children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-            "Day ${session.$1.dayInSchedule + 1} of ${session.$2.cycleDurationInDays} of ${session.$2.name!}"),
-        Text(session.$1.name == "" ? "No name" : session.$1.name),
-      ]),
-    ),
-  );
-}
-
-Widget _addTrainingSessionButton(BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.of(context).pushNamed('/training_session_screen');
-    },
-    child: Container(
-      padding: const EdgeInsets.all(30),
-      width: double.infinity,
-      decoration: const BoxDecoration(color: Color.fromARGB(31, 180, 180, 180)),
-      child: Wrap(alignment: WrapAlignment.center, children: [
-        const FaIcon(
-          FontAwesomeIcons.pen,
-          size: 18,
+          "[${regiment.name!}] #${session.dayInSchedule + 1} of ${regiment.cycleDurationInDays} — ${session.name == "" ? "No name" : session.name}",
+          style:
+              GoogleFonts.montserrat(fontWeight: FontWeight.w800, fontSize: 20),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            'Edit session'.toUpperCase(),
-            style:
-                GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.w500),
-          ),
-        )
       ]),
     ),
   );
@@ -91,11 +71,21 @@ class _SelectTrainingSessionPageState extends State<SelectTrainingSessionPage> {
             "Session variants"),
         body: Column(
           children: [
-            _addTrainingSessionButton(context),
+            routeBaseButton(context, "/training_session_screen",
+                FontAwesomeIcons.solidPenToSquare, "Edit session",
+                topBorder: false),
             Container(
+              decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(
+                        width: 0.5, color: Color.fromRGBO(0, 0, 0, .1))),
+              ),
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(20),
-              child: const Text("Or choose existing session to copy:"),
+              child: Text(
+                "Or choose existing session to copy:",
+                style: GoogleFonts.roboto(fontSize: 14),
+              ),
             ),
             FutureBuilder(
                 future: sessionsList,
