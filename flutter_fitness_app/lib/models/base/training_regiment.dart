@@ -48,26 +48,64 @@ class TrainingRegiment {
     return dayOfPause != -1;
   }
 
+  void rescheduleNotifications(int startingFromIndex) {
+    cancelNotifications();
+    startNotifications(startingFromIndex);
+  }
+
   void startNotifications(int startingFromIndex) {
-    var now = DateTime.now();
+    // var now = DateTime.now();
 
-    var notificationDateTime = now
-        .subtract(
-            Duration(hours: now.hour, minutes: now.minute, seconds: now.second))
-        .add(const Duration(hours: 8));
+    // var notificationDateTime = now
+    //     .subtract(
+    //         Duration(hours: now.hour, minutes: now.minute, seconds: now.second))
+    //     .add(const Duration(hours: 8));
 
-    // var dummyDateTime = now.add(const Duration(seconds: 5));
+    // var dummyDateTime = now.add(const Duration(hours: 15, minutes: 13));
+
+    // for (var i = startingFromIndex; i < schedule!.length; i++) {
+    //   var session = schedule![i];
+
+    //   //if (session.exercises.isEmpty) continue;
+
+    //   var id = Random().nextInt(0x7FFFFFF1);
+    //   notificationIdList!.add(id);
+    //   _notificationService.scheduleNotification(
+    //       "Today`s training session on $name",
+    //       "Session #${session.dayInSchedule + 1} (${session.name == "" ? "No name" : session.name}) is to perform today",
+    //       //notificationDateTime.add(Duration(days: i)),
+    //       dummyDateTime.add(Duration(seconds: 30 * (i - startingFromIndex))),
+    //       id);
+    // }
+
+    // Will be defined in user preferences later
+    var timeOfDay = Duration(hours: 8);
+
+    var notificationStartDate =
+        startDate!.add(Duration(days: getCurrentDay())).add(timeOfDay);
 
     for (var i = startingFromIndex; i < schedule!.length; i++) {
       var session = schedule![i];
+
+      if (session.exercises.isEmpty) continue;
+
       var id = Random().nextInt(0x7FFFFFF1);
       notificationIdList!.add(id);
+
       _notificationService.scheduleNotification(
           "Today`s training session on $name",
           "Session #${session.dayInSchedule + 1} (${session.name == "" ? "No name" : session.name}) is to perform today",
-          notificationDateTime.add(Duration(days: i)),
+          notificationStartDate.add(Duration(days: i - startingFromIndex)),
           id);
     }
+  }
+
+  void cancelNotifications() {
+    for (var id in notificationIdList!) {
+      _notificationService.cancelScheduledNotification(id);
+    }
+
+    notificationIdList!.clear();
   }
 
   String? getMainStatistic() {
@@ -85,13 +123,5 @@ class TrainingRegiment {
       return "$workDays ${workDays % 10 == 1 ? "day" : "days"} a week";
     }
     return null;
-  }
-
-  void cancelNotifications() {
-    for (var id in notificationIdList!) {
-      _notificationService.cancelScheduledNotification(id);
-    }
-
-    notificationIdList!.clear();
   }
 }

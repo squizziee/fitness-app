@@ -114,46 +114,13 @@ class RegimentService {
         .schedule = schedule;
   }
 
-  void _startNotifications(BuildContext context, int startingFromIndex) {
-    var regiment =
-        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
-
-    var now = DateTime.now();
-
-    var notificationDateTime = now
-        .subtract(
-            Duration(hours: now.hour, minutes: now.minute, seconds: now.second))
-        .add(const Duration(hours: 8));
-
-    // var dummyDateTime = now.add(const Duration(seconds: 5));
-
-    for (var i = startingFromIndex; i < regiment.schedule!.length; i++) {
-      var session = regiment.schedule![i];
-      var id = Random().nextInt(0x7FFFFFF1);
-      regiment.notificationIdList!.add(id);
-      _notificationService.scheduleNotification(
-          "Today`s training session on ${regiment.name}",
-          "Session #${session.dayInSchedule + 1} (${session.name == "" ? "No name" : session.name}) is to perform today",
-          notificationDateTime.add(Duration(days: i)),
-          id);
-    }
-  }
-
-  void _cancelNotifications(BuildContext context) {
-    var regiment =
-        Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
-    for (var id in regiment.notificationIdList!) {
-      _notificationService.cancelScheduledNotification(id);
-    }
-
-    regiment.notificationIdList!.clear();
-  }
-
   void startRegiment(BuildContext context) {
     var regiment =
         Provider.of<CurrentTrainingRegiment>(context, listen: false).regiment!;
 
-    regiment.startDate = DateTime.now();
+    var now = DateTime.now();
+    regiment.startDate = now.subtract(
+        Duration(hours: now.hour, minutes: now.minute, seconds: now.second));
 
     regiment.startNotifications(0);
 
