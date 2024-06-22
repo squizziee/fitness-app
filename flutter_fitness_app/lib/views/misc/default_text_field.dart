@@ -4,13 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 Widget defaultTextField(
     {String placeholder = "",
-    bool isMultiline = false,
+    required TextInputType inputType,
     required TextEditingController controller}) {
   return TextField(
     controller: controller,
     style: GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500),
-    keyboardType: isMultiline ? TextInputType.multiline : TextInputType.text,
-    maxLines: isMultiline ? null : 1,
+    keyboardType: inputType,
+    maxLines: inputType == TextInputType.multiline ? null : 1,
     decoration: InputDecoration(
         focusedBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.zero,

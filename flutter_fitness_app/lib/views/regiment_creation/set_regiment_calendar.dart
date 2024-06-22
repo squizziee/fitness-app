@@ -97,12 +97,14 @@ class _SetRegimentCalendarPageState extends State<SetRegimentCalendarPage> {
                         content: SingleChildScrollView(
                           child: Column(children: [
                             defaultTextField(
+                                inputType: TextInputType.text,
                                 controller: _nameController,
                                 placeholder: "Name"),
                             defaultTextField(
-                                controller: _notesController,
-                                placeholder: "Notes",
-                                isMultiline: true),
+                              inputType: TextInputType.multiline,
+                              controller: _notesController,
+                              placeholder: "Notes",
+                            ),
                           ]),
                         ),
                         actions: [

@@ -52,6 +52,8 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   awesome_notifications: ^0.9.3+1
   dcdg: ^4.1.0
+  permission_handler: ^11.3.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

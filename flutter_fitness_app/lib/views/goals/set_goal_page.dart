@@ -5,9 +5,15 @@ import 'package:flutter_fitness_app/repos/current_goal.dart';
 import 'package:flutter_fitness_app/services/custom_search_delegate.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/goal_service.dart';
+import 'package:flutter_fitness_app/views/misc/bottom_border.dart';
+import 'package:flutter_fitness_app/views/misc/default_text_field.dart';
+import 'package:flutter_fitness_app/views/misc/positioned_image.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/dialog.dart';
+import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SetGoalPage extends StatefulWidget {
@@ -15,20 +21,6 @@ class SetGoalPage extends StatefulWidget {
 
   @override
   State<SetGoalPage> createState() => _SetGoalPageState();
-}
-
-Widget _tagWidget(String text, Color backgroundColor) {
-  return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: const BorderRadius.all(Radius.circular(5))),
-      child: Text(text.toUpperCase(),
-          style: GoogleFonts.montserrat(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-              height: 1)));
 }
 
 Widget _field(String text, String placeholder, TextEditingController controller,
@@ -66,64 +58,33 @@ class _SetGoalPageState extends State<SetGoalPage> {
     _metricScaleController.text = "";
   }
 
-  Widget _metricWidget(BuildContext context, GoalMetric metric,
-      GoalService goalService, int index) {
-    return GestureDetector(
-      onLongPress: () => showDialog<String>(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Confirmation'),
-                content: Text(
-                    'Are you sure you want to delete "${metric.metricName}"?'),
-                actions: <Widget>[
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Cancel')),
-                  TextButton(
-                      onPressed: () {
-                        //goalService.deleteMetric(context, metric.metricName!);
-                        goalService.deleteMetricByIndex(context, index);
-                        setState(() {});
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text(
-                        'Delete',
-                        style: TextStyle(color: Colors.redAccent),
-                      )),
-                ],
-              )),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(20),
-        child: Column(children: [
-          Text(
-              "${metric.metricName} — ${metric.metricSize}${metric.metricScale}")
-        ]),
-      ),
-    );
-  }
-
   Widget _addMetricButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () => showDialog<String>(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Add new metric'),
-                content: Column(
-                  children: [
-                    _field("", "Metric name", _metricNameController,
-                        TextInputType.name),
-                    const SizedBox(height: 10),
-                    _field("", "Metric size", _metricSizeController,
-                        TextInputType.number),
-                    const SizedBox(height: 10),
-                    _field("", "Metric scale", _metricScaleController,
-                        TextInputType.name),
-                  ],
-                ),
-                actions: <Widget>[
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+              bottom:
+                  BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
+      child: GestureDetector(
+        onTap: () => showDialog(
+            context: context,
+            builder: (context) => defaultDialog(title: "Add metric", content: [
+                  defaultTextField(
+                      inputType: TextInputType.text,
+                      controller: _metricNameController,
+                      placeholder: "Name"),
+                  defaultTextField(
+                      inputType: TextInputType.number,
+                      controller: _metricSizeController,
+                      placeholder: "Size"),
+                  defaultTextField(
+                      inputType: TextInputType.text,
+                      controller: _metricScaleController,
+                      placeholder: "Scale (can be empty)"),
+                ], actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: const Text('Cancel'),
@@ -140,21 +101,151 @@ class _SetGoalPageState extends State<SetGoalPage> {
                     },
                     child: const Text('OK'),
                   ),
-                ],
-              )),
-      child: Container(
-          height: 50,
-          width: 50,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(100)),
-              color: Color.fromRGBO(0, 0, 0, .05)),
-          child: const Wrap(children: [
-            FaIcon(
+                ])),
+        child: Container(
+            height: 50,
+            width: 50,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border:
+                    Border.all(width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)),
+                borderRadius: BorderRadius.all(Radius.circular(50))),
+            child: const FaIcon(
               FontAwesomeIcons.plus,
               size: 18,
+            )),
+      ),
+    );
+  }
+
+  Widget _deadlineWidget(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(border: bottomBorder()),
+      padding: EdgeInsets.all(20),
+      child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.spaceBetween,
+          children: [
+            Text(
+              datePicked == null
+                  ? "No deadline selected"
+                  : "Due on ${DateFormat.yMMMd().format(datePicked!)}",
+              style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w800, fontSize: 20),
             ),
-          ])),
+            GestureDetector(
+              onTap: () async {
+                datePicked = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(Duration(days: 1001)),
+                );
+                if (datePicked != null) {
+                  await _goalService.updateDeadline(context, datePicked!);
+                }
+                setState(() {});
+              },
+              child: FaIcon(
+                FontAwesomeIcons.pen,
+                size: 16,
+              ),
+            )
+          ]),
+    );
+  }
+
+  Widget _metricWidget(BuildContext context, GoalMetric metric,
+      GoalService goalService, int index) {
+    return GestureDetector(
+      onLongPress: () => showDialog<String>(
+        context: context,
+        builder: (context) =>
+            defaultDialog(title: "Delete ${metric.metricName}?", actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel')),
+          TextButton(
+              onPressed: () {
+                //goalService.deleteMetric(context, metric.metricName!);
+                goalService.deleteMetricByIndex(context, index);
+                setState(() {});
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.redAccent),
+              )),
+        ]),
+        // builder: (context) => AlertDialog(
+        //       title: const Text('Confirmation'),
+        //       content: Text(
+        //           'Are you sure you want to delete "${metric.metricName}"?'),
+        //       actions: <Widget>[
+        //         TextButton(
+        //             onPressed: () {
+        //               Navigator.of(context).pop();
+        //             },
+        //             child: const Text('Cancel')),
+        //         TextButton(
+        //             onPressed: () {
+        //               //goalService.deleteMetric(context, metric.metricName!);
+        //               goalService.deleteMetricByIndex(context, index);
+        //               setState(() {});
+        //               Navigator.of(context).pop();
+        //             },
+        //             child: const Text(
+        //               'Delete',
+        //               style: TextStyle(color: Colors.redAccent),
+        //             )),
+        //       ],
+        //     )),
+      ),
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(border: bottomBorder()),
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width - 40,
+              child: Wrap(
+                  spacing: 5,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 40) * 0.5,
+                      child: Text(
+                        "${metric.metricName}",
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w800, fontSize: 15),
+                      ),
+                    ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 40) * 0.48,
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "${metric.metricSize}${metric.metricScale == "" ? "" : " "}${metric.metricScale}",
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w800, fontSize: 15),
+                      ),
+                    ),
+                    // tagWidget("${metric.metricSize}${metric.metricScale}",
+                    //     Colors.black)
+                  ]),
+            ),
+            //positionedImage(imageSrc: "assets/productivity.png", size: 100)
+          ],
+        ),
+      ),
     );
   }
 
@@ -203,69 +294,69 @@ class _SetGoalPageState extends State<SetGoalPage> {
                         bottom: BorderSide(
                             color: Color.fromRGBO(0, 0, 0, 0.05), width: 1),
                       )),
-                      child: Wrap(
-                        spacing: 15,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(0, 0, 0, .05),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100))),
-                              height: 60,
-                              width: 60,
-                              child: currentExercise == null
-                                  ? const Icon(Icons.search)
-                                  : Image.network(
-                                      currentExercise!.iconURL,
-                                      height: 20,
-                                      width: 20,
-                                    )),
-                          Container(
+                      child: Row(children: [
+                        Container(
+                            padding: EdgeInsets.all(20),
                             child: currentExercise == null
+                                ? const Icon(Icons.search)
+                                : Image.network(
+                                    currentExercise!.iconURL,
+                                    width: 50,
+                                  )),
+                        Container(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            currentExercise == null
                                 ? Text('No exercise chosen',
                                     style: GoogleFonts.montserrat(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
                                         height: 1))
+                                : Container(
+                                    child: Text(currentExercise!.name,
+                                        overflow: TextOverflow.fade,
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800,
+                                            height: 1))),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            currentExercise == null
+                                ? SizedBox()
                                 : Wrap(
-                                    crossAxisAlignment:
-                                        WrapCrossAlignment.center,
-                                    spacing: 6,
+                                    spacing: 5,
                                     children: [
-                                        Text(currentExercise!.name,
-                                            style: GoogleFonts.montserrat(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                                height: 1)),
-                                        _tagWidget(currentExercise!.bodyPart,
-                                            Colors.blueAccent),
-                                        _tagWidget(currentExercise!.category,
-                                            Colors.black87),
-                                      ]),
-                          ),
-                        ],
-                      )),
+                                      tagWidget(currentExercise!.bodyPart,
+                                          Colors.black),
+                                      tagWidget(currentExercise!.category,
+                                          Theme.of(context).primaryColor),
+                                    ],
+                                  )
+                          ],
+                        ))
+                      ])),
                 );
               }
             }),
-        ElevatedButton(
-            onPressed: () async {
-              datePicked = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2025),
-              );
-              if (datePicked != null) {
-                await _goalService.updateDeadline(context, datePicked!);
-              }
-              setState(() {});
-            },
-            child: Text(datePicked == null
-                ? "Pick deadline date"
-                : datePicked.toString())),
+        // ElevatedButton(
+        //     onPressed: () async {
+        //       datePicked = await showDatePicker(
+        //         context: context,
+        //         initialDate: DateTime.now(),
+        //         firstDate: DateTime.now(),
+        //         lastDate: DateTime.now().add(Duration(days: 1001)),
+        //       );
+        //       if (datePicked != null) {
+        //         await _goalService.updateDeadline(context, datePicked!);
+        //       }
+        //       setState(() {});
+        //     },
+        //     child: Text(datePicked == null
+        //         ? "Pick deadline date"
+        //         : datePicked.toString())),
+        _deadlineWidget(context),
         _addMetricButton(context),
         Expanded(
           child: ListView.builder(

@@ -6,6 +6,7 @@ import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/models/base/user.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/database_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class UserService {
@@ -78,6 +79,24 @@ class UserService {
     }
 
     return result;
+  }
+
+  Future<void> requestPermissions() async {
+    final permission = Permission.notification;
+    final permission2 = Permission.accessNotificationPolicy;
+    final permission3 = Permission.scheduleExactAlarm;
+
+    if (await permission.isDenied) {
+      await permission.request();
+    }
+
+    if (await permission2.isDenied) {
+      await permission2.request();
+    }
+
+    if (await permission3.isDenied) {
+      await permission3.request();
+    }
   }
 
   Future removeAllUserGoals(BuildContext context) async {

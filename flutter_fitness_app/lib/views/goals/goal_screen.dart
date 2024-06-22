@@ -54,7 +54,7 @@ class _GoalScreenState extends State<GoalScreen> {
 
   Widget _goalWidget(BuildContext context, Goal goal, int index) {
     var daysLeft = goal.deadline!.difference(DateTime.now()).inDays;
-    var isDue = daysLeft <= 0;
+    var isDue = daysLeft < 0;
 
     return GestureDetector(
       onTap: () {

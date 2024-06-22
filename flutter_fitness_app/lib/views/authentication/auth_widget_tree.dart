@@ -37,6 +37,7 @@ class _AuthWidgetTreeState extends State<AuthWidgetTree> {
                   return const LoginPage();
                 }
                 if (snapshot.hasData && snapshot.data == 0) {
+                  _userService.requestPermissions();
                   return const HomePage();
                 }
               }
