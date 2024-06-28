@@ -41,8 +41,10 @@ class _AuthWidgetTreeState extends State<AuthWidgetTree> {
                   return const HomePage();
                 }
               }
-              return const Center(
-                child: LoadingScreen(),
+              return Center(
+                child: LoadingScreen(
+                  message: snapshot.error.toString(),
+                ),
               );
             });
       },

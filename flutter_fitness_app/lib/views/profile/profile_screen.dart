@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/services/auth.dart';
 import 'package:flutter_fitness_app/services/user_service.dart';
+import 'package:flutter_fitness_app/views/misc/bottom_border.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -58,29 +59,26 @@ Widget _removeAllRegimentsButton(
               ],
             )),
     child: Container(
-        decoration: const BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
+        decoration: const BoxDecoration(),
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20),
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: 10,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                  color: Colors.greenAccent),
-              child: const FaIcon(
-                FontAwesomeIcons.trash,
-                size: 14,
-              ),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.all(10),
+            //   decoration: const BoxDecoration(
+            //       borderRadius: BorderRadius.all(Radius.circular(100)),
+            //       color: Colors.greenAccent),
+            //   child: const FaIcon(
+            //     FontAwesomeIcons.trash,
+            //     size: 14,
+            //   ),
+            // ),
             Text(
               "Delete all regiments",
-              style: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
+              style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
             )
           ],
         )),
@@ -114,28 +112,25 @@ Widget _removeAllGoalsButton(BuildContext context, UserService userService) {
               ],
             )),
     child: Container(
-        decoration: const BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
+        decoration: const BoxDecoration(),
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20),
         child: Wrap(
           spacing: 10,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                  color: Colors.greenAccent),
-              child: const FaIcon(
-                FontAwesomeIcons.trash,
-                size: 14,
-              ),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.all(10),
+            //   decoration: const BoxDecoration(
+            //       borderRadius: BorderRadius.all(Radius.circular(100)),
+            //       color: Colors.greenAccent),
+            //   child: const FaIcon(
+            //     FontAwesomeIcons.trash,
+            //     size: 14,
+            //   ),
+            // ),
             Text("Delete all Goals",
-                style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
+                style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
           ],
         )),
   );
@@ -199,28 +194,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               )),
       child: Container(
-          decoration: const BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
+          decoration: const BoxDecoration(),
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(20),
           child: Wrap(
             spacing: 10,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                    color: Colors.greenAccent),
-                child: const FaIcon(
-                  FontAwesomeIcons.solidEnvelopeOpen,
-                  size: 14,
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.all(10),
+              //   decoration: const BoxDecoration(
+              //       borderRadius: BorderRadius.all(Radius.circular(100)),
+              //       color: Colors.greenAccent),
+              //   child: const FaIcon(
+              //     FontAwesomeIcons.solidEnvelopeOpen,
+              //     size: 14,
+              //   ),
+              // ),
               Text("Change email",
-                  style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
+                  style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
             ],
           )),
     );
@@ -270,28 +262,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               )),
       child: Container(
-          decoration: const BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      width: 0.5, color: Color.fromRGBO(0, 0, 0, .1)))),
+          decoration: const BoxDecoration(),
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(20),
           child: Wrap(
             spacing: 15,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                    color: Colors.greenAccent),
-                child: const FaIcon(
-                  FontAwesomeIcons.lockOpen,
-                  size: 14,
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.all(10),
+              //   decoration: const BoxDecoration(
+              //       borderRadius: BorderRadius.all(Radius.circular(100)),
+              //       color: Colors.greenAccent),
+              //   child: const FaIcon(
+              //     FontAwesomeIcons.lockOpen,
+              //     size: 14,
+              //   ),
+              // ),
               Text("Change password",
-                  style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
+                  style: GoogleFonts.roboto(fontWeight: FontWeight.w600)),
             ],
           )),
     );
@@ -301,10 +290,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: Column(children: [
+            body: Column(
+      children: [
         Container(
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(border: bottomBorder()),
           child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               alignment: WrapAlignment.spaceBetween,
@@ -321,11 +312,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     )),
               ]),
         ),
-        _removeAllRegimentsButton(context, _userService),
-        _removeAllGoalsButton(context, _userService),
-        _changeEmailButton(context, _authService),
-        _changePasswordButton(context, _authService),
-      ]),
-    ));
+        Container(
+          decoration:
+              BoxDecoration(border: Border(bottom: defaultBorderSide())),
+          child: ExpansionTile(
+              title: Text(
+                "Account",
+                style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
+              ),
+              children: [
+                _changeEmailButton(context, _authService),
+                _changePasswordButton(context, _authService),
+              ]),
+        ),
+        Container(
+          decoration:
+              BoxDecoration(border: Border(bottom: defaultBorderSide())),
+          child: ExpansionTile(
+              title: Text(
+                "Actions",
+                style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
+              ),
+              children: [
+                _removeAllRegimentsButton(context, _userService),
+                _removeAllGoalsButton(context, _userService),
+              ]),
+        ),
+      ],
+    )));
   }
 }

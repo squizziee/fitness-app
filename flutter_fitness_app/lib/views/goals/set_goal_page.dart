@@ -7,7 +7,6 @@ import 'package:flutter_fitness_app/services/database_service.dart';
 import 'package:flutter_fitness_app/services/goal_service.dart';
 import 'package:flutter_fitness_app/views/misc/bottom_border.dart';
 import 'package:flutter_fitness_app/views/misc/default_text_field.dart';
-import 'package:flutter_fitness_app/views/misc/positioned_image.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/app_bar.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/dialog.dart';
 import 'package:flutter_fitness_app/views/regiment_creation/common_widgets/tag_widget.dart';
@@ -21,24 +20,6 @@ class SetGoalPage extends StatefulWidget {
 
   @override
   State<SetGoalPage> createState() => _SetGoalPageState();
-}
-
-Widget _field(String text, String placeholder, TextEditingController controller,
-    TextInputType type) {
-  controller.text = text;
-  return TextField(
-      controller: controller,
-      keyboardType: type,
-      decoration: InputDecoration(
-        labelText: placeholder,
-        contentPadding:
-            const EdgeInsets.only(left: 15, right: 10, top: 10, bottom: 10),
-        filled: true,
-        fillColor: const Color.fromARGB(31, 180, 180, 180),
-        border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(50)),
-      ));
 }
 
 class _SetGoalPageState extends State<SetGoalPage> {
@@ -181,29 +162,6 @@ class _SetGoalPageState extends State<SetGoalPage> {
                 style: TextStyle(color: Colors.redAccent),
               )),
         ]),
-        // builder: (context) => AlertDialog(
-        //       title: const Text('Confirmation'),
-        //       content: Text(
-        //           'Are you sure you want to delete "${metric.metricName}"?'),
-        //       actions: <Widget>[
-        //         TextButton(
-        //             onPressed: () {
-        //               Navigator.of(context).pop();
-        //             },
-        //             child: const Text('Cancel')),
-        //         TextButton(
-        //             onPressed: () {
-        //               //goalService.deleteMetric(context, metric.metricName!);
-        //               goalService.deleteMetricByIndex(context, index);
-        //               setState(() {});
-        //               Navigator.of(context).pop();
-        //             },
-        //             child: const Text(
-        //               'Delete',
-        //               style: TextStyle(color: Colors.redAccent),
-        //             )),
-        //       ],
-        //     )),
       ),
       child: Container(
         clipBehavior: Clip.hardEdge,
@@ -340,22 +298,6 @@ class _SetGoalPageState extends State<SetGoalPage> {
                 );
               }
             }),
-        // ElevatedButton(
-        //     onPressed: () async {
-        //       datePicked = await showDatePicker(
-        //         context: context,
-        //         initialDate: DateTime.now(),
-        //         firstDate: DateTime.now(),
-        //         lastDate: DateTime.now().add(Duration(days: 1001)),
-        //       );
-        //       if (datePicked != null) {
-        //         await _goalService.updateDeadline(context, datePicked!);
-        //       }
-        //       setState(() {});
-        //     },
-        //     child: Text(datePicked == null
-        //         ? "Pick deadline date"
-        //         : datePicked.toString())),
         _deadlineWidget(context),
         _addMetricButton(context),
         Expanded(

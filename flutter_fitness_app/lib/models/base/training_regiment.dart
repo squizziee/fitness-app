@@ -36,11 +36,11 @@ class TrainingRegiment {
     if (isPaused()) {
       return dayOfPause;
     }
-    if (DateTime.now().difference(startDate!).inDays > cycleDurationInDays!) {
-      startDate = null;
-      dayOfPause = -1;
-      return -1;
-    }
+    // if (DateTime.now().difference(startDate!).inDays > cycleDurationInDays!) {
+    //   startDate = null;
+    //   dayOfPause = -1;
+    //   return -1;
+    // }
     return DateTime.now().difference(startDate!).inDays % cycleDurationInDays!;
   }
 

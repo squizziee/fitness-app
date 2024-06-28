@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoadingScreen extends StatelessWidget {
-  const LoadingScreen({super.key});
+  final String? message;
+
+  const LoadingScreen({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class LoadingScreen extends StatelessWidget {
               //   height: 70,
               // ),
               // Text(
-              //   "Loading your data...",
+              //   message == null ? "Loading your data..." : message!,
               //   style: GoogleFonts.montserrat(
               //       fontWeight: FontWeight.w600, fontSize: 15),
               // )

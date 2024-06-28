@@ -55,8 +55,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Home Page',
+      title: 'Manifold Fitness',
       theme: ThemeData(
+        dividerColor: Colors.transparent,
         primaryColor: Color(0xffccb5b5),
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xffccb5b5)),
         buttonTheme:

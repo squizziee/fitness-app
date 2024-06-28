@@ -29,6 +29,7 @@ class UserService {
         regiment.startNotifications(regiment.dayOfPause == -1
             ? regiment.getCurrentDay()
             : regiment.dayOfPause);
+        _dbService.postRegiment(regiment);
       }
     }
 

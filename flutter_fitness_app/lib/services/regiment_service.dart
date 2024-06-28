@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/models/combat_training/combat_training_session.dart';
 import 'package:flutter_fitness_app/models/cycling/cycling_session.dart';
